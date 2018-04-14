@@ -1,0 +1,21 @@
+Package: SDLfilter
+Type: Package
+Title: Filtering Satellite-Derived Locations
+Version: 1.0.0.9007
+Date: 2018-04-14
+Author: Takahiro Shimada
+Maintainer: Takahiro Shimada <takahiro.shimada@my.jcu.edu.au>
+Description: Functions to filter GPS and/or Argos locations. The provided
+    filters remove temporal and spatial duplicates, fixes located at a given
+    height from estimated high tide line, and locations with high error as
+    proposed in Shimada et al. (2012) <doi:10.3354/meps09747> and 
+    Shimada et al. (2016) <doi:10.1007/s00227-015-2771-0>.
+Depends:
+    R (>= 2.10)
+Imports:
+    sp, raster, trip, data.table, geosphere
+License: GPL-2 | file LICENSE
+URL: https://github.com/TakahiroShimada/SDLfilter
+BugReports: https://github.com/TakahiroShimada/SDLfilter/issues
+LazyData: true
+RoxygenNote: 6.0.1
