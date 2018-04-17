@@ -83,7 +83,7 @@
 #' 
 #' 
 #' #### Plot data removed or retained by depthfilter
-#' plot.map(turtle.dd, bgmap=SandyStrait, point.size = 2, line.size = 0.5, axes.lab.size = 0, 
+#' plotMap(turtle.dd, bgmap=SandyStrait, point.size = 2, line.size = 0.5, axes.lab.size = 0, 
 #'          title.size=0, sb.distance=10, multiplot = FALSE)[[1]] + 
 #' geom_point(aes(x=lon, y=lat), data=turtle.dep, size=2, fill="yellow", shape=21)+
 #' geom_point(aes(x=x, y=y), data=data.frame(x=c(152.68, 152.68), y=c(-25.3, -25.34)), 

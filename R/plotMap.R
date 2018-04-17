@@ -1,4 +1,4 @@
-#' @aliases plot.map
+#' @aliases plotMap
 #' @title Plot location data
 #' @description Function to easily plot locations on a map or a satellite image. 
 #' @param sdata A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon". 
@@ -20,14 +20,14 @@
 #' @param point.size An integer to specify the size of the symbol.
 #' @param line.col The colour of the line that connects consecutive points.
 #' @param line.type The type of the line that connects consecutive points. See \code{\link[ggplot2]{linetype}} for details. 
-#' @param line.size An interger to specify the thickness (width) of the line that connects consecutive points. 
+#' @param lnine.size An interger to specify the thickness (width) of the line that connects consecutive points. 
 #' @param sb.distance An integer to specify the length of the scale bar. If not specified, approximately a quater of the 
 #' plotting range will be used. 
 #' @param sb.lwd An interger to specify the thickness (width) of the scale bar.
 #' @param sb.line.col The colour of the scale bar.
 #' @param sb.text.size An integer to specify the text size for the scale bar.
 #' @param sb.text.col The colour of the text for the scale bar.
-#' @param sb.space Set the amount of space between the scale bar and the text for the scale bar. 
+#' @param sb.space Set th e amount of space between the scale bar and the text for the scale bar. 
 #' The value is scaled to the plot. The smaller value increases the space.
 #' @param title The main title for each plot. If not specified, the "id" will be used.
 #' @param title.size An integer to specify the size of the title.
@@ -62,17 +62,18 @@
 #' 
 #' #### Plot filtered data for each animal
 #' ## using the low-resolution world map
-#' plot.map(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1, point.bg = "yellow")
+#' plotMap(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, 
+#'          ncol=2, nrow=1, point.bg = "yellow")
 #'
 #' \dontrun{
 #' ## using the high-resolution google satellite images
-#' plot.map(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1, 
-#' point.bg = "yellow", bgmap = "satellite", sb.line.col = "white", sb.text.col = "white")}
+#' plotMap(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1, 
+#'          point.bg = "yellow", bgmap = "satellite", sb.line.col = "white", sb.text.col = "white")}
 
 
 
 #### Plot data removed or retained by ddfilter
-plot.map<-function(sdata, xlim=NULL, ylim=NULL, margin=10, 
+plotMap<-function(sdata, xlim=NULL, ylim=NULL, margin=10, 
                    bgmap=NULL, map.bg="grey", map.col="black", zoom="auto", 
                    point.bg="red", point.col="black", point.symbol=21, point.size=1,
                    line.col="lightgrey", line.type=1, line.size=0.5,

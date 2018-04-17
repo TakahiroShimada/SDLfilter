@@ -59,7 +59,7 @@
 #' 
 #' #### Plot data removed or retained by ddfilter
 #' ## Entire area
-#' p1<-plot.map(turtle.dup, bgmap=Australia, point.size = 2, line.size = 0.5, axes.lab.size = 0, 
+#' p1<-plotMap(turtle.dup, bgmap=Australia, point.size = 2, line.size = 0.5, axes.lab.size = 0, 
 #'              sb.distance=200, multiplot = FALSE, title.size=15, title="Entire area")[[1]] + 
 #'   geom_point(aes(x=lon, y=lat), data=turtle.dd, size=2, fill="yellow", shape=21)+
 #'   geom_point(aes(x=x, y=y), data=data.frame(x=c(154, 154), y=c(-22, -22.5)), 
@@ -68,7 +68,7 @@
 #'            colour="black", size=4, hjust = 0)
 #'
 #' ## Zoomed in
-#' p2<-plot.map(turtle.dup, bgmap=SandyStrait, xlim=c(152.7, 153.2), ylim=(c(-25.75, -25.24)), 
+#' p2<-plotMap(turtle.dup, bgmap=SandyStrait, xlim=c(152.7, 153.2), ylim=(c(-25.75, -25.24)), 
 #' axes.lab.size = 0, sb.distance=10, point.size = 2, line.size = 0.5, multiplot = FALSE, 
 #' title.size=15, title="Zoomed in")[[1]] + 
 #' geom_path(aes(x=lon, y=lat), data=turtle.dd, size=0.5, colour="black", linetype=1) + 
