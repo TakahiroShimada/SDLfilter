@@ -3,7 +3,6 @@
 \docType{data}
 \name{turtle2}
 \alias{turtle2}
-\alias{turtle}
 \title{Green turtle tracking data 2}
 \format{A data frame with 276 rows and 5 variables:
 \describe{

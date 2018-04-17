@@ -30,7 +30,7 @@
 #' @param title The main title for each plot. If not specified, the "id" will be used.
 #' @param title.size An integer to specify the size of the title.
 #' @param axes.text.size An integer to specify the size of the axes characters.
-#' @param axes.text.size An integer to specify the size of the axes labels.
+#' @param axes.lab.size An integer to specify the size of the axes labels.
 #' @param multiplot Logical. If TRUE (defaul), multiple plots are put on the same page.
 #' @param nrow An integer to specify the number of rows in the multiple plot page.
 #' @param ncol An integer to specify the number of columns in the multiple plot page.

@@ -4,7 +4,7 @@
 \alias{plot.map}
 \title{Plot location data}
 \usage{
-plot.map(sdata, xlim = NULL, ylim = NULL, margin = 19, bgmap = NULL,
+plot.map(sdata, xlim = NULL, ylim = NULL, margin = 10, bgmap = NULL,
   map.bg = "grey", map.col = "black", zoom = "auto", point.bg = "red",
   point.col = "black", point.symbol = 21, point.size = 1,
   line.col = "lightgrey", line.type = 1, line.size = 0.5,
@@ -66,13 +66,13 @@ plotting range will be used.}
 
 \item{axes.text.size}{An integer to specify the size of the axes characters.}
 
+\item{axes.lab.size}{An integer to specify the size of the axes labels.}
+
 \item{multiplot}{Logical. If TRUE (defaul), multiple plots are put on the same page.}
 
 \item{nrow}{An integer to specify the number of rows in the multiple plot page.}
 
 \item{ncol}{An integer to specify the number of columns in the multiple plot page.}
-
-\item{axes.text.size}{An integer to specify the size of the axes labels.}
 }
 \value{
 An arrangelist is returned when multiplot is TRUE. Otherwise a list is returned.

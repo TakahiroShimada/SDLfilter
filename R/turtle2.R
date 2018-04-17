@@ -1,4 +1,4 @@
-#' @aliases turtle
+#' @aliases turtle2
 #' @title Green turtle tracking data 2
 #' @description A dataset containing Fastloc GPS locations of a green turtle tracked in Moreton Bay, Australia.
 #' @format A data frame with 276 rows and 5 variables:
