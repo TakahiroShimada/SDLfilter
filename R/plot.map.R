@@ -42,6 +42,7 @@
 #' @export
 #' @return An arrangelist is returned when multiplot is TRUE. Otherwise a list is returned. 
 #' @author Takahiro Shimada
+#' @seealso dupfilter, ddfilter, est.vmax, est.maxvlp
 #' @examples
 #' #### Load data sets
 #' ## Fastloc GPS data obtained from two green turtles
@@ -61,11 +62,11 @@
 #' 
 #' #### Plot filtered data for each animal
 #' ## using the low-resolution world map
-#' plot.map(t, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1, point.bg = "yellow")
+#' plot.map(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1, point.bg = "yellow")
 #'
 #' \dontrun{
 #' ## using the high-resolution google satellite images
-#' plot.map(t, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1, 
+#' plot.map(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1, 
 #' point.bg = "yellow", bgmap = "satellite", sb.line.col = "white", sb.text.col = "white")}
 
 
@@ -76,8 +77,7 @@ plot.map<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
                    point.bg="red", point.col="black", point.symbol=21, point.size=1,
                    line.col="lightgrey", line.type=1, line.size=0.5,
                    sb.distance=NULL, sb.lwd=1, sb.line.col="black", sb.text.size=4, sb.text.col="black", sb.space=3,
-                   title="id", title.size=11,  
-                   axes.text.size=11, axes.lab.size=11,
+                   title="id", title.size=11, axes.text.size=11, axes.lab.size=11,
                    multiplot=TRUE, nrow=2, ncol=2){
   
   #### Get data to plot
