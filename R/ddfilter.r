@@ -8,14 +8,13 @@
 #' (e.g. number of GPS satellites used for estimation).
 #' @param vmax A numeric vector specifying threshold speed both from a previous and to a subsequent fix. 
 #' Default is 8.9km/h. If this value is unknown, the function "est.vmax" can be used to estimate the value based on the supplied data.
-#' @param maxvlp A numeric vector specifying threshold speed during a loop trip. Default is 1.8 km/h. 
+#' @param maxvlp A numeric value specifying threshold speed during a loop trip. Default is 1.8 km/h. 
 #' If this value is unknown, the function "est.maxvlp" can be used to estimate the value based on the supplied data.
 #' @param qi An integer specifying threshold quality index during a loop trip. Default is 4.
 #' @param ia An integer specifying threshold inner angle during a loop trip. Default is 90 degrees.
 #' @param method An integer specifying how locations are filtered by speed. 
 #' 1 = a location is removed if the speed EITHER from a previous and to a subsequent location exceeds a given threshold speed. 
 #' 2 = a location is removed if the speed BOTH from a previous and to a subsequent location exceeds a given threshold speed. Default is 2.
-#' @import sp raster trip
 #' @export
 #' @details Locations are removed if the speed both from a previous and to a subsequent location exceeds a given "vmax", 
 #' or if all of the following criteria apply: the associated quality index is less than or equal to a given "qi", 
@@ -32,7 +31,7 @@
 #' @references Shimada T, Jones R, Limpus C, Hamann M (2012) 
 #' Improving data retention and home range estimates by data-driven screening. 
 #' Marine Ecology Progress Series 457:171-180 doi:10.3354/meps09747
-#' @seealso ddfilter.speed, ddfilter.loop, "est.vmax", "est.maxvlp"
+#' @seealso ddfilter.speed, ddfilter.loop, est.vmax, est.maxvlp
 #' @examples
 #' #### Load data sets
 #' ## Fastloc GPS data obtained from a green turtle
@@ -48,7 +47,7 @@
 #'  
 #' 
 #' #### ddfilter
-#' ## Using the built-in function to estimate threshold speeds
+#' ## Using the built-in function to estimate the threshold speeds
 #' V <- est.vmax(turtle.dup)
 #' VLP <- est.maxvlp(turtle.dup)
 #' turtle.dd <- ddfilter(turtle.dup, vmax=V, maxvlp=VLP)
@@ -58,26 +57,23 @@
 #' 
 #' 
 #' #### Plot data removed or retained by ddfilter
-#' library(raster)
-#' par(mfrow=c(1,2))
-#' 
 #' ## Entire area
-#' plot(Australia, col="grey", axes=TRUE, las=1, 
-#'      xlim=c(147.8, 156.2), ylim=c(-29,-22), main="Entire area")
-#' points(lat~lon, data=turtle.dup, bg="red", pch=21)
-#' points(lat~lon, data=turtle.dd, bg="yellow", pch=21)
-#' legend('topright', legend=c("Retained", "Removed"), pt.bg=c("yellow", "red"), pch=21)
-#' scalebar(d=200, label="200 km")
-#' box()
-#' 
+#' p1<-plot.map(turtle.dup, bgmap=Australia, point.size = 2, line.size = 0.5, axes.lab.size = 0, 
+#'              sb.distance=200, multiplot = F, title.size=15, title="Entire area")[[1]] + 
+#'   geom_point(aes(x=lon, y=lat), data=turtle.dd, size=2, fill="yellow", shape=21)+
+#'   geom_point(aes(x=x, y=y), data=data.frame(x=c(154, 154), y=c(-22, -22.5)), 
+#'              size=3, fill=c("yellow", "red"), shape=21) + 
+#'   annotate("text", x=c(154.3, 154.3), y=c(-22, -22.5), label=c("Retained", "Removed"), 
+#'            colour="black", size=4, hjust = 0)
+#'
 #' ## Zoomed in
-#' plot(SandyStrait, col="grey", axes=TRUE, las=1, 
-#'      xlim=c(152.8, 153.1), ylim=(c(-25.75, -25.24)), main="Zoomed in")
-#' points(lat~lon, data=turtle.dup, bg="red", pch=21)
-#' points(lat~lon, data=turtle.dd, bg="yellow", pch=21)
-#' legend('topleft', legend=c("Retained", "Removed"), pt.bg=c("yellow", "red"), pch=21)
-#' scalebar(d=10, label="10 km")
-#' box()
+#' p2<-plot.map(turtle.dup, bgmap=SandyStrait, xlim=c(152.7, 153.2), ylim=(c(-25.75, -25.24)), axes.lab.size = 0,
+#' sb.distance=10, point.size = 2, line.size = 0.5, multiplot = F, title.size=15, title="Zoomed in")[[1]] + 
+#' geom_path(aes(x=lon, y=lat), data=turtle.dd, size=0.5, colour="black", linetype=1) + 
+#' geom_point(aes(x=lon, y=lat), data=turtle.dd, size=2, colour="black", shape=21, fill="yellow")
+#'
+#' gridExtra::marrangeGrob(list(p1, p2), nrow=1, ncol=2)
+
 
 
 ddfilter<-function(sdata, vmax=8.9, maxvlp=1.8, qi=4, ia=90, method=2) {

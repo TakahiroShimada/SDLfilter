@@ -7,12 +7,13 @@
 #' "DateTime" is date & time in class POSIXct. "lat" and "lon" are the recorded latitude and longitude in decimal degrees. 
 #' "qi" is the numerical quality index associated with each fix where the greater number represents better quality 
 #' (e.g. number of GPS satellites used for estimation).
-#' @param vmax A numeric vector specifying threshold speed both from a previous and to a subsequent fix. Default is 8.9 km/h. 
+#' @param vmax A numeric value specifying threshold speed both from a previous and to a subsequent fix. Default is 8.9 km/h. 
 #' If this value is unknown, the function "est.vmax" can be used to estimate the value based on the supplied data.
 #' @param method An integer specifying how locations are filtered by speed. 
 #' 1 = a location is removed if the speed EITHER from a previous and to a subsequent location exceeds a given threshold speed. 
 #' 2 = a location is removed if the speed BOTH from a previous and to a subsequent location exceeds a given threshold speed. Default is FALSE.
-#' @import sp raster
+#' @import sp
+#' @importFrom raster pointDistance
 #' @export
 #' @details This function removes locations if the speed both/either from a previous and to a subsequent location exceeds a given threshold speed. 
 #' If "vmax" is unknown, it can be estimated using the function "est.vmax".

@@ -7,8 +7,9 @@
 #' "qi" is the numerical quality index associated with each fix where the greater number represents better quality 
 #' (e.g. number of GPS satellites used for estimation).
 #' @param qi An integer specifying minimum quality index associated with a location used for the estimation. Default is 5.
-#' @param prob Numeric vector of a probability to obtain sample quantiles. Default is 0.99.
-#' @import sp raster
+#' @param prob numeric value of a probability to obtain sample quantiles. Default is 0.99.
+#' @import sp
+#' @importFrom raster pointDistance
 #' @export
 #' @details The function first calculates the linear speeds between each pair of two consecutive locations. 
 #' It discards extreme values based on the quantile specified by a user (default is 0.99). 

@@ -13,10 +13,10 @@ This filter is independently applied to a subset of data grouped by the unique "
 "qi" is the numerical quality index associated with each fix where the greater number represents better quality 
 (e.g. number of GPS satellites used for estimation).}
 
-\item{step.time}{A numeric vector specifying temporal interval between two consecutive locations. Default is 0 hours. 
+\item{step.time}{A numeric value specifying temporal interval between two consecutive locations. Default is 0 hours. 
 Locations are considered temporal duplicates if the temporal interval is less than or equal to the user specified value.}
 
-\item{step.dist}{A numeric vector specifying spatial interval between two consecutive locations. Default is 0 kilometres. 
+\item{step.dist}{A numeric value specifying spatial interval between two consecutive locations. Default is 0 kilometres. 
 Locations are considered spatial duplicates if the spatial interval is less than or equal to the user specified value.}
 
 \item{conditional}{If TRUE, spatial duplicates are removed only if the temporal interval between the locations is 

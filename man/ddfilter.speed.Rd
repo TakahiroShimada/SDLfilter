@@ -13,7 +13,7 @@ This filter is independently applied to a subset of data grouped by the unique "
 "qi" is the numerical quality index associated with each fix where the greater number represents better quality 
 (e.g. number of GPS satellites used for estimation).}
 
-\item{vmax}{A numeric vector specifying threshold speed both from a previous and to a subsequent fix. Default is 8.9 km/h. 
+\item{vmax}{A numeric value specifying threshold speed both from a previous and to a subsequent fix. Default is 8.9 km/h. 
 If this value is unknown, the function "est.vmax" can be used to estimate the value based on the supplied data.}
 
 \item{method}{An integer specifying how locations are filtered by speed. 

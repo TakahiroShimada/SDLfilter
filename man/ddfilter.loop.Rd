@@ -17,7 +17,7 @@ ddfilter.loop(sdata, qi = 4, ia = 90, maxvlp = 1.8)
 
 \item{ia}{An integer specifying threshold inner angle during a loop trip. Default is 90 degrees.}
 
-\item{maxvlp}{A numeric vector specifying threshold speed during a loop trip. Default is 1.8 km/h. 
+\item{maxvlp}{A numeric value specifying threshold speed during a loop trip. Default is 1.8 km/h. 
 If this value is unknown, the function "est.maxvlp" can be used to estimate the value based on the supplied data.}
 }
 \value{

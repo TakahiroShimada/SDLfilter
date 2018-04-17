@@ -4,7 +4,7 @@
 \name{SandyStrait}
 \alias{SandyStrait}
 \title{A map of Sandy Strait, Australia}
-\format{A SpatialPolygonsDataFrame}
+\format{A data.frame}
 \usage{
 SandyStrait
 }

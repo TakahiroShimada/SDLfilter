@@ -1,10 +1,10 @@
 ## News for Package 'SDLfilter'
 
 
-#### Changes in version 1.0.0.9006 (2018-02-12)
+#### version 1.0.0.9011 (2018-04-17)
 
-* update vignette.
-
+* added a new function (plot.map) to plot locations.
+* updated vignette.
 
 #### SDLfilter 1.0.0 (2018-02-08)
 

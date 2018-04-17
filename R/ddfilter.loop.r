@@ -9,9 +9,10 @@
 #' (e.g. number of GPS satellites used for estimation).
 #' @param qi An integer specifying threshold quality index during a loop trip. Default is 4 satellites.
 #' @param ia An integer specifying threshold inner angle during a loop trip. Default is 90 degrees.
-#' @param maxvlp A numeric vector specifying threshold speed during a loop trip. Default is 1.8 km/h. 
+#' @param maxvlp A numeric value specifying threshold speed during a loop trip. Default is 1.8 km/h. 
 #' If this value is unknown, the function "est.maxvlp" can be used to estimate the value based on the supplied data.
-#' @import sp raster trip
+#' @import sp trip
+#' @importFrom raster pointDistance
 #' @export
 #' @details This function removes locations if all of the following criteria apply: 
 #' the number of source satellites are less than or equal to "qi", 

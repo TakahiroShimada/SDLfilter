@@ -7,8 +7,9 @@
 #' "qi" is the numerical quality index associated with each fix where the greater number represents better quality 
 #' (e.g. number of GPS satellites used for estimation).
 #' @param qi An integer specifying the minimum quality index associated with a location used for the estimation. Default is 4.
-#' @param prob A numeric vector specifying a probability to obtain sample quantiles. Default is 0.99.
-#' @import sp raster
+#' @param prob A numeric value specifying a probability to obtain sample quantiles. Default is 0.99.
+#' @import sp
+#' @importFrom raster pointDistance
 #' @export
 #' @details The function first detects a "loop trip". 
 #' Loop trip behaviour is represented by spatial departure and return with more than 3 consecutive locations (Shimada et al 2012). 

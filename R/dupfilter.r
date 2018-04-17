@@ -6,13 +6,12 @@
 #' "lat" and "lon" are the recorded latitude and longitude in decimal degrees. 
 #' "qi" is the numerical quality index associated with each fix where the greater number represents better quality 
 #' (e.g. number of GPS satellites used for estimation).
-#' @param step.time A numeric vector specifying temporal interval between two consecutive locations. Default is 0 hours. 
+#' @param step.time A numeric value specifying temporal interval between two consecutive locations. Default is 0 hours. 
 #' Locations are considered temporal duplicates if the temporal interval is less than or equal to the user specified value.
-#' @param step.dist A numeric vector specifying spatial interval between two consecutive locations. Default is 0 kilometres. 
+#' @param step.dist A numeric value specifying spatial interval between two consecutive locations. Default is 0 kilometres. 
 #' Locations are considered spatial duplicates if the spatial interval is less than or equal to the user specified value.
 #' @param conditional If TRUE, spatial duplicates are removed only if temporal interval between the locations is 
 #' less than the time specified in "step.time". Default is FALSE.
-#' @import sp raster
 #' @export
 #' @details A fix associated with a higher quality index is retained over other duplicated fixes. 
 #' If temporal duplicates are associated with same quality index, a fix located closest to a previous and a subsequent location is retained.

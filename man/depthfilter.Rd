@@ -16,8 +16,8 @@ This filter is independently applied to a subset of data grouped by the unique "
 
 \item{bathymetry}{object of class "RasterLayer" containing bathymetric data in meters. Geographic coordinate system is WGS84.}
 
-\item{extract}{Method to extract cell values from raster layer inherited from extract function of raster package. 
-Default is "bilinear". See the raster package for details.}
+\item{extract}{Method to extract cell values from raster layer inherited from extract function of the raster package. 
+Default is "bilinear". See \code{\link[raster]{extract}} for details.}
 
 \item{tide}{A data frame containing columns with the following headers: "tideDT", "reading", "standard.port". 
 "tideDT" is date & time in class POSIXct for each observed tidal height. "reading" is the observed tidal height in meters. 
@@ -35,7 +35,7 @@ The function removes fixes above the given threshold. Default is 0 m (i.e. high 
 "standard.port" is the identifier for a tidal observation station. 
 "secondary.port" is the identifier for a station at which tide is only predicted using tidal records observed at the related standard port. 
 "lat" and "lon" are the latitude and longitude of each secondary port in decimal degrees. 
-"timeDiff" is the time difference between standard port and its associated secondary port. 
+"timeDiff" is the time difference between standard piort and its associated secondary port. 
 "datumDiff" is the baseline difference in meters between bathymetry and tidal observations/predictions 
 if each data uses different datum (e.g. LAT and MSL).}
 
@@ -95,14 +95,13 @@ turtle.dep <- depthfilter(sdata=turtle.dd,
 
 
 #### Plot data removed or retained by depthfilter
-library(raster)
-plot(SandyStrait, col="grey", axes=TRUE, las=1, 
-     xlim=c(152.8, 153.1), ylim=(c(-25.75, -25.24)))
-points(lat~lon, data=turtle.dup, bg="red", pch=21)
-points(lat~lon, data=turtle.dep, bg="yellow", pch=21)
-legend('topleft', legend=c("Retained", "Removed"), pt.bg=c("yellow", "red"), pch=21)
-scalebar(d=10, label="10 km")
-box()
+plot.map(turtle.dd, bgmap=SandyStrait, point.size = 2, line.size = 0.5, axes.lab.size = 0, 
+         title.size=0, sb.distance=10, multiplot = F)[[1]] + 
+geom_point(aes(x=lon, y=lat), data=turtle.dep, size=2, fill="yellow", shape=21)+
+geom_point(aes(x=x, y=y), data=data.frame(x=c(152.68, 152.68), y=c(-25.3, -25.34)), 
+           size=3, fill=c("yellow", "red"), shape=21) + 
+annotate("text", x=c(152.7, 152.7), y=c(-25.3, -25.34), label=c("Retained", "Removed"), 
+        colour="black", size=4, hjust = 0)
 }
 \references{
 Shimada T, Limpus C, Jones R, Hazel J, Groom R, Hamann M (2016) 

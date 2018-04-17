@@ -15,7 +15,7 @@ This filter is independently applied to a subset of data grouped by the unique "
 
 \item{qi}{An integer specifying minimum quality index associated with a location used for the estimation. Default is 5.}
 
-\item{prob}{Numeric vector of a probability to obtain sample quantiles. Default is 0.99.}
+\item{prob}{numeric value of a probability to obtain sample quantiles. Default is 0.99.}
 }
 \value{
 A vector is returned. The unit is in kilometres per hour.

@@ -7,7 +7,8 @@
 #' "DateTime" is date & time in class POSIXct. "lat" and "lon" are the recorded latitude and longitude in decimal degrees. 
 #' "qi" is the numerical quality index associated with each fix where the greater number represents better quality 
 #' (e.g. number of GPS satellites used for estimation).
-#' @import sp raster
+#' @import sp
+#' @importFrom raster pointDistance
 #' @export
 #' @details This function selects a fix from multiple fixes, which were simultaneously obtained at the same geographical coordinate.
 #' @return Input data frame is returned with temporally and spatially exact duplicates removed. 

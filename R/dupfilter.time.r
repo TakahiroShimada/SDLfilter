@@ -7,9 +7,10 @@
 #' "lat" and "lon" are the recorded latitude and longitude in decimal degrees. 
 #' "qi" is the numerical quality index associated with each fix where the greater number represents better quality 
 #' (e.g. number of GPS satellites used for estimation).
-#' @param step.time A numeric vector specifying temporal interval between two consecutive locations. Default is 0 hours. 
+#' @param step.time A numeric value specifying temporal interval between two consecutive locations. Default is 0 hours. 
 #' Locations are considered temporal duplicates if the temporal interval is less than or equal to the user specified value.
-#' @import sp raster
+#' @import sp
+#' @importFrom raster pointDistance
 #' @importFrom geosphere distGeo
 #' @export
 #' @details This function removes temporal duplicates according to the total distance from a previous and to a subsequent location. 

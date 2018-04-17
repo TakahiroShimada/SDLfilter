@@ -4,7 +4,7 @@
 \name{Australia}
 \alias{Australia}
 \title{A map of Australia}
-\format{A SpatialPolygonsDataFrame}
+\format{A data.frame}
 \usage{
 Australia
 }
