@@ -9,7 +9,7 @@ plot.map(sdata, xlim = NULL, ylim = NULL, margin = 10, bgmap = NULL,
   point.col = "black", point.symbol = 21, point.size = 1,
   line.col = "lightgrey", line.type = 1, line.size = 0.5,
   sb.distance = NULL, sb.lwd = 1, sb.line.col = "black",
-  sb.text.size = 4, sb.text.col = "black", title = "id",
+  sb.text.size = 4, sb.text.col = "black", sb.space = 3, title = "id",
   title.size = 11, axes.text.size = 11, axes.lab.size = 11,
   multiplot = TRUE, nrow = 2, ncol = 2)
 }
@@ -22,7 +22,7 @@ Locations are independently plotted to each subset of data grouped by the unique
 
 \item{ylim}{Limits for x axis. See \emph{xlim} for details.}
 
-\item{margin}{Set the amount of areas added around the periphery of the plot. The value is scale to the plot. 
+\item{margin}{Set the amount of areas added around the periphery of the plot. The value is scaled to the plot. 
 The smaller value increases the margin area.}
 
 \item{bgmap}{A background map in data.frame, which contains the following headers: "long", "lat", "group"
@@ -59,6 +59,9 @@ plotting range will be used.}
 \item{sb.text.size}{An integer to specify the text size for the scale bar.}
 
 \item{sb.text.col}{The colour of the text for the scale bar.}
+
+\item{sb.space}{Set the amount of space between the scale bar and the text for the scale bar. 
+The value is scaled to the plot. The smaller value increases the space.}
 
 \item{title}{The main title for each plot. If not specified, the "id" will be used.}
 

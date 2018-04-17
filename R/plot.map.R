@@ -6,7 +6,7 @@
 #' "DateTime" is date & time in class POSIXct. "lat" and "lon" are the recorded latitude and longitude in decimal degrees. 
 #' @param xlim Limits for x axis. If not specified, the maximum range of the input data plus an additional margin (see \emph{margin}) is used.    
 #' @param ylim Limits for x axis. See \emph{xlim} for details. 
-#' @param margin Set the amount of areas added around the periphery of the plot. The value is scale to the plot. 
+#' @param margin Set the amount of areas added around the periphery of the plot. The value is scaled to the plot. 
 #' The smaller value increases the margin area.
 #' @param bgmap A background map in data.frame, which contains the following headers: "long", "lat", "group"
 #' as the output of the \strong{broom} package. If not specified, the "world" map provided by the \strong{maps} package is used. 
@@ -27,6 +27,8 @@
 #' @param sb.line.col The colour of the scale bar.
 #' @param sb.text.size An integer to specify the text size for the scale bar.
 #' @param sb.text.col The colour of the text for the scale bar.
+#' @param sb.space Set the amount of space between the scale bar and the text for the scale bar. 
+#' The value is scaled to the plot. The smaller value increases the space.
 #' @param title The main title for each plot. If not specified, the "id" will be used.
 #' @param title.size An integer to specify the size of the title.
 #' @param axes.text.size An integer to specify the size of the axes characters.
@@ -73,7 +75,7 @@ plot.map<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
                    bgmap=NULL, map.bg="grey", map.col="black", zoom="auto", 
                    point.bg="red", point.col="black", point.symbol=21, point.size=1,
                    line.col="lightgrey", line.type=1, line.size=0.5,
-                   sb.distance=NULL, sb.lwd=1, sb.line.col="black", sb.text.size=4, sb.text.col="black",
+                   sb.distance=NULL, sb.lwd=1, sb.line.col="black", sb.text.size=4, sb.text.col="black", sb.space=3,
                    title="id", title.size=11,  
                    axes.text.size=11, axes.lab.size=11,
                    multiplot=TRUE, nrow=2, ncol=2){
@@ -166,8 +168,8 @@ plot.map<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
     sb.df<-data.frame(x=c(sb.xmin, sb.xmax), y=c(sb.ymax, sb.ymax))
     
     # Add scale bar
-    p + geom_line(aes(x=x, y=y), data=sb.df, colour=sb.line.col, lwd=sb.lwd) +
-      annotate("text", x=mean(c(sb.xmin, sb.xmax)), y=sb.ymin-extra2/3, 
+    p + geom_line(aes(x=sb.df$x, y=sb.df$y), colour=sb.line.col, lwd=sb.lwd) +
+      annotate("text", x=mean(c(sb.xmin, sb.xmax)), y=sb.ymin-extra2/sb.space, 
                label=paste0(sb.distance, " km"), colour=sb.text.col, size=sb.text.size)
   })
   

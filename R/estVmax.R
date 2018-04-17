@@ -10,6 +10,7 @@
 #' @param prob numeric value of a probability to obtain sample quantiles. Default is 0.99.
 #' @import sp
 #' @importFrom raster pointDistance
+#' @importFrom stats quantile
 #' @export
 #' @details The function first calculates the linear speeds between each pair of two consecutive locations. 
 #' It discards extreme values based on the quantile specified by a user (default is 0.99). 
@@ -75,7 +76,7 @@ est.vmax<-function(sdata, qi=5, prob=0.99){
   
   
   #### Maximum speed given # percentile considered outliers
-  Vmax<-quantile(speed, prob)
+  Vmax<-stats::quantile(speed, prob)
   
   
   #### Report the results

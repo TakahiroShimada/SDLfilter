@@ -10,6 +10,7 @@
 #' @param prob A numeric value specifying a probability to obtain sample quantiles. Default is 0.99.
 #' @import sp
 #' @importFrom raster pointDistance
+#' @importFrom stats quantile
 #' @export
 #' @details The function first detects a "loop trip". 
 #' Loop trip behaviour is represented by spatial departure and return with more than 3 consecutive locations (Shimada et al 2012). 
@@ -234,7 +235,7 @@ est.maxvlp<-function(sdata, qi=4, prob=0.99){
   
   
   #### Maximum Vlp given # percentile considered outliers
-  MaxVlp<-quantile(Vlp, prob)
+  MaxVlp<-stats::quantile(Vlp, prob)
   
   
   #### Report the results
