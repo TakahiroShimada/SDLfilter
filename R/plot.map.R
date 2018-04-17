@@ -69,7 +69,7 @@
 
 
 #### Plot data removed or retained by ddfilter
-plot.map<-function(sdata, xlim=NULL, ylim=NULL, margin=19, 
+plot.map<-function(sdata, xlim=NULL, ylim=NULL, margin=10, 
                    bgmap=NULL, map.bg="grey", map.col="black", zoom="auto", 
                    point.bg="red", point.col="black", point.symbol=21, point.size=1,
                    line.col="lightgrey", line.type=1, line.size=0.5,
