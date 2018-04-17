@@ -47,6 +47,8 @@ The Google Maps ("terrain", "satellite", "roadmap", "hybrid") can also be querie
 
 \item{line.type}{The type of the line that connects consecutive points. See \code{\link[ggplot2]{linetype}} for details.}
 
+\item{line.size}{An interger to specify the thickness (width) of the line that connects consecutive points.}
+
 \item{sb.distance}{An integer to specify the length of the scale bar. If not specified, approximately a quater of the 
 plotting range will be used.}
 
@@ -74,8 +76,6 @@ The value is scaled to the plot. The smaller value increases the space.}
 \item{nrow}{An integer to specify the number of rows in the multiple plot page.}
 
 \item{ncol}{An integer to specify the number of columns in the multiple plot page.}
-
-\item{lnine.size}{An interger to specify the thickness (width) of the line that connects consecutive points.}
 }
 \value{
 An arrangelist is returned when multiplot is TRUE. Otherwise a list is returned.

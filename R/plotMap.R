@@ -20,7 +20,7 @@
 #' @param point.size An integer to specify the size of the symbol.
 #' @param line.col The colour of the line that connects consecutive points.
 #' @param line.type The type of the line that connects consecutive points. See \code{\link[ggplot2]{linetype}} for details. 
-#' @param lnine.size An interger to specify the thickness (width) of the line that connects consecutive points. 
+#' @param line.size An interger to specify the thickness (width) of the line that connects consecutive points. 
 #' @param sb.distance An integer to specify the length of the scale bar. If not specified, approximately a quater of the 
 #' plotting range will be used. 
 #' @param sb.lwd An interger to specify the thickness (width) of the scale bar.
