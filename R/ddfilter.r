@@ -15,6 +15,7 @@
 #' @param method An integer specifying how locations are filtered by speed. 
 #' 1 = a location is removed if the speed EITHER from a previous and to a subsequent location exceeds a given threshold speed. 
 #' 2 = a location is removed if the speed BOTH from a previous and to a subsequent location exceeds a given threshold speed. Default is 2.
+#' @importFrom gridExtra marrangeGrob
 #' @export
 #' @details Locations are removed if the speed both from a previous and to a subsequent location exceeds a given "vmax", 
 #' or if all of the following criteria apply: the associated quality index is less than or equal to a given "qi", 
@@ -67,8 +68,9 @@
 #'            colour="black", size=4, hjust = 0)
 #'
 #' ## Zoomed in
-#' p2<-plot.map(turtle.dup, bgmap=SandyStrait, xlim=c(152.7, 153.2), ylim=(c(-25.75, -25.24)), axes.lab.size = 0,
-#' sb.distance=10, point.size = 2, line.size = 0.5, multiplot = F, title.size=15, title="Zoomed in")[[1]] + 
+#' p2<-plot.map(turtle.dup, bgmap=SandyStrait, xlim=c(152.7, 153.2), ylim=(c(-25.75, -25.24)), 
+#' axes.lab.size = 0, sb.distance=10, point.size = 2, line.size = 0.5, multiplot = F, 
+#' title.size=15, title="Zoomed in")[[1]] + 
 #' geom_path(aes(x=lon, y=lat), data=turtle.dd, size=0.5, colour="black", linetype=1) + 
 #' geom_point(aes(x=lon, y=lat), data=turtle.dd, size=2, colour="black", shape=21, fill="yellow")
 #'

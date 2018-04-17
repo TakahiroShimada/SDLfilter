@@ -80,8 +80,9 @@ p1<-plot.map(turtle.dup, bgmap=Australia, point.size = 2, line.size = 0.5, axes.
            colour="black", size=4, hjust = 0)
 
 ## Zoomed in
-p2<-plot.map(turtle.dup, bgmap=SandyStrait, xlim=c(152.7, 153.2), ylim=(c(-25.75, -25.24)), axes.lab.size = 0,
-sb.distance=10, point.size = 2, line.size = 0.5, multiplot = F, title.size=15, title="Zoomed in")[[1]] + 
+p2<-plot.map(turtle.dup, bgmap=SandyStrait, xlim=c(152.7, 153.2), ylim=(c(-25.75, -25.24)), 
+axes.lab.size = 0, sb.distance=10, point.size = 2, line.size = 0.5, multiplot = F, 
+title.size=15, title="Zoomed in")[[1]] + 
 geom_path(aes(x=lon, y=lat), data=turtle.dd, size=0.5, colour="black", linetype=1) + 
 geom_point(aes(x=lon, y=lat), data=turtle.dd, size=2, colour="black", shape=21, fill="yellow")
 

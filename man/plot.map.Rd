@@ -102,7 +102,7 @@ turtle.dd <- ddfilter(turtle.dup, vmax=V, maxvlp=VLP)
 plot.map(t, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1, point.bg = "yellow")
 
 \dontrun{
-## using a high-resolution the google satellite images
+## using the high-resolution google satellite images
 plot.map(t, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1, 
 point.bg = "yellow", bgmap = "satellite", sb.line.col = "white", sb.text.col = "white")}
 }

@@ -34,8 +34,9 @@
 #' @param multiplot Logical. If TRUE (defaul), multiple plots are put on the same page.
 #' @param nrow An integer to specify the number of rows in the multiple plot page.
 #' @param ncol An integer to specify the number of columns in the multiple plot page.
-#' @import ggmap gridExtra
+#' @import ggmap ggplot2
 #' @importFrom ggsn scalebar
+#' @importFrom gridExtra marrangeGrob
 #' @export
 #' @return An arrangelist is returned when multiplot is TRUE. Otherwise a list is returned. 
 #' @author Takahiro Shimada
