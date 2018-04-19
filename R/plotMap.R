@@ -97,7 +97,7 @@ plotMap<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
     if((x2-x1)<(y2-y1)){
       difference<-range-(x2-x1)
       xrange<-c(x1-extra-difference/2, x2+extra+difference/2)
-      yrange<-c(y1-extra, y2+extra)
+      yrange<-c(y1-extra, y2 + extra)
     } else {
       difference<-range-(y2-y1)
       xrange<-c(x1-extra, x2+extra)
@@ -117,23 +117,23 @@ plotMap<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
     if(is.null(bgmap)){
       map.data<-map_data('world', xlim=xlim, ylim=ylim)
       p <-ggplot()+
-        geom_polygon(aes(x=map.data$long, y=map.data$lat, group=map.data$group), bg=map.bg, colour=map.col)
+        geom_polygon(aes(x=map.data$long, y=map.data$lat, group=map.data$group), data=map.data, bg=map.bg, colour=map.col)
       
     } else if(bgmap %in% "terrain" || bgmap %in% "satellite" || bgmap %in% "roadmap" || bgmap %in% "hybrid") {
-      map.data<-ggmap::get_map(location = c(lon=mean(xlim), lat=mean(ylim)), 
+      map.data<-ggmap::get_map(location = c(lon = median(xlim), lat = median(ylim)), 
                                color = "color", source = "google", maptype = bgmap, zoom=zoom)
       p <-ggmap::ggmap(map.data)
     } else {
       map.data<-bgmap
       p <-ggplot()+
-        geom_polygon(aes(x=map.data$long, y=map.data$lat, group=map.data$group), bg=map.bg, colour=map.col)
+        geom_polygon(aes(x=map.data$long, y=map.data$lat, group=map.data$group), data=map.data, bg=map.bg, colour=map.col)
     }
     
     
     #### Plot locations on the map
     p <- p +
-      geom_path(aes(x=sdata.temp$lon, y=sdata.temp$lat), colour=line.col, linetype = line.type, size=line.size)+
-      geom_point(aes(x=sdata.temp$lon, y=sdata.temp$lat), size=point.size, colour=point.col, shape=point.symbol, fill=point.bg) +
+      geom_path(aes(x=sdata.temp$lon, y=sdata.temp$lat), data=sdata.temp, colour=line.col, linetype = line.type, size=line.size)+
+      geom_point(aes(x=sdata.temp$lon, y=sdata.temp$lat), data=sdata.temp, size=point.size, colour=point.col, shape=point.symbol, fill=point.bg) +
       coord_fixed(xlim=xlim, ylim=ylim, ratio=1) + 
       theme_classic() + 
       theme(axis.title.x = element_text(colour="black", size=axes.lab.size), 
@@ -169,7 +169,7 @@ plotMap<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
     sb.df<-data.frame(x=c(sb.xmin, sb.xmax), y=c(sb.ymax, sb.ymax))
     
     # Add scale bar
-    p + geom_line(aes(x=sb.df$x, y=sb.df$y), colour=sb.line.col, lwd=sb.lwd) +
+    p + geom_line(aes(x=sb.df$x, y=sb.df$y), data=sb.df, colour=sb.line.col, lwd=sb.lwd) +
       annotate("text", x=mean(c(sb.xmin, sb.xmax)), y=sb.ymin-extra2/sb.space, 
                label=paste0(sb.distance, " km"), colour=sb.text.col, size=sb.text.size)
   })
