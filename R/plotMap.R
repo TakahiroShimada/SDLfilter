@@ -120,7 +120,7 @@ plotMap<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
         geom_polygon(aes(x=map.data$long, y=map.data$lat, group=map.data$group), data=map.data, bg=map.bg, colour=map.col)
       
     } else if(bgmap %in% "terrain" || bgmap %in% "satellite" || bgmap %in% "roadmap" || bgmap %in% "hybrid") {
-      map.data<-ggmap::get_map(location = c(lon = median(xlim), lat = median(ylim)), 
+      map.data<-ggmap::get_map(location = c(lon = mean(xlim), lat = mean(ylim)), 
                                color = "color", source = "google", maptype = bgmap, zoom=zoom)
       p <-ggmap::ggmap(map.data)
     } else {

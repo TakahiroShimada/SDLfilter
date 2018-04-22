@@ -12,7 +12,7 @@ SDLfilter
 
 Overview 
 --------
-SDLfilter contains a variety of functions to screen GPS and/or Argos locations. 
+SDLfilter contains a variety of functions to screen GPS and/or Argos locations, and to plot them on a map. 
 
 
 Installation
