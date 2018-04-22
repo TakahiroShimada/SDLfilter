@@ -3,7 +3,7 @@
 #' @description Function to remove locations by a data driven filter as described in Shimada et al. (2012)
 #' @param sdata A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon", "qi". 
 #' This filter is independently applied to a subset of data grouped by the unique "id". 
-#' "DateTime" is date & time in class POSIXct. "lat" and "lon" are the recorded latitude and longitude in decimal degrees. 
+#' "DateTime" is date & time in class \code{\link[base]{POSIXct}}. "lat" and "lon" are the recorded latitude and longitude in decimal degrees. 
 #' "qi" is the numerical quality index associated with each fix where the greater number represents better quality 
 #' (e.g. number of GPS satellites used for estimation).
 #' @param vmax A numeric vector specifying threshold speed both from a previous and to a subsequent fix. 
@@ -32,7 +32,7 @@
 #' @references Shimada T, Jones R, Limpus C, Hamann M (2012) 
 #' Improving data retention and home range estimates by data-driven screening. 
 #' Marine Ecology Progress Series 457:171-180 doi:10.3354/meps09747
-#' @seealso ddfilter.speed, ddfilter.loop, est.vmax, est.maxvlp
+#' @seealso \code{\link{ddfilter.speed}}, \code{\link{ddfilter.loop}}, \code{\link{est.vmax}}, \code{\link{est.maxvlp}}
 #' @examples
 #' #### Load data sets
 #' ## Fastloc GPS data obtained from a green turtle

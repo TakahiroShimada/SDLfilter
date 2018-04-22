@@ -5,18 +5,18 @@
 \title{Plot location data}
 \usage{
 plotMap(sdata, xlim = NULL, ylim = NULL, margin = 10, bgmap = NULL,
-  map.bg = "grey", map.col = "black", zoom = "auto", point.bg = "red",
-  point.col = "black", point.symbol = 21, point.size = 1,
-  line.col = "lightgrey", line.type = 1, line.size = 0.5,
-  sb.distance = NULL, sb.lwd = 1, sb.line.col = "black",
-  sb.text.size = 4, sb.text.col = "black", sb.space = 3, title = "id",
-  title.size = 11, axes.text.size = 11, axes.lab.size = 11,
-  multiplot = TRUE, nrow = 2, ncol = 2)
+  map.bg = "grey", map.col = "black", zoom = "auto",
+  point.bg = "yellow", point.col = "black", point.symbol = 21,
+  point.size = 1, line.col = "lightgrey", line.type = 1,
+  line.size = 0.5, sb.distance = NULL, sb.lwd = 1,
+  sb.line.col = "black", sb.text.size = 4, sb.text.col = "black",
+  sb.space = 3, title = "id", title.size = 11, axes.text.size = 11,
+  axes.lab.size = 11, multiplot = TRUE, nrow = 1, ncol = 1)
 }
 \arguments{
 \item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon". 
 Locations are independently plotted to each subset of data grouped by the unique "id". 
-"DateTime" is date & time in class POSIXct. "lat" and "lon" are the recorded latitude and longitude in decimal degrees.}
+"DateTime" is date & time in class \code{\link[base]{POSIXct}}. "lat" and "lon" are the recorded latitude and longitude in decimal degrees.}
 
 \item{xlim}{Limits for x axis. If not specified, the maximum range of the input data plus an additional margin (see \emph{margin}) is used.}
 
@@ -71,7 +71,7 @@ The value is scaled to the plot. The smaller value increases the space.}
 
 \item{axes.lab.size}{An integer to specify the size of the axes labels.}
 
-\item{multiplot}{Logical. If TRUE (defaul), multiple plots are put on the same page.}
+\item{multiplot}{Logical. If TRUE (default), multiple plots are displayed on the same page.}
 
 \item{nrow}{An integer to specify the number of rows in the multiple plot page.}
 
@@ -111,7 +111,7 @@ plotMap(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, n
          point.bg = "yellow", bgmap = "satellite", sb.line.col = "white", sb.text.col = "white")}
 }
 \seealso{
-dupfilter, ddfilter, est.vmax, est.maxvlp
+\code{\link{dupfilter}}, \code{\link{ddfilter}}, \code{\link{est.vmax}}, \code{\link{est.maxvlp}}
 }
 \author{
 Takahiro Shimada

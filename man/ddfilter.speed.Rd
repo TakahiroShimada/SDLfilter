@@ -9,7 +9,7 @@ ddfilter.speed(sdata, vmax = 8.9, method = 2)
 \arguments{
 \item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon", "qi". 
 This filter is independently applied to a subset of data grouped by the unique "id". 
-"DateTime" is date & time in class POSIXct. "lat" and "lon" are the recorded latitude and longitude in decimal degrees. 
+"DateTime" is date & time in class \code{\link[base]{POSIXct}}. "lat" and "lon" are the recorded latitude and longitude in decimal degrees. 
 "qi" is the numerical quality index associated with each fix where the greater number represents better quality 
 (e.g. number of GPS satellites used for estimation).}
 
@@ -41,7 +41,7 @@ Improving data retention and home range estimates by data-driven screening.
 Marine Ecology Progress Series 457:171-180 doi:10.3354/meps09747
 }
 \seealso{
-ddfilter, ddfilter.loop, est.vmax
+\code{\link{ddfilter}}, \code{\link{ddfilter.loop}}, \code{\link{est.vmax}}
 }
 \author{
 Takahiro Shimada

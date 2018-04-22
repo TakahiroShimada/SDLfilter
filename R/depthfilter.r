@@ -3,7 +3,7 @@
 #' @description Function to remove fixes located at a given height from the high tide line.
 #' @param sdata A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon", "qi". 
 #' This filter is independently applied to a subset of data grouped by the unique "id". 
-#' "DateTime" is date & time in class POSIXct. "lat" and "lon" are the recorded latitude and longitude in decimal degrees. 
+#' "DateTime" is date & time in class \code{\link[base]{POSIXct}}. "lat" and "lon" are the recorded latitude and longitude in decimal degrees. 
 #' "qi" is the numerical quality index associated with each fix where the greater number represents better quality 
 #' (e.g. number of GPS satellites used for estimation).
 #' @param bathymetry object of class "RasterLayer" containing bathymetric data in meters. Geographic coordinate system is WGS84.
@@ -47,7 +47,7 @@
 #' Marine Biology 163:1-14 doi:10.1007/s00227-015-2771-0
 #' @references Beaman, R.J. (2010) Project 3DGBR: A high-resolution depth model for the Great Barrier Reef and Coral Sea. 
 #' Marine and Tropical Sciences Research Facility (MTSRF) Project 2.5i.1a Final Report, MTSRF, Cairns, Australia, pp. 13 plus Appendix 1.
-#' @seealso dupfilter, ddfilter
+#' @seealso \code{\link{dupfilter}}, \code{\link{ddfilter}}
 #' @examples
 #' 
 #' #### Load data sets

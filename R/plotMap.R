@@ -3,7 +3,7 @@
 #' @description Function to easily plot locations on a map or a satellite image. 
 #' @param sdata A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon". 
 #' Locations are independently plotted to each subset of data grouped by the unique "id". 
-#' "DateTime" is date & time in class POSIXct. "lat" and "lon" are the recorded latitude and longitude in decimal degrees. 
+#' "DateTime" is date & time in class \code{\link[base]{POSIXct}}. "lat" and "lon" are the recorded latitude and longitude in decimal degrees. 
 #' @param xlim Limits for x axis. If not specified, the maximum range of the input data plus an additional margin (see \emph{margin}) is used.    
 #' @param ylim Limits for x axis. See \emph{xlim} for details. 
 #' @param margin Set the amount of areas added around the periphery of the plot. The value is scaled to the plot. 
@@ -33,7 +33,7 @@
 #' @param title.size An integer to specify the size of the title.
 #' @param axes.text.size An integer to specify the size of the axes characters.
 #' @param axes.lab.size An integer to specify the size of the axes labels.
-#' @param multiplot Logical. If TRUE (defaul), multiple plots are put on the same page.
+#' @param multiplot Logical. If TRUE (default), multiple plots are displayed on the same page.
 #' @param nrow An integer to specify the number of rows in the multiple plot page.
 #' @param ncol An integer to specify the number of columns in the multiple plot page.
 #' @import ggmap ggplot2
@@ -42,7 +42,7 @@
 #' @export
 #' @return An arrangelist is returned when multiplot is TRUE. Otherwise a list is returned. 
 #' @author Takahiro Shimada
-#' @seealso dupfilter, ddfilter, est.vmax, est.maxvlp
+#' @seealso \code{\link{dupfilter}}, \code{\link{ddfilter}}, \code{\link{est.vmax}}, \code{\link{est.maxvlp}}
 #' @examples
 #' #### Load data sets
 #' ## Fastloc GPS data obtained from two green turtles
@@ -75,11 +75,11 @@
 #### Plot data removed or retained by ddfilter
 plotMap<-function(sdata, xlim=NULL, ylim=NULL, margin=10, 
                    bgmap=NULL, map.bg="grey", map.col="black", zoom="auto", 
-                   point.bg="red", point.col="black", point.symbol=21, point.size=1,
+                   point.bg="yellow", point.col="black", point.symbol=21, point.size=1,
                    line.col="lightgrey", line.type=1, line.size=0.5,
                    sb.distance=NULL, sb.lwd=1, sb.line.col="black", sb.text.size=4, sb.text.col="black", sb.space=3,
                    title="id", title.size=11, axes.text.size=11, axes.lab.size=11,
-                   multiplot=TRUE, nrow=2, ncol=2){
+                   multiplot=TRUE, nrow=1, ncol=1){
   
   #### Get data to plot
   ID<-levels(factor(sdata$id))

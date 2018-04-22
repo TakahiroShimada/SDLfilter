@@ -10,7 +10,7 @@ depthfilter(sdata, bathymetry, extract = "bilinear", tide, qi = 4,
 \arguments{
 \item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon", "qi". 
 This filter is independently applied to a subset of data grouped by the unique "id". 
-"DateTime" is date & time in class POSIXct. "lat" and "lon" are the recorded latitude and longitude in decimal degrees. 
+"DateTime" is date & time in class \code{\link[base]{POSIXct}}. "lat" and "lon" are the recorded latitude and longitude in decimal degrees. 
 "qi" is the numerical quality index associated with each fix where the greater number represents better quality 
 (e.g. number of GPS satellites used for estimation).}
 
@@ -112,7 +112,7 @@ Beaman, R.J. (2010) Project 3DGBR: A high-resolution depth model for the Great B
 Marine and Tropical Sciences Research Facility (MTSRF) Project 2.5i.1a Final Report, MTSRF, Cairns, Australia, pp. 13 plus Appendix 1.
 }
 \seealso{
-dupfilter, ddfilter
+\code{\link{dupfilter}}, \code{\link{ddfilter}}
 }
 \author{
 Takahiro Shimada
