@@ -62,14 +62,12 @@
 #' 
 #' #### Plot filtered data for each animal
 #' ## using the low-resolution world map
-#' plotMap(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, 
-#'          ncol=2, nrow=1, point.bg = "yellow")
+#' plotMap(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1)
 #'
 #' \dontrun{
 #' ## using the high-resolution google satellite images
 #' plotMap(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1, 
-#'          point.bg = "yellow", bgmap = "satellite", sb.line.col = "white", sb.text.col = "white")}
-
+#'         bgmap = "satellite", sb.line.col = "white", sb.text.col = "white")}
 
 
 #### Plot data removed or retained by ddfilter
@@ -122,7 +120,8 @@ plotMap<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
     } else if(bgmap %in% "terrain" || bgmap %in% "satellite" || bgmap %in% "roadmap" || bgmap %in% "hybrid") {
       map.data<-ggmap::get_map(location = c(lon = mean(xlim), lat = mean(ylim)), 
                                color = "color", source = "google", maptype = bgmap, zoom=zoom)
-      p <-ggmap::ggmap(map.data)
+      p <-ggmap::ggmap(map.data, data=sdata.temp)  
+
     } else {
       map.data<-bgmap
       p <-ggplot()+
@@ -132,8 +131,8 @@ plotMap<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
     
     #### Plot locations on the map
     p <- p +
-      geom_path(aes(x=sdata.temp$lon, y=sdata.temp$lat), data=sdata.temp, colour=line.col, linetype = line.type, size=line.size)+
-      geom_point(aes(x=sdata.temp$lon, y=sdata.temp$lat), data=sdata.temp, size=point.size, colour=point.col, shape=point.symbol, fill=point.bg) +
+      geom_path(aes(x=lon, y=lat), data=sdata.temp, colour=line.col, linetype = line.type, size=line.size)+
+      geom_point(aes(x=lon, y=lat), data=sdata.temp, size=point.size, colour=point.col, shape=point.symbol, fill=point.bg) +
       coord_fixed(xlim=xlim, ylim=ylim, ratio=1) + 
       theme_classic() + 
       theme(axis.title.x = element_text(colour="black", size=axes.lab.size), 
@@ -169,9 +168,10 @@ plotMap<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
     sb.df<-data.frame(x=c(sb.xmin, sb.xmax), y=c(sb.ymax, sb.ymax))
     
     # Add scale bar
-    p + geom_line(aes(x=sb.df$x, y=sb.df$y), data=sb.df, colour=sb.line.col, lwd=sb.lwd) +
+    p <- p + geom_line(aes(x=sb.df$x, y=sb.df$y), data=sb.df, colour=sb.line.col, lwd=sb.lwd) +
       annotate("text", x=mean(c(sb.xmin, sb.xmax)), y=sb.ymin-extra2/sb.space, 
                label=paste0(sb.distance, " km"), colour=sb.text.col, size=sb.text.size)
+    p
   })
   
   if(isTRUE(multiplot)){

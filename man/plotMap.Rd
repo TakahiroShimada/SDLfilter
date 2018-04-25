@@ -102,13 +102,12 @@ turtle.dd <- ddfilter(turtle.dup, vmax=V, maxvlp=VLP)
 
 #### Plot filtered data for each animal
 ## using the low-resolution world map
-plotMap(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, 
-         ncol=2, nrow=1, point.bg = "yellow")
+plotMap(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1)
 
 \dontrun{
 ## using the high-resolution google satellite images
 plotMap(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1, 
-         point.bg = "yellow", bgmap = "satellite", sb.line.col = "white", sb.text.col = "white")}
+        bgmap = "satellite", sb.line.col = "white", sb.text.col = "white")}
 }
 \seealso{
 \code{\link{dupfilter}}, \code{\link{ddfilter}}, \code{\link{est.vmax}}, \code{\link{est.maxvlp}}

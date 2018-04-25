@@ -43,7 +43,20 @@ turtle.dup <- dupfilter(turtle)
 
 ### Remove biologically unrealistic fixes 
 turtle.dd <- ddfilter(turtle.dup, vmax=9.9, qi=4, ia=90, maxvlp=2.0)
+
+### Plot the locations on a map
+# unfiltered
+plotMap(turtle, point.size = 2, line.size = 0.5, axes.lab.size = 0)
 ```
+
+![](README_files/figure-markdown_github/SDLfilter-1.png)
+
+``` r
+# filtered
+plotMap(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0)
+```
+
+![](README_files/figure-markdown_github/SDLfilter-2.png)
 
 ![](man/figures/README-example.png)
 
@@ -61,4 +74,4 @@ Shimada T, Limpus C, Jones R, Hazel J, Groom R, Hamann M (2016) Sea turtles retu
 Current version
 ---------------
 
-1.0.0.9012 (22 April 2018)
+1.0.0.9013 (24 April 2018)
