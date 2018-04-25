@@ -120,7 +120,7 @@ plotMap<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
     } else if(bgmap %in% "terrain" || bgmap %in% "satellite" || bgmap %in% "roadmap" || bgmap %in% "hybrid") {
       map.data<-ggmap::get_map(location = c(lon = mean(xlim), lat = mean(ylim)), 
                                color = "color", source = "google", maptype = bgmap, zoom=zoom)
-      p <-ggmap::ggmap(map.data, data=sdata.temp)  
+      p <-ggmap::ggmap(map.data)  
 
     } else {
       map.data<-bgmap
@@ -168,10 +168,10 @@ plotMap<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
     sb.df<-data.frame(x=c(sb.xmin, sb.xmax), y=c(sb.ymax, sb.ymax))
     
     # Add scale bar
-    p <- p + geom_line(aes(x=sb.df$x, y=sb.df$y), data=sb.df, colour=sb.line.col, lwd=sb.lwd) +
+    p + geom_line(aes(x=x, y=y), data=sb.df, colour=sb.line.col, lwd=sb.lwd) +
       annotate("text", x=mean(c(sb.xmin, sb.xmax)), y=sb.ymin-extra2/sb.space, 
                label=paste0(sb.distance, " km"), colour=sb.text.col, size=sb.text.size)
-    p
+  
   })
   
   if(isTRUE(multiplot)){

@@ -53,7 +53,8 @@ plotMap(turtle, point.size = 2, line.size = 0.5, axes.lab.size = 0)
 
 ``` r
 # filtered
-plotMap(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0)
+plotMap(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0,
+        bgmap = "satellite", sb.line.col = "white", sb.text.col = "white")
 ```
 
 ![](README_files/figure-markdown_github/SDLfilter-2.png)
@@ -74,4 +75,4 @@ Shimada T, Limpus C, Jones R, Hazel J, Groom R, Hamann M (2016) Sea turtles retu
 Current version
 ---------------
 
-1.0.0.9013 (24 April 2018)
+1.0.0.9014 (25 April 2018)
