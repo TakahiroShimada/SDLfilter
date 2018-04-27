@@ -2,12 +2,11 @@
 * local ubuntu 16.04 install, R 3.4.4
 * ubuntu 14.04.5 on travis-ci, R 3.4.4
 * win-builder, devel
-* local OS X install, R 3.4.4
 
 
 ## R CMD check results
 
-There were no ERRORs, WARNINGs or NOTEs when run on ubuntu and OS X.
+There were no ERRORs, WARNINGs or NOTEs when run on ubuntu.
 
 When checking with devtools::build_win(version = "R-devel"), there was 1 NOTE:
 
