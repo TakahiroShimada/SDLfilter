@@ -47,12 +47,12 @@ The Google Maps ("terrain", "satellite", "roadmap", "hybrid") can also be querie
 
 \item{line.type}{The type of the line that connects consecutive points. See \code{\link[ggplot2]{linetype}} for details.}
 
-\item{line.size}{An interger to specify the thickness (width) of the line that connects consecutive points.}
+\item{line.size}{An integer to specify the thickness (width) of the line that connects consecutive points.}
 
-\item{sb.distance}{An integer to specify the length of the scale bar. If not specified, approximately a quater of the 
+\item{sb.distance}{An integer to specify the length of the scale bar. If not specified, approximately a quarter of the 
 plotting range will be used.}
 
-\item{sb.lwd}{An interger to specify the thickness (width) of the scale bar.}
+\item{sb.lwd}{An integer to specify the thickness (width) of the scale bar.}
 
 \item{sb.line.col}{The colour of the scale bar.}
 

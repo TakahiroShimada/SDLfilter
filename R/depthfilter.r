@@ -22,7 +22,7 @@
 #' "standard.port" is the identifier for a tidal observation station. 
 #' "secondary.port" is the identifier for a station at which tide is only predicted using tidal records observed at the related standard port. 
 #' "lat" and "lon" are the latitude and longitude of each secondary port in decimal degrees. 
-#' "timeDiff" is the time difference between standard piort and its associated secondary port. 
+#' "timeDiff" is the time difference between standard port and its associated secondary port. 
 #' "datumDiff" is the baseline difference in meters between bathymetry and tidal observations/predictions 
 #' if each data uses different datum (e.g. LAT and MSL). 
 #' @param filter Default is TRUE. If FALSE, the function does not filter locations but the depth estimates are returned.
