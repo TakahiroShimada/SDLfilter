@@ -22,7 +22,7 @@ devtools::install_github("TakahiroShimada/SDLfilter")
 Usage
 -----
 
-There are three main functions.
+There are three main filtering functions.
 
 1.  *dupfilter* removes temporal and spatial duplicates.
 
@@ -69,4 +69,4 @@ Shimada T, Limpus C, Jones R, Hazel J, Groom R, Hamann M (2016) Sea turtles retu
 Current version
 ---------------
 
-1.0.0.9014 (25 April 2018)
+1.1.0 (27 April 2018)

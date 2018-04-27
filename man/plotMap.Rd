@@ -15,23 +15,23 @@ plotMap(sdata, xlim = NULL, ylim = NULL, margin = 10, bgmap = NULL,
 }
 \arguments{
 \item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon". 
-Locations are independently plotted to each subset of data grouped by the unique "id". 
+A map is created for each subset of location data grouped by the unique "id". 
 "DateTime" is date & time in class \code{\link[base]{POSIXct}}. "lat" and "lon" are the recorded latitude and longitude in decimal degrees.}
 
-\item{xlim}{Limits for x axis. If not specified, the maximum range of the input data plus an additional margin (see \emph{margin}) is used.}
+\item{xlim}{Limits for x axis. If not specified, the values are determined as the maximum range of the input data with an additional margin (see \emph{margin}).}
 
 \item{ylim}{Limits for x axis. See \emph{xlim} for details.}
 
 \item{margin}{Set the amount of areas added around the periphery of the plot. The value is scaled to the plot. 
-The smaller value increases the margin area.}
+The smaller value increases the margin.}
 
-\item{bgmap}{A background map in data.frame, which contains the following headers: "long", "lat", "group"
-as the output of the \strong{broom} package. If not specified, the "world" map provided by the \strong{maps} package is used. 
+\item{bgmap}{A data.frame of a background map data, containing the following headers: "long", "lat", "group". 
+If not specified, the "world" map provided by the \emph{maps} package is used. 
 The Google Maps ("terrain", "satellite", "roadmap", "hybrid") can also be queried.}
 
-\item{map.bg}{Backgroud colour of the map. This argument is used only when the input backgroud map is a vector.}
+\item{map.bg}{Backgroud colour of the map. This argument is ignored when any of the Google Maps is selected.}
 
-\item{map.col}{Ouline colour of the map. This argument is used only when the input backgroud map is a vector.}
+\item{map.col}{Outline colour of the map. This argument is ignored when any of the Google Maps is selected.}
 
 \item{zoom}{Map zoom for the Google Maps. See \code{\link[ggmap]{get_map}} for details.}
 
@@ -60,7 +60,7 @@ plotting range will be used.}
 
 \item{sb.text.col}{The colour of the text for the scale bar.}
 
-\item{sb.space}{Set th e amount of space between the scale bar and the text for the scale bar. 
+\item{sb.space}{Set the amount of space between the scale bar and the text for the scale bar. 
 The value is scaled to the plot. The smaller value increases the space.}
 
 \item{title}{The main title for each plot. If not specified, the "id" will be used.}
