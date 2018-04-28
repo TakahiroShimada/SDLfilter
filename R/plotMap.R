@@ -64,9 +64,10 @@
 #' ## using the low-resolution world map
 #' plotMap(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1)
 #'
+#'\dontrun{
 #' ## using the high-resolution google satellite images
 #' plotMap(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1, 
-#'         bgmap = "satellite", sb.line.col = "white", sb.text.col = "white")
+#'         bgmap = "satellite", sb.line.col = "white", sb.text.col = "white")}
 
 
 #### Plot data removed or retained by ddfilter

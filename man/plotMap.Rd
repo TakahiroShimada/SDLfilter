@@ -29,7 +29,7 @@ The smaller value increases the margin.}
 If not specified, the "world" map provided by the \emph{maps} package is used. 
 The Google Maps ("terrain", "satellite", "roadmap", "hybrid") can also be queried.}
 
-\item{map.bg}{Backgroud colour of the map. This argument is ignored when any of the Google Maps is selected.}
+\item{map.bg}{Background colour of the map. This argument is ignored when any of the Google Maps is selected.}
 
 \item{map.col}{Outline colour of the map. This argument is ignored when any of the Google Maps is selected.}
 
@@ -104,9 +104,10 @@ turtle.dd <- ddfilter(turtle.dup, vmax=V, maxvlp=VLP)
 ## using the low-resolution world map
 plotMap(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1)
 
+\dontrun{
 ## using the high-resolution google satellite images
 plotMap(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1, 
-        bgmap = "satellite", sb.line.col = "white", sb.text.col = "white")
+        bgmap = "satellite", sb.line.col = "white", sb.text.col = "white")}
 }
 \seealso{
 \code{\link{dupfilter}}, \code{\link{ddfilter}}, \code{\link{est.vmax}}, \code{\link{est.maxvlp}}
