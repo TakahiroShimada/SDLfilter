@@ -11,7 +11,7 @@
 #' @param bgmap A data.frame of a background map data, containing the following headers: "long", "lat", "group". 
 #' If not specified, the "world" map provided by the \emph{maps} package is used. 
 #' The Google Maps ("terrain", "satellite", "roadmap", "hybrid") can also be queried.
-#' @param map.bg Backgroud colour of the map. This argument is ignored when any of the Google Maps is selected.
+#' @param map.bg Background colour of the map. This argument is ignored when any of the Google Maps is selected.
 #' @param map.col Outline colour of the map. This argument is ignored when any of the Google Maps is selected.
 #' @param zoom Map zoom for the Google Maps. See \code{\link[ggmap]{get_map}} for details. 
 #' @param point.bg The colour to fill in a symbol.
