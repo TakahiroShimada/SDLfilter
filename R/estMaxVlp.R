@@ -82,8 +82,19 @@ est.maxvlp<-function(sdata, qi=4, prob=0.99){
   sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
   tr<-trip::trip(LatLong, c("tms", "id"))
   sdata$inAng<-trip::trackAngle(tr)
+  sdata<-with(sdata, sdata[complete.cases(inAng),])
   
   
+  #### Exclude datasets less than 6 locations
+  ndata<-table(as.character(sdata$id))
+  id.exclude<-names(ndata[as.numeric(ndata)<6])
+  sdata<-with(sdata, sdata[!id %in% id.exclude,])
+
+  ## Renew IDs and row names
+  IDs<-levels(factor(sdata$id))
+  row.names(sdata)<-1:nrow(sdata)
+  
+ 
   #### Identify loop trips
   ## continuous straight movements 
   # function to identify straight movements: (1=straight, 0=curve)
@@ -99,7 +110,6 @@ est.maxvlp<-function(sdata, qi=4, prob=0.99){
     }
   }
   
-    
   # Apply the above funtion to each data set seperately
   straight.group<-function(j){
     start<-as.numeric(rownames(sdata[sdata$id %in% j,][4,]))
@@ -109,7 +119,7 @@ est.maxvlp<-function(sdata, qi=4, prob=0.99){
   }
   
   sdata$straightMove<-unlist(lapply(IDs, straight.group))
-  
+
   
   ## Identify the first and last points of each straight movement 
   # function to identify start and end points: (1=start, 2=end, others=3)
@@ -246,6 +256,9 @@ est.maxvlp<-function(sdata, qi=4, prob=0.99){
   cat("\n")
   cat("Max.Vlp:", round(MaxVlp,1), "km/h")
   cat("\n\n")
+  cat("  Warning: insufficient data to detect a loop trip from", id.exclude)
+  cat("\n\n")
+  
   
   #### Maximum Vlp given # percentile considered outliers
   return(MaxVlp)
