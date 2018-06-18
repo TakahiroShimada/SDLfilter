@@ -19,7 +19,7 @@
 #' It discards extreme values based on the quantile specified by a user (default is 0.99). 
 #' This is to exclude outliers potentially contained in the original data set. 
 #' The maximum value in the retained dataset (i.e. without outliers) represents the maximum one-way linear speed at which 
-#' an animal would travel during a loop trip. A minimum of 6 locations are required to run this function.
+#' an animal would travel during a loop trip. A minimum of 8 locations are required to run this function.
 #' @return A vector is returned. The unit is in kilometres per hour. 
 #' @author Takahiro Shimada
 #' @note Input data must not contain temporal or spatial duplicates.
@@ -87,7 +87,7 @@ est.maxvlp<-function(sdata, qi=4, prob=0.99){
   
   #### Exclude datasets less than 6 locations
   ndata<-table(as.character(sdata$id))
-  id.exclude<-names(ndata[as.numeric(ndata)<6])
+  id.exclude<-names(ndata[as.numeric(ndata)<8])
   sdata<-with(sdata, sdata[!id %in% id.exclude,])
 
   ## Renew IDs and row names
