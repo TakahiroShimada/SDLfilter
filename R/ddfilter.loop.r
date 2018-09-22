@@ -18,11 +18,9 @@
 #' the number of source satellites are less than or equal to "qi", 
 #' the inner angle is less than and equal to "ia" and the speed either from a previous or to a subsequent location exceeds "maxvlp". 
 #' If "maxvlp" is unknown, it can be estimated using the function "est.maxvlp". 
-#' @return A data frame is returned with the locations identified by this filter removed. 
-#' The following columns are added: "pTime", "sTime", "pDist", "sDist", "pSpeed", "sSpeed", "inAng". 
-#' "pTime" and "sTime" are hours from a previous and to a subsequent fix respectively. 
-#' "pDist" and "sDist" are straight distances in kilometres from a previous and to a subsequent fix respectively. 
-#' "pSpeed" and "sSpeed" are linear speed from a previous and to a subsequent fix respectively. 
+#' @return A data frame is returned without locations identified by this filter. 
+#' The following columns are added: "pTime", "pDist", "inAng". 
+#' "pTime" is hours from a previous fix. "pDist" is straight distance in kilometres from a previous fix. 
 #' "inAng" is the angle between the bearings of lines joining successive location points.    
 #' @author Takahiro Shimada
 #' @references Shimada T, Jones R, Limpus C, Hamann M (2012) Improving data retention and home range estimates by data-driven screening. 
@@ -177,6 +175,7 @@ ddfilter.loop<-function(sdata, qi=4, ia=90, maxvlp=1.8){
   
  
   #### Delete working columns and return the output
-  sdata$overLpMax<-NULL
+  drops<-c("overLpMax", "sTime", "sDist", "pSpeed", "sSpeed")
+  sdata<-sdata[,!(names(sdata) %in% drops)] 
   return(sdata)
 }

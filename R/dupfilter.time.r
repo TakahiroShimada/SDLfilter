@@ -16,7 +16,7 @@
 #' @details This function removes temporal duplicates according to the total distance from a previous and to a subsequent location. 
 #' A fix with a shorter sum distance is retained.
 #' @return Input data frame is returned with temporal duplicates removed according to total distance from a previous and to a subsequent location. 
-#' The following columns are added: "pTime", "sTime". "pTime" and "sTime" are hours from a previous and to a subsequent fix respectively.
+#' The following column is added: "pTime". "pTime" is hours from a previous fix.
 #' @author Takahiro Shimada
 #' @references Shimada T, Limpus C, Jones R, Hazel J, Groom R, Hamann M (2016) 
 #' Sea turtles return home after intentional displacement from coastal foraging areas. 
@@ -405,7 +405,7 @@ dupfilter.time<-function (sdata, step.time=0) {
   
   
   #### Delete working columns and return the output
-  drops<-c("PSL1", "PSL2", "PSL3", "PSL4", "rm1", "rm2", "rm3", "rm4")
+  drops<-c("PSL1", "PSL2", "PSL3", "PSL4", "rm1", "rm2", "rm3", "rm4", "sTime")
   sdata3<-sdata3[,!(names(sdata3) %in% drops)] 
   return(sdata3)
 }

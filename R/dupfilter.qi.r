@@ -14,7 +14,7 @@
 #' @details This function selects a fix from multiple fixes, which were simultaneously obtained but associated with a different level of quality index. 
 #' The fix with the higher quality index is selected over the others.
 #' @return Input data frame is returned with temporal duplicates removed according to quality index. 
-#' The following columns are added: "pTime", "sTime". "pTime" and "sTime" are hours from a previous and to a subsequent fix respectively.
+#' The following column is added: "pTime". "pTime" is hours from a previous fix.
 #' @author Takahiro Shimada
 #' @references Shimada T, Limpus C, Jones R, Hazel J, Groom R, Hamann M (2016) 
 #' Sea turtles return home after intentional displacement from coastal foraging areas. 
@@ -120,6 +120,7 @@ dupfilter.qi<-function (sdata, step.time=0){
   
   
   #### Delete working columns and return the output
-  sdata3$rm<-NULL
+  drops<-c("rm", "sTime")
+  sdata3<-sdata3[,!(names(sdata3) %in% drops)] 
   return(sdata3)
 }

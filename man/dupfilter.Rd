@@ -24,9 +24,8 @@ less than the time specified in "step.time". Default is FALSE.}
 }
 \value{
 Input data frame is returned with spatial and temporal duplicates removed. 
-The following columns are added: "pTime", "sTime", "pDist", "sDist". 
-"pTime" and "sTime" are hours from a previous and to a subsequent fix respectively. 
-"pDist" and "sDist" are straight distances in kilometres from a previous and to a subsequent fix respectively.
+The following columns are added: "pTime", "pDist". 
+"pTime" is hours from a previous fix. "pDist" is straight distance in kilometres from a previous fix.
 }
 \description{
 Function to remove temporal and/or spatial duplicates.

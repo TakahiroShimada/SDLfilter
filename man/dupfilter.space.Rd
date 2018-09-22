@@ -4,7 +4,8 @@
 \alias{dupfilter.space}
 \title{Filter spatial duplicates}
 \usage{
-dupfilter.space(sdata, step.time = 0, step.dist = 0, conditional = FALSE)
+dupfilter.space(sdata, step.time = 0, step.dist = 0,
+  conditional = FALSE)
 }
 \arguments{
 \item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon", "qi". 
@@ -23,9 +24,10 @@ Locations are considered spatial duplicates if the spatial interval is less than
 less than the time specified in "step.time". Default is FALSE.}
 }
 \value{
-Input data frame is returned with spatial duplicates removed. The following columns are added: "pTime", "sTime", "pDist", "sDist". 
-"pTime" and "sTime" are hours from a previous and to a subsequent fix respectively. 
-"pDist" and "sDist" are straight distances in kilometres from a previous and to a subsequent fix respectively.
+Input data frame is returned with spatial duplicates removed. 
+The following columns are added: "pTime", "pDist". 
+"pTime" is hours from a previous fix. "pDist" is straight distance in kilometres from a previous fix. 
+#' @author Takahiro Shimada
 }
 \description{
 A partial component of dupfilter although works as a stand-alone function. This function removes spatial duplicates.
@@ -41,7 +43,4 @@ Marine Biology 163:1-14 doi:10.1007/s00227-015-2771-0
 }
 \seealso{
 \code{\link{dupfilter}}, \code{\link{dupfilter.exact}}, \code{\link{dupfilter.time}}, \code{\link{dupfilter.qi}}
-}
-\author{
-Takahiro Shimada
 }

@@ -19,7 +19,7 @@ less than or equal to the user specified value.}
 }
 \value{
 Input data frame is returned with temporal duplicates removed according to quality index. 
-The following columns are added: "pTime", "sTime". "pTime" and "sTime" are hours from a previous and to a subsequent fix respectively.
+The following column is added: "pTime". "pTime" is hours from a previous fix.
 }
 \description{
 A partial component of dupfilter, although works as a stand-alone function. 

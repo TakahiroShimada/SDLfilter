@@ -18,7 +18,7 @@ Locations are considered temporal duplicates if the temporal interval is less th
 }
 \value{
 Input data frame is returned with temporal duplicates removed according to total distance from a previous and to a subsequent location. 
-The following columns are added: "pTime", "sTime". "pTime" and "sTime" are hours from a previous and to a subsequent fix respectively.
+The following column is added: "pTime". "pTime" is hours from a previous fix.
 }
 \description{
 A partial component of dupfilter, although works as a stand-alone function. 

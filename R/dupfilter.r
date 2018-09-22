@@ -16,9 +16,8 @@
 #' @details A fix associated with a higher quality index is retained over other duplicated fixes. 
 #' If temporal duplicates are associated with same quality index, a fix located closest to a previous and a subsequent location is retained.
 #' @return Input data frame is returned with spatial and temporal duplicates removed. 
-#' The following columns are added: "pTime", "sTime", "pDist", "sDist". 
-#' "pTime" and "sTime" are hours from a previous and to a subsequent fix respectively. 
-#' "pDist" and "sDist" are straight distances in kilometres from a previous and to a subsequent fix respectively. 
+#' The following columns are added: "pTime", "pDist". 
+#' "pTime" is hours from a previous fix. "pDist" is straight distance in kilometres from a previous fix. 
 #' @author Takahiro Shimada
 #' @references Shimada T, Limpus C, Jones R, Hazel J, Groom R, Hamann M (2016) 
 #' Sea turtles return home after intentional displacement from coastal foraging areas. 

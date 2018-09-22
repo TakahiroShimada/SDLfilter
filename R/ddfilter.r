@@ -22,12 +22,10 @@
 #' the inner angle is less than or equal to a given "ia" and the speed either from a previous 
 #' or to a subsequent location exceeds a given "maxvlp". If "vmax" and "maxvlp" are unknown, they can be estimated 
 #' using the functions "est.vmax" and "est.maxvlp", respectively.
-#' @return A data frame is returned with locations identified by this filter removed. 
-#' The following columns are added: "pTime", "sTime", "pDist", "sDist", "pSpeed", "sSpeed", "inAng". 
-#' "pTime" and "sTime" are hours from a previous and to a subsequent fix respectively. 
-#' "pDist" and "sDist" are straight distances in kilometres from a previous and to a subsequent fix respectively. 
-#' "pSpeed" and "sSpeed" are linear speed from a previous and to a subsequent fix respectively. 
-#' "inAng" is the angle between the bearings of lines joining successive location points.
+#' @return A data frame is returned without locations identified by this filter. 
+#' The following columns are added: "pTime", "pDist", "inAng". 
+#' "pTime" is hours from a previous fix. "pDist" is straight distance in kilometres from a previous fix. 
+#' "inAng" is the angle between the bearings of lines joining successive location points.    
 #' @author Takahiro Shimada
 #' @references Shimada T, Jones R, Limpus C, Hamann M (2012) 
 #' Improving data retention and home range estimates by data-driven screening. 
@@ -60,7 +58,8 @@
 #' #### Plot data removed or retained by ddfilter
 #' ## Entire area
 #' p1<-plotMap(turtle.dup, bgmap=Australia, point.size = 2, line.size = 0.5, axes.lab.size = 0, 
-#'              sb.distance=200, multiplot = FALSE, title.size=15, title="Entire area")[[1]] + 
+#'             sb.distance=200, multiplot = FALSE, point.bg = "red",
+#'             title.size=15, title="Entire area")[[1]] + 
 #'   geom_point(aes(x=lon, y=lat), data=turtle.dd, size=2, fill="yellow", shape=21)+
 #'   geom_point(aes(x=x, y=y), data=data.frame(x=c(154, 154), y=c(-22, -22.5)), 
 #'              size=3, fill=c("yellow", "red"), shape=21) + 
@@ -69,8 +68,8 @@
 #'
 #' ## Zoomed in
 #' p2<-plotMap(turtle.dup, bgmap=SandyStrait, xlim=c(152.7, 153.2), ylim=(c(-25.75, -25.24)), 
-#' axes.lab.size = 0, sb.distance=10, point.size = 2, line.size = 0.5, multiplot = FALSE, 
-#' title.size=15, title="Zoomed in")[[1]] + 
+#'             axes.lab.size = 0, sb.distance=10, point.size = 2, point.bg = "red", line.size = 0.5, 
+#'             multiplot = FALSE, title.size=15, title="Zoomed in")[[1]] + 
 #' geom_path(aes(x=lon, y=lat), data=turtle.dd, size=0.5, colour="black", linetype=1) + 
 #' geom_point(aes(x=lon, y=lat), data=turtle.dd, size=2, colour="black", shape=21, fill="yellow")
 #'

@@ -17,11 +17,9 @@
 #' @export
 #' @details This function removes locations if the speed both/either from a previous and to a subsequent location exceeds a given threshold speed. 
 #' If "vmax" is unknown, it can be estimated using the function "est.vmax".
-#' @return A data frame is returned with the locations identified by this filter removed. 
-#' The following columns are added: "pTime", "sTime", "pDist", "sDist", "pSpeed", "sSpeed". 
-#' "pTime" and "sTime" are hours from a previous and to a subsequent fix respectively. 
-#' "pDist" and "sDist" are straight distances in kilometres from a previous and to a subsequent fix respectively. 
-#' "pSpeed" and "sSpeed" are linear speed from a previous and to a subsequent fix respectively. 
+#' @return A data frame is returned without locations identified by this filter. 
+#' The following columns are added: "pTime", "pDist". 
+#' "pTime" is hours from a previous fix. "pDist" is straight distance in kilometres from a previous fix. 
 #' @author Takahiro Shimada
 #' @references Shimada T, Jones R, Limpus C, Hamann M (2012) 
 #' Improving data retention and home range estimates by data-driven screening.
@@ -160,6 +158,7 @@ ddfilter.speed<-function (sdata, vmax=8.9, method=2){
 
   
   # Delete working columns and return the output
-  sdata3$overMax<-NULL
+  drops<-c("overMax", "sTime", "sDist", "pSpeed", "sSpeed")
+  sdata3<-sdata3[,!(names(sdata3) %in% drops)] 
   return(sdata3)
 }
