@@ -18,6 +18,7 @@
 #' @details This function selects a fix from multiple fixes which were obtained at the same geographical coordinate. 
 #' A minimum of two locations per id is required to run this function.
 #' @return Input data frame is returned with spatial duplicates removed. 
+#' The following columns are added: "pTime", "sTime", "pDist", "sDist". 
 #' "pTime" and "sTime" are hours from a previous and to a subsequent fix respectively. 
 #' "pDist" and "sDist" are straight distances in kilometres from a previous and to a subsequent fix respectively.
 #' @author Takahiro Shimada

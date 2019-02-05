@@ -6,12 +6,6 @@ editor_options:
 ## News for Package 'SDLfilter'
 
 
-#### Version 1.2.0 (2019-02-05)
-
-* added a mew function "distance_filter". This function removes fixes located beyond a given threshold distance.
-* fixed bugs in the example codes.
-* amended "plotMap" in accordance with the ggmap update to version 3.0.0. 
-
 #### Version 1.1.1 (2018-06-10)
 
 * fixed minor bugs in the est.maxvlp function. The values estimated using the previous version would not have been affected by the changes. In the previous version, when sample size is too small (i.e. <6 fixes) or inner angles could not be estimated (e.g. two consecutive locations with the same coordinates), the function ceased with warning messages. These errors are now avoided by exuding those fixes from the estimation process.

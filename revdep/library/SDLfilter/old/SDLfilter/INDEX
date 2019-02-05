@@ -1,0 +1,22 @@
+Australia               A map of Australia
+SandyStrait             A map of Sandy Strait, Australia
+bathymodel              Bathymetry model for Sandy Strait, Australia
+ddfilter                Filter locations using a data driven filter
+ddfilter.loop           Filter locations by quality index, inner angle,
+                        and speed
+ddfilter.speed          Filter locations by speed
+depthfilter             Filter locations by water depth
+dupfilter               Filter temporal and/or spatial duplicates
+dupfilter.exact         Filter temporally and spatially exact
+                        duplicates
+dupfilter.qi            Filter temporal duplicates by quality index
+dupfilter.space         Filter spatial duplicates
+dupfilter.time          Filter temporal duplicates
+est.maxvlp              Estimate maximum one-way linear speed of a loop
+                        trip
+est.vmax                Estimate maximum linear speed
+plotMap                 Plot location data
+tidalplane              Tidal plane table for Sandy Strait, Australia
+tidedata                Tidal data for Sandy Strait, Australia
+turtle                  Green turtle tracking data
+turtle2                 Green turtle tracking data 2
