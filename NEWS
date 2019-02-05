@@ -1,6 +1,6 @@
-Version 1.1.1-1 (2018-09-22)
+Version 1.1.1-2 (2019-02-05)
 
-  o removed some redundant columns from the output data.frame. Removed colunms are "sTime", "sDist", "pSpeed", and "sSpeed".
+  o A mew function "distance_filter" is added. This function removes fixes located beyond a given threshold distance.
   o fixed bugs in the example codes.
 
 Version 1.1.1 (2018-06-10)

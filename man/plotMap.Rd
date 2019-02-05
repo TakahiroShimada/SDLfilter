@@ -11,7 +11,7 @@ plotMap(sdata, xlim = NULL, ylim = NULL, margin = 10, bgmap = NULL,
   line.size = 0.5, sb.distance = NULL, sb.lwd = 1,
   sb.line.col = "black", sb.text.size = 4, sb.text.col = "black",
   sb.space = 3, title = "id", title.size = 11, axes.text.size = 11,
-  axes.lab.size = 11, multiplot = TRUE, nrow = 1, ncol = 1)
+  axes.lab.size = 11, multiplot = TRUE, nrow = 1, ncol = 1, ...)
 }
 \arguments{
 \item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon". 
@@ -76,6 +76,8 @@ The value is scaled to the plot. The smaller value increases the space.}
 \item{nrow}{An integer to specify the number of rows in the multiple plot page.}
 
 \item{ncol}{An integer to specify the number of columns in the multiple plot page.}
+
+\item{...}{If the Google Maps are queried, a valid API key needs to be specified here. See \code{\link[ggmap]{register_google}} for details.}
 }
 \value{
 An arrangelist is returned when multiplot is TRUE. Otherwise a list is returned.

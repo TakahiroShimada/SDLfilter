@@ -25,9 +25,8 @@ less than the time specified in "step.time". Default is FALSE.}
 }
 \value{
 Input data frame is returned with spatial duplicates removed. 
-The following columns are added: "pTime", "pDist". 
-"pTime" is hours from a previous fix. "pDist" is straight distance in kilometres from a previous fix. 
-#' @author Takahiro Shimada
+"pTime" and "sTime" are hours from a previous and to a subsequent fix respectively. 
+"pDist" and "sDist" are straight distances in kilometres from a previous and to a subsequent fix respectively.
 }
 \description{
 A partial component of dupfilter although works as a stand-alone function. This function removes spatial duplicates.
@@ -43,4 +42,7 @@ Marine Biology 163:1-14 doi:10.1007/s00227-015-2771-0
 }
 \seealso{
 \code{\link{dupfilter}}, \code{\link{dupfilter.exact}}, \code{\link{dupfilter.time}}, \code{\link{dupfilter.qi}}
+}
+\author{
+Takahiro Shimada
 }

@@ -36,6 +36,7 @@
 #' @param multiplot Logical. If TRUE (default), multiple plots are displayed on the same page.
 #' @param nrow An integer to specify the number of rows in the multiple plot page.
 #' @param ncol An integer to specify the number of columns in the multiple plot page.
+#' @param ... If the Google Maps are queried, a valid API key needs to be specified here. See \code{\link[ggmap]{register_google}} for details.
 #' @import ggmap ggplot2
 #' @importFrom ggsn scalebar
 #' @importFrom gridExtra marrangeGrob
@@ -77,7 +78,7 @@ plotMap<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
                    line.col="lightgrey", line.type=1, line.size=0.5,
                    sb.distance=NULL, sb.lwd=1, sb.line.col="black", sb.text.size=4, sb.text.col="black", sb.space=3,
                    title="id", title.size=11, axes.text.size=11, axes.lab.size=11,
-                   multiplot=TRUE, nrow=1, ncol=1){
+                   multiplot=TRUE, nrow=1, ncol=1, ...){
   
   #### Get data to plot
   ID<-levels(factor(sdata$id))
@@ -113,11 +114,12 @@ plotMap<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
     
     #### Background map
     if(is.null(bgmap)){
-      map.data<-map_data('world', xlim=xlim, ylim=ylim)
+      map.data<-ggplot2::map_data('world', xlim=xlim, ylim=ylim)
       p <-ggplot(data=sdata.temp)+
         geom_polygon(aes_string(x="long", y="lat", group="group"), data=map.data, bg=map.bg, colour=map.col)
       
     } else if(bgmap %in% "terrain" || bgmap %in% "satellite" || bgmap %in% "roadmap" || bgmap %in% "hybrid") {
+      ggmap::register_google(...)
       map.data<-ggmap::get_map(location = c(lon = mean(xlim), lat = mean(ylim)), 
                                color = "color", source = "google", maptype = bgmap, zoom=zoom)
       p <-ggmap::ggmap(map.data)  

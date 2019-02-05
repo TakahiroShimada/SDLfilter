@@ -33,8 +33,7 @@ est.maxvlp<-function(sdata, qi=4, prob=0.99){
   #### Organize data
   ## Subset data by quality index
   sdata<-sdata[sdata$qi>=qi,]
-  
-  
+
   ## Sort data in alphabetical and chronological order
   sdata<-with(sdata, sdata[order(id, DateTime),])
   row.names(sdata)<-1:nrow(sdata)

@@ -18,9 +18,9 @@
 #' @details This function selects a fix from multiple fixes which were obtained at the same geographical coordinate. 
 #' A minimum of two locations per id is required to run this function.
 #' @return Input data frame is returned with spatial duplicates removed. 
-#' The following columns are added: "pTime", "pDist". 
-#' "pTime" is hours from a previous fix. "pDist" is straight distance in kilometres from a previous fix. 
-#' #' @author Takahiro Shimada
+#' "pTime" and "sTime" are hours from a previous and to a subsequent fix respectively. 
+#' "pDist" and "sDist" are straight distances in kilometres from a previous and to a subsequent fix respectively.
+#' @author Takahiro Shimada
 #' @references Shimada T, Limpus C, Jones R, Hazel J, Groom R, Hamann M (2016) 
 #' Sea turtles return home after intentional displacement from coastal foraging areas. 
 #' Marine Biology 163:1-14 doi:10.1007/s00227-015-2771-0
@@ -192,7 +192,8 @@ dupfilter.space<-function (sdata, step.time=0, step.dist=0, conditional=FALSE){
   }
   
   #### Delete working columns and return the output
-  drops<-c("rm", "rm2", "sTime", "sDist")
-  sdata3<-sdata3[,!(names(sdata3) %in% drops)] 
+  drops<-c("rm", "rm2")
+  # drops<-c("rm", "rm2", "sTime", "sDist")
+  sdata3<-sdata3[,!(names(sdata3) %in% drops)]
   return(sdata3)
 }

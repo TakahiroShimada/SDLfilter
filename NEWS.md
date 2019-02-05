@@ -6,10 +6,11 @@ editor_options:
 ## News for Package 'SDLfilter'
 
 
-#### Version 1.1.1-1 (2018-09-22)
+#### Version 1.2.0 (2019-02-05)
 
-* removed some redundant columns from the output data.frame. Removed colunms are "sTime", "sDist", "pSpeed", and "sSpeed".
+* A mew function "distance_filter" is added. This function removes fixes located beyond a given threshold distance.
 * fixed bugs in the example codes.
+* "plotMap" amended in accordance with the ggmap update to version 3.0.0. 
 
 #### Version 1.1.1 (2018-06-10)
 

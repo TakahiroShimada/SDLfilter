@@ -30,8 +30,10 @@ If this value is unknown, the function "est.maxvlp" can be used to estimate the 
 }
 \value{
 A data frame is returned without locations identified by this filter. 
-The following columns are added: "pTime", "pDist", "inAng". 
-"pTime" is hours from a previous fix. "pDist" is straight distance in kilometres from a previous fix. 
+The following columns are added: "pTime", "sTime", "pDist", "sDist", "pSpeed", "sSpeed", "inAng". 
+"pTime" and "sTime" are hours from a previous and to a subsequent fix respectively. 
+"pDist" and "sDist" are straight distances in kilometres from a previous and to a subsequent fix respectively. 
+"pSpeed" and "sSpeed" are linear speed from a previous and to a subsequent fix respectively. 
 "inAng" is the angle between the bearings of lines joining successive location points.
 }
 \description{
