@@ -72,7 +72,7 @@ If you use the function *ddfilter*, please cite
 
 Shimada T, Jones R, Limpus C, Hamann M (2012) Improving data retention and home range estimates by data-driven screening. Mar Ecol Prog Ser 457:171-180 http://dx.doi.org/10.3354/meps09747
 
-If you use the funtions *dupfilter* or *depthfilter*, please cite
+If you use the functions *dupfilter* or *depthfilter*, please cite
 
 Shimada T, Limpus C, Jones R, Hazel J, Groom R, Hamann M (2016) Sea turtles return home after intentional displacement from coastal foraging areas. Mar Biol 163:1-14 http://dx.doi.org/10.1007/s00227-015-2771-0
 
