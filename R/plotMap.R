@@ -119,7 +119,8 @@ plotMap<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
       p <-ggplot(data=sdata.temp)+
         geom_polygon(aes_string(x="long", y="lat", group="group"), data=map.data, bg=map.bg, colour=map.col)
       
-    } else if(bgmap %in% "terrain" || bgmap %in% "satellite" || bgmap %in% "roadmap" || bgmap %in% "hybrid") {
+    # } else if(bgmap == "terrain" | bgmap == "satellite" | bgmap == "roadmap" | bgmap == "hybrid") {
+    } else if(any(bgmap %in% c("terrain", "satellite", "roadmap", "hybrid"))) {
       ggmap::register_google(...)
       map.data<-ggmap::get_map(location = c(lon = mean(xlim), lat = mean(ylim)), 
                                color = "color", source = "google", maptype = bgmap, zoom=zoom)
