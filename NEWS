@@ -1,4 +1,4 @@
-Version 1.2.0 (2019-02-05)
+Version 1.2.0 (2019-02-18)
 
   o added a mew function "distance_filter". This function removes fixes located beyond a given threshold distance.
   o fixed bugs in the example codes.

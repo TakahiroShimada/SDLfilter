@@ -6,7 +6,7 @@ editor_options:
 ## News for Package 'SDLfilter'
 
 
-#### Version 1.2.0 (2019-02-05)
+#### Version 1.2.0 (2019-02-18)
 
 * added a mew function "distance_filter". This function removes fixes located beyond a given threshold distance.
 * fixed bugs in the example codes.

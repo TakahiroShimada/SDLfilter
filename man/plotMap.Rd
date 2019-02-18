@@ -5,13 +5,13 @@
 \title{Plot location data}
 \usage{
 plotMap(sdata, xlim = NULL, ylim = NULL, margin = 10, bgmap = NULL,
-  map.bg = "grey", map.col = "black", zoom = "auto",
-  point.bg = "yellow", point.col = "black", point.symbol = 21,
-  point.size = 1, line.col = "lightgrey", line.type = 1,
-  line.size = 0.5, sb.distance = NULL, sb.lwd = 1,
+  google.key = NULL, map.bg = "grey", map.col = "black",
+  zoom = "auto", point.bg = "yellow", point.col = "black",
+  point.symbol = 21, point.size = 1, line.col = "lightgrey",
+  line.type = 1, line.size = 0.5, sb.distance = NULL, sb.lwd = 1,
   sb.line.col = "black", sb.text.size = 4, sb.text.col = "black",
   sb.space = 3, title = "id", title.size = 11, axes.text.size = 11,
-  axes.lab.size = 11, multiplot = TRUE, nrow = 1, ncol = 1, ...)
+  axes.lab.size = 11, multiplot = TRUE, nrow = 1, ncol = 1)
 }
 \arguments{
 \item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon". 
@@ -28,6 +28,8 @@ The smaller value increases the margin.}
 \item{bgmap}{A data.frame of a background map data, containing the following headers: "long", "lat", "group". 
 If not specified, the "world" map provided by the \emph{maps} package is used. 
 The Google Maps ("terrain", "satellite", "roadmap", "hybrid") can also be queried.}
+
+\item{google.key}{If the Google Maps are queried, a valid API key (a string) needs to be specified here. See \code{\link[ggmap]{register_google}} for details.}
 
 \item{map.bg}{Background colour of the map. This argument is ignored when any of the Google Maps is selected.}
 
@@ -76,8 +78,6 @@ The value is scaled to the plot. The smaller value increases the space.}
 \item{nrow}{An integer to specify the number of rows in the multiple plot page.}
 
 \item{ncol}{An integer to specify the number of columns in the multiple plot page.}
-
-\item{...}{If the Google Maps are queried, a valid API key needs to be specified here. See \code{\link[ggmap]{register_google}} for details.}
 }
 \value{
 An arrangelist is returned when multiplot is TRUE. Otherwise a list is returned.

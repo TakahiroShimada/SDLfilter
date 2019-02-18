@@ -11,6 +11,7 @@
 #' @param bgmap A data.frame of a background map data, containing the following headers: "long", "lat", "group". 
 #' If not specified, the "world" map provided by the \emph{maps} package is used. 
 #' The Google Maps ("terrain", "satellite", "roadmap", "hybrid") can also be queried.
+#' @param google.key If the Google Maps are queried, a valid API key (a string) needs to be specified here. See \code{\link[ggmap]{register_google}} for details.
 #' @param map.bg Background colour of the map. This argument is ignored when any of the Google Maps is selected.
 #' @param map.col Outline colour of the map. This argument is ignored when any of the Google Maps is selected.
 #' @param zoom Map zoom for the Google Maps. See \code{\link[ggmap]{get_map}} for details. 
@@ -36,7 +37,6 @@
 #' @param multiplot Logical. If TRUE (default), multiple plots are displayed on the same page.
 #' @param nrow An integer to specify the number of rows in the multiple plot page.
 #' @param ncol An integer to specify the number of columns in the multiple plot page.
-#' @param ... If the Google Maps are queried, a valid API key needs to be specified here. See \code{\link[ggmap]{register_google}} for details.
 #' @import ggmap ggplot2
 #' @importFrom ggsn scalebar
 #' @importFrom gridExtra marrangeGrob
@@ -74,12 +74,12 @@
 
 #### Plot data removed or retained by ddfilter
 plotMap<-function(sdata, xlim=NULL, ylim=NULL, margin=10, 
-                   bgmap=NULL, map.bg="grey", map.col="black", zoom="auto", 
+                   bgmap=NULL, google.key=NULL, map.bg="grey", map.col="black", zoom="auto", 
                    point.bg="yellow", point.col="black", point.symbol=21, point.size=1,
                    line.col="lightgrey", line.type=1, line.size=0.5,
                    sb.distance=NULL, sb.lwd=1, sb.line.col="black", sb.text.size=4, sb.text.col="black", sb.space=3,
                    title="id", title.size=11, axes.text.size=11, axes.lab.size=11,
-                   multiplot=TRUE, nrow=1, ncol=1, ...){
+                   multiplot=TRUE, nrow=1, ncol=1){
   
   #### Get data to plot
   ID<-levels(factor(sdata$id))
@@ -119,9 +119,9 @@ plotMap<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
       p <-ggplot(data=sdata.temp)+
         geom_polygon(aes_string(x="long", y="lat", group="group"), data=map.data, bg=map.bg, colour=map.col)
       
-    # } else if(bgmap == "terrain" | bgmap == "satellite" | bgmap == "roadmap" | bgmap == "hybrid") {
     } else if(any(bgmap %in% c("terrain", "satellite", "roadmap", "hybrid"))) {
-      ggmap::register_google(...)
+      ggmap::ggmap_show_api_key()
+      ggmap::register_google(key = google.key)
       map.data<-ggmap::get_map(location = c(lon = mean(xlim), lat = mean(ylim)), 
                                color = "color", source = "google", maptype = bgmap, zoom=zoom)
       p <-ggmap::ggmap(map.data)  
