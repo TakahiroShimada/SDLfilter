@@ -22,7 +22,7 @@ A map is created for each subset of location data grouped by the unique "id".
 
 \item{ylim}{Limits for x axis. See \emph{xlim} for details.}
 
-\item{margin}{Set the amount of areas added around the periphery of the plot. The value is scaled to the plot. 
+\item{margin}{Set the amount of spaces added around the periphery of the plot. The value is scaled to the plot. 
 The smaller value increases the margin.}
 
 \item{bgmap}{A data.frame of a background map data, containing the following headers: "long", "lat", "group". 

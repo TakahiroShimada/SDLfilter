@@ -1,10 +1,10 @@
 Package: SDLfilter
 Type: Package
 Title: Filtering Satellite-Derived Locations
-Version: 1.2.0
-Date: 2019-02-18
+Version: 1.2.1
+Date: 2019-02-19
 Author: Takahiro Shimada
-Maintainer: Takahiro Shimada <takahiro.shimada@my.jcu.edu.au>
+Maintainer: Takahiro Shimada <taka.shimada@gmail.com>
 Description: Functions to filter GPS and/or Argos locations. The provided
     filters remove temporal and spatial duplicates, fixes located at a given
     height from estimated high tide line, and locations with high error as

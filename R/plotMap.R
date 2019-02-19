@@ -6,7 +6,7 @@
 #' "DateTime" is date & time in class \code{\link[base]{POSIXct}}. "lat" and "lon" are the recorded latitude and longitude in decimal degrees. 
 #' @param xlim Limits for x axis. If not specified, the values are determined as the maximum range of the input data with an additional margin (see \emph{margin}).    
 #' @param ylim Limits for x axis. See \emph{xlim} for details. 
-#' @param margin Set the amount of areas added around the periphery of the plot. The value is scaled to the plot. 
+#' @param margin Set the amount of spaces added around the periphery of the plot. The value is scaled to the plot. 
 #' The smaller value increases the margin.
 #' @param bgmap A data.frame of a background map data, containing the following headers: "long", "lat", "group". 
 #' If not specified, the "world" map provided by the \emph{maps} package is used. 
@@ -159,10 +159,10 @@ plotMap<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
     if(is.null(sb.distance)){
       sb.distance<-round(((xlim[2]-xlim[1])*111.139)/4)
       sb<-ggsn::scalebar(x.min=xlim[1]+extra2, x.max=xlim[2]-extra2, y.min=ylim[1]+extra2, y.max=ylim[2]-extra2,
-                         dist = sb.distance, dd2km = TRUE, model = 'WGS84', location="bottomleft", st.dist=.03)
+                         dist = sb.distance, dist_unit = "km", transform = TRUE, model = 'WGS84', location="bottomleft", st.dist=.03)
     } else {
       sb<-ggsn::scalebar(x.min=xlim[1]+extra2, x.max=xlim[2]-extra2, y.min=ylim[1]+extra2, y.max=ylim[2]-extra2,
-                         dist = sb.distance, dd2km = TRUE, model = 'WGS84', location="bottomleft", st.dist=.03)
+                         dist = sb.distance, dist_unit = "km", transform = TRUE, model = 'WGS84', location="bottomleft", st.dist=.03)
     }
     sb.xmin<-min(sb[[1]]$data$x)
     sb.xmax<-max(sb[[1]]$data$x)
