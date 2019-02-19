@@ -69,4 +69,4 @@ Shimada T, Limpus C, Jones R, Hazel J, Groom R, Hamann M (2016) Sea turtles retu
 Current version
 ---------------
 
-1.2.0 (18 February 2019)
+1.2.1 (19 February 2019)
