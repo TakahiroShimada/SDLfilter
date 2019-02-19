@@ -6,7 +6,8 @@
 
 ## R CMD check results
 
-There were no ERRORs, WARNINGs or NOTEs when run on ubuntu (local and travis-ci) or windows (win-builder).
+There were no ERRORs or WARNINGs when run on ubuntu (local and travis-ci) or windows (win-builder).
+There was one NOTE. The maintainer's email address was changed.
 
 
 ## Reverse dependencies
@@ -26,13 +27,13 @@ There were no ERRORs, WARNINGs or NOTEs when run on ubuntu (local and travis-ci)
 |collate  |en_AU.UTF-8                  |
 |ctype    |en_AU.UTF-8                  |
 |tz       |Australia/Perth              |
-|date     |2019-02-18                   |
+|date     |2019-02-19                   |
 
 # Dependencies
 
-|package   |old   |new |Δ  |
-|:---------|:-----|:---|:--|
-|SDLfilter |1.1.1 |NA  |*  |
+|package   |old   |new   |Δ  |
+|:---------|:-----|:-----|:--|
+|SDLfilter |1.2.0 |1.2.1 |*  |
 
 # Revdeps
 

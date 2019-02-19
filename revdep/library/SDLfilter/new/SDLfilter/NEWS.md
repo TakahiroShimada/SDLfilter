@@ -6,6 +6,11 @@ editor_options:
 ## News for Package 'SDLfilter'
 
 
+#### Version 1.2.1 (2019-02-19)
+
+* amended "plotMap" in accordance with the ggsn update to version 0.5.0. 
+
+
 #### Version 1.2.0 (2019-02-18)
 
 * added a mew function "distance_filter". This function removes fixes located beyond a given threshold distance.
