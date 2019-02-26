@@ -1,12 +1,11 @@
 ## Test environments
 * local ubuntu 18.04 install: R 3.5.2
-* ubuntu 14.04.5 on travis-ci: R 3.5.2
 * win-builder: R-devel
 
 
 ## R CMD check results
 
-There were no ERRORs or WARNINGs when run on ubuntu (local and travis-ci) or windows (win-builder).
+There were no ERRORs or WARNINGs when run on ubuntu (local) or windows (win-builder).
 There was one NOTE. The maintainer's email address was changed.
 
 
