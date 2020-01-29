@@ -1,15 +1,16 @@
 #' @aliases plotMap
 #' @title Plot location data
-#' @description Function to easily plot locations on a map or a satellite image. 
+#' @description Function to plot tracking data on a map or a satellite image. 
 #' @param sdata A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon". 
-#' A map is created for each subset of location data grouped by the unique "id". 
-#' "DateTime" is date & time in class \code{\link[base]{POSIXct}}. "lat" and "lon" are the recorded latitude and longitude in decimal degrees. 
-#' @param xlim Limits for x axis. If not specified, the values are determined as the maximum range of the input data with an additional margin (see \emph{margin}).    
-#' @param ylim Limits for x axis. See \emph{xlim} for details. 
+#' The function creates a map for each unique "id". 
+#' "DateTime" is date & time in class \code{\link[base]{POSIXct}}. 
+#' "lat" and "lon" are the latitude and longitude of each location in decimal degrees. 
+#' @param xlim,ylim Limits for x and y axes. 
+#' If not specified, the values are determined as the maximum range of the input data plus an additional margin (see \emph{margin}).    
 #' @param margin Set the amount of spaces added around the periphery of the plot. The value is scaled to the plot. 
 #' The smaller value increases the margin.
-#' @param bgmap A data.frame of a background map data, containing the following headers: "long", "lat", "group". 
-#' If not specified, the "world" map provided by the \emph{maps} package is used. 
+#' @param bgmap A data frame of a background map data, containing the following headers: "long", "lat", "group". 
+#' If not specified, the \code{\link[maps]{world}} map is used. 
 #' The Google Maps ("terrain", "satellite", "roadmap", "hybrid") can also be queried.
 #' @param google.key If the Google Maps are queried, a valid API key (a string) needs to be specified here. See \code{\link[ggmap]{register_google}} for details.
 #' @param map.bg Background colour of the map. This argument is ignored when any of the Google Maps is selected.
@@ -28,7 +29,7 @@
 #' @param sb.line.col The colour of the scale bar.
 #' @param sb.text.size An integer to specify the text size for the scale bar.
 #' @param sb.text.col The colour of the text for the scale bar.
-#' @param sb.space Set the amount of space between the scale bar and the text for the scale bar. 
+#' @param sb.space Set the amount of space between the scale bar and the text. 
 #' The value is scaled to the plot. The smaller value increases the space.
 #' @param title The main title for each plot. If not specified, the "id" will be used.
 #' @param title.size An integer to specify the size of the title.
@@ -43,7 +44,7 @@
 #' @export
 #' @return An arrangelist is returned when multiplot is TRUE. Otherwise a list is returned. 
 #' @author Takahiro Shimada
-#' @seealso \code{\link{dupfilter}}, \code{\link{ddfilter}}, \code{\link{est.vmax}}, \code{\link{est.maxvlp}}
+#' @seealso \code{\link{dupfilter}}, \code{\link{ddfilter}}, \code{\link{vmax}}, \code{\link{vmaxlp}}
 #' @examples
 #' #### Load data sets
 #' ## Fastloc GPS data obtained from two green turtles
@@ -56,9 +57,9 @@
 #'  
 #' 
 #' #### ddfilter
-#' V <- est.vmax(turtle.dup)
-#' VLP <- est.maxvlp(turtle.dup)
-#' turtle.dd <- ddfilter(turtle.dup, vmax=V, maxvlp=VLP)
+#' V <- vmax(turtle.dup)
+#' VLP <- vmaxlp(turtle.dup)
+#' turtle.dd <- ddfilter(turtle.dup, vmax=V, vmaxlp=VLP)
 #' 
 #' 
 #' #### Plot filtered data for each animal
@@ -67,8 +68,7 @@
 #'
 #'\dontrun{
 #' ## using the high-resolution google satellite images
-#' plotMap(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1, 
-#'         bgmap = "satellite", sb.line.col = "white", sb.text.col = "white", google.key = "an_api_key")
+#' plotMap(turtle.dd, bgmap = "satellite", google.key = "key", ncol=2)
 #'}
 
 

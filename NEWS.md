@@ -5,11 +5,16 @@ editor_options:
 ---
 ## News for Package 'SDLfilter'
 
+#### Version 1.4.0 (2020-01-22)
+
+* added four new functions to assess sample sizes of animal tracking data (boot_overlap, boot_area, asymptote, percent_vol).
+* renamed some functions (ddfilter.loop -> ddfilter_loop; ddfilter.speed -> ddfilter_speed; dupfilter.exact -> dupfilter_exact; dupfilter.qi -> dupfilter_qi; dupfilter.space -> dupfilter_space; dupfilter.time -> dupfilter_time, distantfilter -> distfilter).
+* renamed an argument in ddfilter (maxvlp -> vmaxlp).
+* improved the R documentations.
 
 #### Version 1.2.1 (2019-02-19)
 
 * amended "plotMap" in accordance with the ggsn update to version 0.5.0. 
-
 
 #### Version 1.2.0 (2019-02-18)
 
@@ -23,7 +28,7 @@ editor_options:
 
 #### Version 1.1.0 (2018-04-27)
 
-* added a new function (plot.map) to plot locations.
+* added a new function (plotMap) to plot locations.
 * updated vignette.
 
 #### Version 1.0.0 (2018-02-08)
