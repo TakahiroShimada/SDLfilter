@@ -6,6 +6,10 @@ output:
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
 
 SDLfilter
 =========
@@ -18,7 +22,7 @@ SDLfilter contains a variety of functions to screen GPS and/or Argos locations a
 Installation
 --------
 
-```{r, eval = FALSE}
+```{r}
 # The official version from CRAN:
 install.packages("SDLfilter")
 
@@ -44,7 +48,7 @@ There are three main filtering functions.
 
 3. *depthfilter* filters locations by water depth.
 
-```{r SDLfilter, message=FALSE, results = FALSE}
+```{r SDLfilter, message=FALSE}
 ## Fastloc GPS data obtained from a green turtle
 data(turtle)
 
@@ -78,6 +82,8 @@ turtle.dd <- ddfilter(turtle.dup, vmax=9.9, qi=4, ia=90, vmaxlp=2.0)
 
  gridExtra::marrangeGrob(list(p1, p2), nrow=1, ncol=2, top =  NA)
 ```
+![](man/figures/README-example1.png)
+
 
 ### Assessing sample sizes
 
@@ -113,6 +119,7 @@ ggplot(data = overlap$summary)+
   labs(x = "N", y = "Overlap probability")
 ```
 
+![](man/figures/README-example2.png)
 
 > Please see the package help pages and Shimada et al. (2012, 2016) for more details.
 
@@ -134,6 +141,6 @@ Shimada T,.... (in prep) Assessing sample sizes for the analysis of animal distr
 
 Current version
 --------
-1.4.0.9001 (25 January 2020)
+1.2.1.9005 (29 January 2020)
 
 

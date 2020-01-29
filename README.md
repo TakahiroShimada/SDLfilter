@@ -5,7 +5,9 @@ SDLfilter
 Overview
 --------
 
-SDLfilter contains a variety of functions to screen GPS and/or Argos locations and to assess sample sizes of tracking data for the analysis of animal distributions.
+SDLfilter contains a variety of functions to screen GPS and/or Argos
+locations and to assess sample sizes of tracking data for the analysis
+of animal distributions.
 
 Installation
 ------------
@@ -49,7 +51,7 @@ turtle.dd <- ddfilter(turtle.dup, vmax=9.9, qi=4, ia=90, vmaxlp=2.0)
 ## Plot the locations on a map
 ```
 
-![](README_files/figure-markdown_github/unnamed-chunk-3-1.png)
+![](man/figures/README-example1.png)
 
 ### Assessing sample sizes
 
@@ -60,48 +62,65 @@ turtle.dd <- ddfilter(turtle.dup, vmax=9.9, qi=4, ia=90, vmaxlp=2.0)
 data(curtis)
 ```
 
-The input data can be either a matrix or a list of RasterLayer objects. Each row of the matrix or each RasterLayer object contains the probability distribution of an animal. The function assumes that each column of a matrix is associated with a unique geographical location, therefore it is critical that the grid size and geographical extent are the consistent across UDs. In this example, the grid size was 1km and the geographical extent was 1901789, 1972789, -2750915, -2653915 (EPSG:3577) across all 29 layers.
+The input data can be either a matrix or a list of RasterLayer objects.
+Each row of the matrix or each RasterLayer object contains the
+probability distribution of an animal. The function assumes that each
+column of a matrix is associated with a unique geographical location,
+therefore it is critical that the grid size and geographical extent are
+the consistent across UDs. In this example, the grid size was 1km and
+the geographical extent was 1901789, 1972789, -2750915, -2653915
+(EPSG:3577) across all 29 layers.
 
 ``` r
 ## 2. Calculate overlap probability from 1000 random permutation.
 overlap <- boot_overlap(curtis, R = 1000, method = "PHR")
 ```
 
-It will take some time to run this code depending on the number of iterations and the machine specs. The runtime was about 2.5 minutes on a linux machine (Intel i7-8650U CPU @ 1.90GHz, 32GB RAM) for 1000 iterations.
+It will take some time to run this code depending on the number of
+iterations and the machine specs. The runtime was about 2.5 minutes on a
+linux machine (Intel i7-8650U CPU @ 1.90GHz, 32GB RAM) for 1000
+iterations.
 
 ``` r
 ## 3. Find the minimum sample size required to estimate the general distribution.
 a <- asymptote(overlap)
 ```
 
-    ## 
-    ## Asymptote reached at x = 7
-    ## Estimated Horizontal asymptote ~ 0.9693733
-
-As described in the main text, an asymptote was considered once the mean overlap probability exceeded 95% of the estimated horizontal asymptote. The sample size linked to this value was deemed to be the minimum sample size required to represent the general distribution of the group.
+As described in the main text, an asymptote was considered once the mean
+overlap probability exceeded 95% of the estimated horizontal asymptote.
+The sample size linked to this value was deemed to be the minimum sample
+size required to represent the general distribution of the group.
 
 ``` r
 ## 4. Plot the mean probability and rational function fit relative to the sample sizes.
 ```
 
-![](README_files/figure-markdown_github/unnamed-chunk-8-1.png)
+![](man/figures/README-example2.png)
 
-> Please see the package help pages and Shimada et al. (2012, 2016) for more details.
+> Please see the package help pages and Shimada et al. (2012, 2016) for
+> more details.
 
 References
 ----------
 
 If you use the function *ddfilter*, please cite
 
-Shimada T, Jones R, Limpus C, Hamann M (2012) Improving data retention and home range estimates by data-driven screening. *Mar Ecol Prog Ser* 457:171-180 doi: [10.3354/meps09747](http://dx.doi.org/10.3354/meps09747)
+Shimada T, Jones R, Limpus C, Hamann M (2012) Improving data retention
+and home range estimates by data-driven screening. *Mar Ecol Prog Ser*
+457:171-180 doi:
+[10.3354/meps09747](http://dx.doi.org/10.3354/meps09747)
 
 If you use the functions *dupfilter* or *depthfilter*, please cite
 
-Shimada T, Limpus C, Jones R, Hazel J, Groom R, Hamann M (2016) Sea turtles return home after intentional displacement from coastal foraging areas. *Mar Biol* 163:1-14 doi: [10.1007/s00227-015-2771-0](http://dx.doi.org/10.1007/s00227-015-2771-0)
+Shimada T, Limpus C, Jones R, Hazel J, Groom R, Hamann M (2016) Sea
+turtles return home after intentional displacement from coastal foraging
+areas. *Mar Biol* 163:1-14 doi:
+[10.1007/s00227-015-2771-0](http://dx.doi.org/10.1007/s00227-015-2771-0)
 
-Shimada T,.... (in prep) Assessing sample sizes for the analysis of animal distributions using the R package SDLfilter.
+Shimada T,…. (in prep) Assessing sample sizes for the analysis of animal
+distributions using the R package SDLfilter.
 
 Current version
 ---------------
 
-1.4.0.9001 (25 January 2020)
+1.2.1.9005 (29 January 2020)
