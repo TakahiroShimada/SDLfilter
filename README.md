@@ -47,11 +47,9 @@ turtle.dup <- dupfilter(turtle)
 
 ## Remove biologically unrealistic fixes 
 turtle.dd <- ddfilter(turtle.dup, vmax=9.9, qi=4, ia=90, vmaxlp=2.0)
-
-## Plot the locations on a map
 ```
 
-![](man/figures/README-example1.png)
+<img src="man/figures/README-example1.png" width="80%" />
 
 ### Assessing sample sizes
 
@@ -95,7 +93,7 @@ size required to represent the general distribution of the group.
 ## 4. Plot the mean probability and rational function fit relative to the sample sizes.
 ```
 
-![](man/figures/README-example2.png)
+<img src="man/figures/README-example2.png" width="50%" />
 
 > Please see the package help pages and Shimada et al. (2012, 2016) for
 > more details.
@@ -123,4 +121,4 @@ distributions using the R package SDLfilter.
 Current version
 ---------------
 
-1.2.1.9005 (29 January 2020)
+1.2.1.9006 (29 January 2020)
