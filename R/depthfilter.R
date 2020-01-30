@@ -25,11 +25,11 @@
 #' This option is useful for animals that use inter-tidal zones at high tide and may remain there even after the tide drops (e.g. some sea turtles).
 #' @param height A numerical value to adjust the water depth an animal is likely to use. Default is 0 m. 
 #' This parameter is useful if the minimum water depth used by the animal is known. 
-#' For example, a dugong unlikely uses the water shallower than its body height (e.g. <0.6 m)
+#' For example, a dugong unlikely uses the water shallower than its body height (e.g. ~0.5 m)
 #' so it may be sensible to consider the fix is an error if the estimated water depth is shallower than its body height.
 #' A negative value indicates below the water surface. 
-#' For the dugong example, to remove locations for which the water depth was <0.6 m, 
-#' it should be specified as; height = -0.6.
+#' For the dugong example, to remove locations for which the water depth was <0.5 m, 
+#' it should be specified as; height = -0.5.
 #' By supplying the body height to this argument, all the locations recorded at waters shallower than its body will be removed. 
 #' @param tidal.plane A data frame containing columns with the following headers: 
 #' "standard.port", "secondary.port", "lat", "lon", "timeDiff", "datumDiff". 

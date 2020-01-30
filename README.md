@@ -2,6 +2,8 @@
 SDLfilter
 =========
 
+[![DOI](https://zenodo.org/badge/27752990.svg)](https://zenodo.org/badge/latestdoi/27752990)
+
 Overview
 --------
 
@@ -75,9 +77,9 @@ overlap <- boot_overlap(curtis, R = 1000, method = "PHR")
 ```
 
 It will take some time to run this code depending on the number of
-iterations and the machine specs. The runtime was about 2.5 minutes on a
-linux machine (Intel i7-8650U CPU @ 1.90GHz, 32GB RAM) for 1000
-iterations.
+iterations and the machine specs. The runtime was about 2.5 minutes for
+1000 iterations on a linux machine (Intel i7-8650U CPU @ 1.90GHz, 32GB
+RAM).
 
 ``` r
 ## 3. Find the minimum sample size required to estimate the general distribution.
