@@ -182,7 +182,8 @@ dupfilter_exact<-function (sdata){
   ## Print report
   cat("dupfilter_exact removed", RemovedSamplesN, "of", OriginalSS, "locations.", fill = TRUE)
   if(length(id.exclude)>0){
-    message('Warning: dupfilter_exact not applied to ', id.exclude, '. Insufficient data.')
+    message('Warning: dupfilter_exact not applied to the following data. Insufficient data.')
+    message(paste(id.exclude, collapse = ', '))
   }
   
   #### Delete working columns and return the output

@@ -152,7 +152,8 @@ ddfilter_speed<-function (sdata, vmax=8.9, method=1){
   ## Print report
   cat("ddfilter_speed removed", RemovedSamplesN, "of", OriginalSS, "locations.", fill = TRUE)
   if(length(id.exclude)>0){
-    message('Warning: ddfilter_speed not applied to ', id.exclude, '. Insufficient data.')
+    message('Warning: ddfilter_speed not applied to the following data. Insufficient data.')
+    message(paste(id.exclude, collapse = ', '))
   }
   # if(length(id.exclude)>0){
   #     cat('ddfilter.speed removed', RemovedSamplesN, 'of', OriginalSS, 'locations')

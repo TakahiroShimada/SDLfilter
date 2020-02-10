@@ -109,7 +109,8 @@ dupfilter_qi<-function (sdata=sdata, step.time=0){
   ## Print report
   cat("dupfilter_qi removed", RemovedSamplesN, "of", OriginalSS, "locations.", fill = TRUE)
   if(length(id.exclude)>0){
-    message('Warning: dupfilter_qi not applied to ', id.exclude, '. Insufficient data.')
+    message('Warning: dupfilter_qi not applied to the following data. Insufficient data.')
+    message(paste(id.exclude, collapse = ', '))
   } 
 
   

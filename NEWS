@@ -1,4 +1,4 @@
-Version 1.2.1.9006 (2020-01-29)
+Version 1.2.1.9008 (2020-02-10)
 
   o added four new functions to assess sample sizes of animal tracking data (boot_overlap, boot_area, asymptote, percent_vol).
   o added a new example data "curtis"

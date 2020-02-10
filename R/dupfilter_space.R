@@ -187,7 +187,8 @@ dupfilter_space<-function (sdata, step.time=0, step.dist=0, conditional=FALSE){
   ## Print report
   cat("dupfilter_space removed", RemovedSamplesN, "of", OriginalSS, "locations.", fill = TRUE)
   if(length(id.exclude)>0){
-    message('Warning: dupfilter_space not applied to ', id.exclude, '. Insufficient data.')
+    message('Warning: dupfilter_space not applied to the following data. Insufficient data.')
+    message(paste(id.exclude, collapse = ', '))
   } 
 
   #### Delete working columns and return the output

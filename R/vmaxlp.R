@@ -257,7 +257,8 @@ vmaxlp<-function(sdata, qi=4, prob=0.99){
   cat("The maximum one-way linear speed of a loop trip (vmaxlp) was estimated using", SampleSize, "Vlp from", LoopTrips, "loop trips.", fill = TRUE)
   cat("vmaxlp:", round(MaxVlp,1), "km/h", fill = TRUE)
   if(length(id.exclude)>0){
-    message('Warning: vlp not estimated from ', id.exclude, '. Insufficient data.')
+    message('Warning: vlp cannot be estimated from the following data. Insufficient data.')
+    message(paste(id.exclude, collapse = ', '))
   }
 
   

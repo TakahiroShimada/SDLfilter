@@ -1,11 +1,14 @@
 ---
-output: html_notebook
-editor_options: 
+editor_options:
   chunk_output_type: inline
+output:
+  html_document:
+    df_print: paged
 ---
-## News for Package 'SDLfilter'
+News for Package 'SDLfilter'
+=========
 
-#### Version 1.2.1.9006 (2020-01-29)
+#### Version 1.2.1.9008 (2020-02-10)
 
 * added four new functions to assess sample sizes of animal tracking data (boot_overlap, boot_area, asymptote, percent_vol).
 * added a new example data "curtis"

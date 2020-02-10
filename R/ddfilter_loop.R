@@ -172,8 +172,8 @@ ddfilter_loop<-function(sdata, qi=4, ia=90, vmaxlp=1.8){
   cat("ddfilter_loop removed", RemovedSamplesN, "of", OriginalSS, "locations.", fill = TRUE)
   # cat("\n")
   if(length(id.exclude)>0){
-      message('Warning: ddfilter_loop not applied to ', id.exclude, '. Insufficient data.')
-      # cat("\n")
+      message('Warning: ddfilter_loop not applied to the following data. Insufficient data.')
+      message(paste(id.exclude, collapse = ', '))
   }
   
   # if(length(id.exclude)>0){

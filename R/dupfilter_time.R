@@ -396,7 +396,8 @@ dupfilter_time<-function (sdata, step.time=0) {
   ## Print report
   cat("dupfilter_time removed", RemovedSamplesN, "of", OriginalSS, "locations.", fill = TRUE)
   if(length(id.exclude)>0){
-    message('Warning: dupfilter_time not applied to ', id.exclude, '. Insufficient data.')
+    message('Warning: dupfilter_time not applied to the following data. Insufficient data.')
+    message(paste(id.exclude, collapse = ', '))
   }
 
   
