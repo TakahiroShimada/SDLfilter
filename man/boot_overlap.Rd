@@ -2,7 +2,7 @@
 % Please edit documentation in R/boot_overlap.R
 \name{boot_overlap}
 \alias{boot_overlap}
-\title{Bootstrap overlaps between UDs}
+\title{Bootstrap overlaps between Utilisation Distributions (UDs)}
 \usage{
 boot_overlap(
   data,

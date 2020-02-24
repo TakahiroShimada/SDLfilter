@@ -32,7 +32,7 @@ that each RasterLayer has exactly the same geographical extent and resolution.}
 A list containing two data frames - raw results and summary (mean, sd, sem and quantiles at each sample size).
 }
 \description{
-Function to calculate collective areas (merged x\% UDs) of n individuals by bootstrapping.
+Function to calculate collective areas (merged x\% Utilisation Distributions or UDs) of n individuals by bootstrapping.
 }
 \details{
 This function calculates collective areas (e.g. 50\% UDs) of 1 to n individuals by bootstrapping.

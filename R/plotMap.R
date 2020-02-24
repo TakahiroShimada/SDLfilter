@@ -15,7 +15,8 @@
 #' @param google.key If the Google Maps are queried, a valid API key (a string) needs to be specified here. See \code{\link[ggmap]{register_google}} for details.
 #' @param map.bg Background colour of the map. This argument is ignored when any of the Google Maps is selected.
 #' @param map.col Outline colour of the map. This argument is ignored when any of the Google Maps is selected.
-#' @param zoom Map zoom for the Google Maps. See \code{\link[ggmap]{get_map}} for details. 
+#' @param zoom Map zoom for the Google Maps. Defualt (NULL) to estimate the zoom from each data set. 
+#' For other options, see \code{\link[ggmap]{get_map}} for details. 
 #' @param point.bg The colour to fill in a symbol.
 #' @param point.col The colour for the outline of a symbol.
 #' @param point.symbol An integer or a string to specify the symbol type. See \code{\link[ggplot2]{shape}} for details. 
@@ -42,7 +43,7 @@
 #' @importFrom ggsn scalebar
 #' @importFrom gridExtra marrangeGrob
 #' @export
-#' @return An arrangelist is returned when multiplot is TRUE. Otherwise a list is returned. 
+#' @return An arrangelist is returned when \emph{multiplot} is TRUE. Otherwise a list is returned. 
 #' @author Takahiro Shimada
 #' @seealso \code{\link{dupfilter}}, \code{\link{ddfilter}}, \code{\link{vmax}}, \code{\link{vmaxlp}}
 #' @examples
@@ -74,7 +75,7 @@
 
 #### Plot data removed or retained by ddfilter
 plotMap<-function(sdata, xlim=NULL, ylim=NULL, margin=10, 
-                   bgmap=NULL, google.key=NULL, map.bg="grey", map.col="black", zoom="auto", 
+                   bgmap=NULL, google.key=NULL, map.bg="grey", map.col="black", zoom=NULL, 
                    point.bg="yellow", point.col="black", point.symbol=21, point.size=1,
                    line.col="lightgrey", line.type=1, line.size=0.5,
                    sb.distance=NULL, sb.lwd=1, sb.line.col="black", sb.text.size=4, sb.text.col="black", sb.space=3,
@@ -82,7 +83,7 @@ plotMap<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
                    multiplot=TRUE, nrow=1, ncol=1){
   
   #### Get data to plot
-  ID<-levels(factor(sdata$id))
+  ID<-as.character(unique(sdata$id))
   
   p.all<-lapply(1:length(ID), function(i){
     #### Subset data
@@ -122,9 +123,28 @@ plotMap<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
     } else if(any(bgmap %in% c("terrain", "satellite", "roadmap", "hybrid"))) {
       ggmap::ggmap_show_api_key()
       ggmap::register_google(key = google.key)
-      map.data<-ggmap::get_map(location = c(lon = mean(xlim), lat = mean(ylim)), 
-                               color = "color", source = "google", maptype = bgmap, zoom=zoom)
-      p <-ggmap::ggmap(map.data)  
+      
+      if(is.null(zoom)){
+        lonlength <- diff(xlim)
+        latlength <- diff(ylim)
+        zoomlon <- ceiling( log2( 360*2 / lonlength) )
+        zoomlat <- ceiling( log2( 180*2 / latlength) )
+        zm <- min(zoomlon, zoomlat)
+        
+        map.data<-ggmap::get_map(location = c(lon = mean(xlim), lat = mean(ylim)), 
+                                 color = "color", source = "google", maptype = bgmap, 
+                                 zoom = zm)
+        # 
+        # map.data<-ggmap::get_map(location = c(xlim[1], ylim[1], xlim[2], ylim[2]), 
+        #                          color = "color", source = "google", maptype = bgmap, 
+        #                          zoom = zm)
+        # 
+      } else {
+        map.data<-ggmap::get_map(location = c(lon = mean(xlim), lat = mean(ylim)), 
+                                 color = "color", source = "google", maptype = bgmap, zoom=zoom)
+      }
+      
+      p <- ggmap::ggmap(map.data)  
 
     } else {
       map.data<-bgmap
@@ -178,7 +198,7 @@ plotMap<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
   })
   
   if(isTRUE(multiplot)){
-    gridExtra::marrangeGrob(p.all, nrow=nrow, ncol=ncol)
+    gridExtra::marrangeGrob(p.all, nrow=nrow, ncol=ncol, top=NULL)
   } else {
     p.all
   }

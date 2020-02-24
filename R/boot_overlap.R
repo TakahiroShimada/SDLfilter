@@ -1,5 +1,5 @@
 #' @aliases boot_overlap
-#' @title Bootstrap overlaps between UDs 
+#' @title Bootstrap overlaps between Utilisation Distributions (UDs) 
 #' @description Function to calculate overlaps between UDs relative to sample size by bootstrapping.
 #' @param data A matrix or list of RasterLayer objects. 
 #' Each row of the matrix or each RasterLayer object contains utilisation distribution 

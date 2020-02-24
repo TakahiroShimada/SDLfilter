@@ -13,7 +13,7 @@ plotMap(
   google.key = NULL,
   map.bg = "grey",
   map.col = "black",
-  zoom = "auto",
+  zoom = NULL,
   point.bg = "yellow",
   point.col = "black",
   point.symbol = 21,
@@ -58,7 +58,8 @@ The Google Maps ("terrain", "satellite", "roadmap", "hybrid") can also be querie
 
 \item{map.col}{Outline colour of the map. This argument is ignored when any of the Google Maps is selected.}
 
-\item{zoom}{Map zoom for the Google Maps. See \code{\link[ggmap]{get_map}} for details.}
+\item{zoom}{Map zoom for the Google Maps. Defualt (NULL) to estimate the zoom from each data set. 
+For other options, see \code{\link[ggmap]{get_map}} for details.}
 
 \item{point.bg}{The colour to fill in a symbol.}
 
@@ -103,7 +104,7 @@ The value is scaled to the plot. The smaller value increases the space.}
 \item{ncol}{An integer to specify the number of columns in the multiple plot page.}
 }
 \value{
-An arrangelist is returned when multiplot is TRUE. Otherwise a list is returned.
+An arrangelist is returned when \emph{multiplot} is TRUE. Otherwise a list is returned.
 }
 \description{
 Function to plot tracking data on a map or a satellite image.

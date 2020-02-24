@@ -1,6 +1,6 @@
 #' @aliases boot_area
 #' @title Cumulative analysis of collective areas by bootstrapping 
-#' @description Function to calculate collective areas (merged x\% UDs) of n individuals by bootstrapping.
+#' @description Function to calculate collective areas (merged x\% Utilisation Distributions or UDs) of n individuals by bootstrapping.
 #' @param data A matrix or list of RasterLayer objects. 
 #' Each row of the matrix or each RasterLayer object contains a utilisation distribution 
 #' (or other statistics that sums to 1 - e.g. proportion of time spent).
