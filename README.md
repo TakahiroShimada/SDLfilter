@@ -3,6 +3,7 @@ SDLfilter
 =========
 
 [![DOI](https://zenodo.org/badge/27752990.svg)](https://zenodo.org/badge/latestdoi/27752990)
+[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/SDLfilter)](https://cran.r-project.org/package=SDLfilter)
 
 Overview
 --------
