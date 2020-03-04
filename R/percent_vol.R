@@ -1,6 +1,6 @@
 #' @aliases percent_vol
 #' @title UD percent volume  
-#' @description Function to calculate a percent volume on a UD
+#' @description Function to calculate a percent volume on a utilisation distribution (UD)
 #' @param x A vector containing the probability density. 
 #' @param percent An integer specifying the percent volume of a UD to be considered.
 #' @export

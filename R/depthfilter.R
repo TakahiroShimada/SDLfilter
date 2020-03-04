@@ -5,12 +5,12 @@
 #' The function filters the input data by the unique "id". 
 #' "DateTime" is date & time in class \code{\link[base]{POSIXct}}. 
 #' "lat" and "lon" are the latitude and longitude of each location in decimal degrees. 
-#' "qi" is the numerical quality index associated with each location fix where the greater number indicates the higher accuracy 
+#' "qi" is the numerical quality index associated with each location fix where a greater number indicates a higher accuracy 
 #' (e.g. number of GPS satellites used for estimation).
 #' @param bathymetry A RasterLayer object containing bathymetric data in metres. 
 #' Negative and positive values indicate below and above the water respectively. 
 #' Geographic coordinate system is WGS84.
-#' @param extract Method to extract cell values from raster layer as inherited from \code{\link[raster]{extract}} function of the raster package. 
+#' @param extract Method to extract cell values from the raster layer as inherited from the \code{\link[raster]{extract}} function of the raster package. 
 #' Default is bilinear.
 #' @param tide A data frame containing columns with the following headers: "tideDT", "reading", "standard.port". 
 #' "tideDT" is date & time in class \code{\link[base]{POSIXct}} at each observation. "reading" is the observed tidal height in metres. 
@@ -20,27 +20,27 @@
 #' Default is 4.
 #' @param type The type of water depth considered in the filtering process.
 #' "exp" is for the water depth experienced by the animal at the time.
-#' This option may be applicable to animals that remains under water all the time (e.g. dugongs, dolphins, etc).
+#' This option may be applicable to species that remain in water at all times (e.g. dugongs, dolphins, etc).
 #' "HT" is for the water depth at the nearest high tide (default). 
 #' This option is useful for animals that use inter-tidal zones at high tide and may remain there even after the tide drops (e.g. some sea turtles).
 #' @param height A numerical value to adjust the water depth an animal is likely to use. Default is 0 m. 
 #' This parameter is useful if the minimum water depth used by the animal is known. 
-#' For example, a dugong unlikely uses the water shallower than its body height (e.g. ~0.5 m)
+#' For example, a dugong is unlikely to use water shallower than its body height (e.g. ~0.5 m)
 #' so it may be sensible to consider the fix is an error if the estimated water depth is shallower than its body height.
 #' A negative value indicates below the water surface. 
 #' For the dugong example, to remove locations for which the water depth was <0.5 m, 
 #' it should be specified as; height = -0.5.
-#' By supplying the body height to this argument, all the locations recorded at waters shallower than its body will be removed. 
+#' By supplying the body height to this argument, all the locations recorded shallower than its body will be removed. 
 #' @param tidal.plane A data frame containing columns with the following headers: 
 #' "standard.port", "secondary.port", "lat", "lon", "timeDiff", "datumDiff". 
 #' "standard.port" is the identifier for a tidal observation station. 
 #' "secondary.port" is the identifier for a station at which tide is only predicted using tidal records observed at the related standard port. 
 #' "lat" and "lon" are the latitude and longitude of each secondary port in decimal degrees. 
 #' "timeDiff" is the time difference between standard port and its associated secondary port. 
-#' "datumDiff" is the baseline difference in metres between bathymetry and tidal observations/predictions 
-#' if each data uses different datum (e.g. LAT and MSL). 
+#' "datumDiff" is the baseline difference in metres if bathymetry and tidal observations/predictions 
+#' uses different datum (e.g. LAT and MSL). 
 #' @param filter Default is TRUE. 
-#' If FALSE, the function does not filter locations but returns estimates of the water depth experienced by the animal at each location.
+#' If FALSE, the function does not filter locations but it still returns estimates of the water depth experienced by the animal at each location.
 #' @import sp
 #' @importFrom data.table data.table
 #' @importFrom raster pointDistance
@@ -96,7 +96,7 @@
 #' 
 #' 
 #' #### Plot data removed or retained by depthfilter
-#' plotMap(turtle.dd, bgmap=SandyStrait, point.bg = "red", point.size = 2, line.size = 0.5, 
+#' plot_track(turtle.dd, bgmap=SandyStrait, point.bg = "red", point.size = 2, line.size = 0.5, 
 #'         axes.lab.size = 0, title.size=0, sb.distance=10, multiplot = FALSE)[[1]] + 
 #' geom_point(aes(x=lon, y=lat), data=turtle.dep, size=2, fill="yellow", shape=21)+
 #' geom_point(aes(x=x, y=y), data=data.frame(x=c(152.68, 152.68), y=c(-25.3, -25.34)), 

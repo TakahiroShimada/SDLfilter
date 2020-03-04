@@ -1,11 +1,12 @@
-Version 1.2.1.9009 (2020-02-24)
+Version 1.2.1.9012 (2020-03-04)
 
   o added four new functions to assess sample sizes of animal tracking data (boot_overlap, boot_area, asymptote, percent_vol).
   o added a new example data "curtis".
   o added a new argument "type" in the depthfilter function.
   o renamed some functions (ddfilter.loop -> ddfilter_loop; ddfilter.speed -> ddfilter_speed; dupfilter.exact -> dupfilter_exact; dupfilter.qi -> dupfilter_qi; dupfilter.space -> dupfilter_space; dupfilter.time -> dupfilter_time, distantfilter -> distfilter).
   o renamed an argument in ddfilter (maxvlp -> vmaxlp).
-  o improved the plotMap function.
+  o renamed the plotMap to plot_track
+  o improved the plot_track function.
   o improved the R documentations.
 
 Version 1.2.1 (2019-02-19)

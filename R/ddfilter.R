@@ -5,7 +5,7 @@
 #' The function filters the input data by the unique "id". 
 #' "DateTime" is date & time in class \code{\link[base]{POSIXct}}. 
 #' "lat" and "lon" are the latitude and longitude of each location in decimal degrees. 
-#' "qi" is the numerical quality index associated with each location fix where the greater number indicates the higher accuracy 
+#' "qi" is the numerical quality index associated with each location fix where a greater number indicates a higher accuracy 
 #' (e.g. number of GPS satellites used for estimation).
 #' @param vmax A numeric value specifying a threshold of speed from a previous and/or to a subsequent fix. 
 #' Default is 8.9km/h. 
@@ -64,7 +64,7 @@
 #' 
 #' #### Plot data removed or retained by ddfilter
 #' ## Entire area
-#' p1<-plotMap(turtle.dup, bgmap=Australia, point.size = 2, line.size = 0.5, axes.lab.size = 0, 
+#' p1<-plot_track(turtle.dup, bgmap=Australia, point.size = 2, line.size = 0.5, axes.lab.size = 0, 
 #'             sb.distance=200, multiplot = FALSE, point.bg = "red",
 #'             title.size=15, title="Entire area")[[1]] + 
 #'   geom_point(aes(x=lon, y=lat), data=turtle.dd, size=2, fill="yellow", shape=21)+
@@ -74,7 +74,7 @@
 #'            colour="black", size=4, hjust = 0)
 #'
 #' ## Zoomed in
-#' p2<-plotMap(turtle.dup, bgmap=SandyStrait, xlim=c(152.7, 153.2), ylim=(c(-25.75, -25.24)), 
+#' p2<-plot_track(turtle.dup, bgmap=SandyStrait, xlim=c(152.7, 153.2), ylim=(c(-25.75, -25.24)), 
 #'             axes.lab.size = 0, sb.distance=10, point.size = 2, point.bg = "red", line.size = 0.5, 
 #'             multiplot = FALSE, title.size=15, title="Zoomed in")[[1]] + 
 #' geom_path(aes(x=lon, y=lat), data=turtle.dd, size=0.5, colour="black", linetype=1) + 

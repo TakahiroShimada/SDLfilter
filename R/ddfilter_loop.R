@@ -6,7 +6,7 @@
 #' The function filters the input data by the unique "id". 
 #' "DateTime" is date & time in class \code{\link[base]{POSIXct}}. 
 #' "lat" and "lon" are the latitude and longitude of each location in decimal degrees. 
-#' "qi" is the numerical quality index associated with each location fix where the greater number indicates the higher accuracy 
+#' "qi" is the numerical quality index associated with each location fix where a greater number indicates a higher accuracy 
 #' (e.g. number of GPS satellites used for estimation).
 #' @param vmaxlp A numeric value specifying a threshold of speed, which is used to evaluate the locations of loop trips. 
 #' Default is 1.8 km/h.

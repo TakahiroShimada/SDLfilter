@@ -2,7 +2,7 @@
 #' @title Bootstrap overlaps between Utilisation Distributions (UDs) 
 #' @description Function to calculate overlaps between UDs relative to sample size by bootstrapping.
 #' @param data A matrix or list of RasterLayer objects. 
-#' Each row of the matrix or each RasterLayer object contains utilisation distribution 
+#' Each row of the matrix or each RasterLayer object contains a utilisation distribution 
 #' (or other statistics that sums to 1 - e.g. proportion of time spent).
 #' \bold{The grid size and geographical extent must be consistent across each row of the matrix or each RasterLayer object.}
 #' The function assumes that each column of the matrix is associated with a unique geographical location or 

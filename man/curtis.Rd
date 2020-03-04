@@ -13,6 +13,6 @@ curtis
 }
 \description{
 Inter-nesting utilisation distributions of 29 flatback turtles (\emph{Natator depressus}) that nested in Curtis Island, Australia.
-For demonstration purpose, the resolution of the UDs is reduced to 1km grid instead of 50m as used in Shimada et al (in prep).
+As a demonstration, the resolution of the UDs is reduced to 1km grid instead of 50m as used in Shimada et al (in prep).
 }
 \keyword{datasets}

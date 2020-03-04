@@ -5,7 +5,7 @@
 #' "id" is the unique representing an individual. 
 #' "DateTime" is date & time in class \code{\link[base]{POSIXct}}. 
 #' "lat" and "lon" are the recorded latitude and longitude in decimal degrees. 
-#' "qi" is the numerical quality index associated with each location fix where the greater number indicates the higher accuracy 
+#' "qi" is the numerical quality index associated with each location fix where a greater number indicates a higher accuracy 
 #' (e.g. the number of GPS satellites involved in estimation).
 #' @param qi An integer specifying the minimum quality index associated with a location used for the estimation. 
 #' Default is 4 (e.g. 4 GPS satellite or more).

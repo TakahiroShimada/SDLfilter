@@ -1,4 +1,4 @@
-#' @aliases plotMap
+#' @aliases plot_track
 #' @title Plot location data
 #' @description Function to plot tracking data on a map or a satellite image. 
 #' @param sdata A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon". 
@@ -42,6 +42,7 @@
 #' @import ggmap ggplot2
 #' @importFrom ggsn scalebar
 #' @importFrom gridExtra marrangeGrob
+#' @importFrom raster pointDistance
 #' @export
 #' @return An arrangelist is returned when \emph{multiplot} is TRUE. Otherwise a list is returned. 
 #' @author Takahiro Shimada
@@ -65,16 +66,16 @@
 #' 
 #' #### Plot filtered data for each animal
 #' ## using the low-resolution world map
-#' plotMap(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1)
+#' plot_track(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1)
 #'
 #'\dontrun{
 #' ## using the high-resolution google satellite images
-#' plotMap(turtle.dd, bgmap = "satellite", google.key = "key", ncol=2)
+#' plot_track(turtle.dd, bgmap = "satellite", google.key = "key", ncol=2)
 #'}
 
 
 #### Plot data removed or retained by ddfilter
-plotMap<-function(sdata, xlim=NULL, ylim=NULL, margin=10, 
+plot_track<-function(sdata, xlim=NULL, ylim=NULL, margin=10, 
                    bgmap=NULL, google.key=NULL, map.bg="grey", map.col="black", zoom=NULL, 
                    point.bg="yellow", point.col="black", point.symbol=21, point.size=1,
                    line.col="lightgrey", line.type=1, line.size=0.5,
@@ -134,11 +135,7 @@ plotMap<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
         map.data<-ggmap::get_map(location = c(lon = mean(xlim), lat = mean(ylim)), 
                                  color = "color", source = "google", maptype = bgmap, 
                                  zoom = zm)
-        # 
-        # map.data<-ggmap::get_map(location = c(xlim[1], ylim[1], xlim[2], ylim[2]), 
-        #                          color = "color", source = "google", maptype = bgmap, 
-        #                          zoom = zm)
-        # 
+
       } else {
         map.data<-ggmap::get_map(location = c(lon = mean(xlim), lat = mean(ylim)), 
                                  color = "color", source = "google", maptype = bgmap, zoom=zoom)
@@ -177,17 +174,28 @@ plotMap<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
     #### Add scale
     # Get parameters
     if(is.null(sb.distance)){
-      sb.distance<-round(((xlim[2]-xlim[1])*111.139)/4)
-      sb<-ggsn::scalebar(x.min=xlim[1]+extra2, x.max=xlim[2]-extra2, y.min=ylim[1]+extra2, y.max=ylim[2]-extra2,
-                         dist = sb.distance, dist_unit = "km", transform = TRUE, model = 'WGS84', location="bottomleft", st.dist=.03)
-    } else {
-      sb<-ggsn::scalebar(x.min=xlim[1]+extra2, x.max=xlim[2]-extra2, y.min=ylim[1]+extra2, y.max=ylim[2]-extra2,
-                         dist = sb.distance, dist_unit = "km", transform = TRUE, model = 'WGS84', location="bottomleft", st.dist=.03)
+      sb.distance <- raster::pointDistance(c(xlim[1], ylim[1]), c(xlim[2], ylim[1]), lonlat = TRUE)/1000/4
+      digi <- nchar(trunc(sb.distance))
+      sb.distance <- round(sb.distance/10^(digi-1)) * 10^(digi-1)
+      if(sb.distance>0){
+      } else {
+        sb.distance <- 1
+      }
+      
+      # sb.distance<-round(((xlim[2]-xlim[1])*111.139)/4)
+      # sb<-ggsn::scalebar(x.min=xlim[1]+extra2, x.max=xlim[2]-extra2, y.min=ylim[1]+extra2, y.max=ylim[2]-extra2,
+      #                    dist = sb.distance, dist_unit = "km", transform = TRUE, model = 'WGS84', location="bottomleft", st.dist=.03)
+    # } else {
+    #   sb<-ggsn::scalebar(x.min=xlim[1]+extra2, x.max=xlim[2]-extra2, y.min=ylim[1]+extra2, y.max=ylim[2]-extra2,
+    #                      dist = sb.distance, dist_unit = "km", transform = TRUE, model = 'WGS84', location="bottomleft", st.dist=.03)
+    # }
     }
-    sb.xmin<-min(sb[[1]]$data$x)
-    sb.xmax<-max(sb[[1]]$data$x)
-    sb.ymin<-min(sb[[1]]$data$y)
-    sb.ymax<-max(sb[[1]]$data$y)
+    
+    sb<-ggsn::scalebar(x.min=xlim[1]+extra2, x.max=xlim[2]-extra2, y.min=ylim[1]+extra2, y.max=ylim[2]-extra2,
+                       dist = sb.distance, dist_unit = "km", transform = TRUE, model = 'WGS84', location="bottomleft", st.dist=.03)
+      
+    sb.xmin<-min(sb[[1]]$data$x); sb.xmax<-max(sb[[1]]$data$x)
+    sb.ymin<-min(sb[[1]]$data$y); sb.ymax<-max(sb[[1]]$data$y)
     
     sb.df<-data.frame(x=c(sb.xmin, sb.xmax), y=c(sb.ymax, sb.ymax))
     

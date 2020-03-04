@@ -6,7 +6,7 @@
 #' The function filters the input data by the unique "id". 
 #' "DateTime" is date & time in class \code{\link[base]{POSIXct}}. 
 #' "lat" and "lon" are the latitude and longitude of each location in decimal degrees. 
-#' "qi" is the numerical quality index associated with each location fix where the greater number indicates the higher accuracy 
+#' "qi" is the numerical quality index associated with each location fix where a greater number indicates a higher accuracy 
 #' (e.g. the number of GPS satellites involved in estimation).
 #' @param step.time Consecutive locations less than or equal to \emph{step.time} apart are considered temporal duplicates.
 #' Default is 0 hours.
@@ -19,7 +19,7 @@
 #' It first filters temporally and spatially exact locations. 
 #' It then looks for temporal duplicates and retains a fix with the highest quality index.
 #' When temporal or spatial duplicates are associated with the same quality index, 
-#' the function retains a location that is the nearest from a previous and to a subsequent locations.
+#' the function retains a location that is nearest from a previous and to a subsequent location.
 #' @return The input data frame is returned containing only a single fix (latitude/longitude pair) per time and location. 
 #' The following columns are added: "pTime", "sTime", "pDist", "sDist". 
 #' "pTime" and "sTime" are hours from a previous and to a subsequent fix respectively. 
