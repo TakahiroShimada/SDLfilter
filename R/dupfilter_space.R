@@ -15,6 +15,7 @@
 #' Default is FALSE.
 #' @import sp
 #' @importFrom raster pointDistance
+#' @importFrom plyr rbind.fill
 #' @export
 #' @details This function is a partial component of \code{\link{dupfilter}}, although works as a stand-alone function.
 #' First it identifies spatial duplicates by searching for consecutive fixes that were located within \emph{step.dist}.
@@ -56,32 +57,32 @@ dupfilter_space<-function (sdata, step.time=0, step.dist=0, conditional=FALSE){
     IDs<-levels(factor(sdata$id))
     
     
-    ## Hours from a previous and to a subsequent location (pTime & sTime)
-    stepTime<-function(j){
-        timeDiff<-diff(sdata[sdata$id %in% j, "DateTime"])
-        units(timeDiff)<-"hours"
-        c(as.numeric(timeDiff), NA)
-    } 
-    
-    sTime<-unlist(lapply(IDs, stepTime))  
-    sdata$pTime<-c(NA, sTime[-length(sTime)])
-    sdata$sTime<-sTime
-    
-    
-    ## Distance from a previous and to a subsequent location (pDist & sDist)
-    calcDist<-function(j){
-      turtle<-sdata[sdata$id %in% j,]  
-      LatLong<-data.frame(Y=turtle$lat, X=turtle$lon)
-      sp::coordinates(LatLong)<-~X+Y
-      sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
-      
-      #pDist
-      c(NA, raster::pointDistance(LatLong[-length(LatLong)], LatLong[-1], lonlat=T)/1000)
-    }
-    
-    sdata$pDist<-unlist(lapply(IDs, calcDist))
-    sdata$sDist<-c(sdata$pDist[-1], NA)
-    
+    # ## Hours from a previous and to a subsequent location (pTime & sTime)
+    # stepTime<-function(j){
+    #     timeDiff<-diff(sdata[sdata$id %in% j, "DateTime"])
+    #     units(timeDiff)<-"hours"
+    #     c(as.numeric(timeDiff), NA)
+    # } 
+    # 
+    # sTime<-unlist(lapply(IDs, stepTime))  
+    # sdata$pTime<-c(NA, sTime[-length(sTime)])
+    # sdata$sTime<-sTime
+    # 
+    # 
+    # ## Distance from a previous and to a subsequent location (pDist & sDist)
+    # calcDist<-function(j){
+    #   turtle<-sdata[sdata$id %in% j,]  
+    #   LatLong<-data.frame(Y=turtle$lat, X=turtle$lon)
+    #   sp::coordinates(LatLong)<-~X+Y
+    #   sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
+    #   
+    #   #pDist
+    #   c(NA, raster::pointDistance(LatLong[-length(LatLong)], LatLong[-1], lonlat=T)/1000)
+    # }
+    # 
+    # sdata$pDist<-unlist(lapply(IDs, calcDist))
+    # sdata$sDist<-c(sdata$pDist[-1], NA)
+    sdata <- track_param(sdata, param = c('time', 'distance'))
     
     #### Select a location from successive spatial duplicates by distance and time 
     ## middle section 1
@@ -156,8 +157,8 @@ dupfilter_space<-function (sdata, step.time=0, step.dist=0, conditional=FALSE){
     
     #### Bring back excluded data
     if(nrow(excluded.data)>0){
-      excluded.data[,c("pTime", "sTime", "pDist", "sDist", "rm", "rm2")]<-NA
-      sdata<-rbind(sdata, excluded.data)
+      # excluded.data[,c("pTime", "sTime", "pDist", "sDist", "rm", "rm2")]<-NA
+      sdata <- plyr::rbind.fill(sdata, excluded.data)
     } else {
       sdata<-sdata
     }

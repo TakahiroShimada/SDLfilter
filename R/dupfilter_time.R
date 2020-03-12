@@ -12,6 +12,7 @@
 #' @import sp
 #' @importFrom raster pointDistance
 #' @importFrom geosphere distGeo
+#' @importFrom plyr rbind.fill
 #' @export
 #' @details This is a partial component of \code{\link{dupfilter}}, although works as a stand-alone function.
 #' First it identifies temporal duplicates by searching for consecutive locations that were obtained within \emph{step.time}.
@@ -50,16 +51,17 @@ dupfilter_time<-function (sdata, step.time=0) {
         IDs<-levels(factor(sdata$id))
         
         
-        ## Hours from a previous and to a subsequent location (pTime & sTime)
-        stepTime<-function(j){
-            timeDiff<-diff(sdata[sdata$id %in% j, "DateTime"])
-            units(timeDiff)<-"hours"
-            c(as.numeric(timeDiff), NA)
-        } 
-        
-        sTime<-unlist(lapply(IDs, stepTime))  
-        sdata$pTime<-c(NA, sTime[-length(sTime)])
-        sdata$sTime<-sTime
+        # ## Hours from a previous and to a subsequent location (pTime & sTime)
+        # stepTime<-function(j){
+        #     timeDiff<-diff(sdata[sdata$id %in% j, "DateTime"])
+        #     units(timeDiff)<-"hours"
+        #     c(as.numeric(timeDiff), NA)
+        # } 
+        # 
+        # sTime<-unlist(lapply(IDs, stepTime))  
+        # sdata$pTime<-c(NA, sTime[-length(sTime)])
+        # sdata$sTime<-sTime
+        sdata <- track_param(sdata, param = 'time')
         
         
         #### Select a location from multiple fixes obtained at the same time
@@ -365,8 +367,8 @@ dupfilter_time<-function (sdata, step.time=0) {
         
         #### Bring back excluded data
         if(nrow(excluded.data)>0){
-          excluded.data[,c("pTime", "sTime", "PSL1", "PSL2", "PSL3", "PSL4", "rm1", "rm2", "rm3", "rm4")]<-NA
-          sdata<-rbind(sdata, excluded.data)
+          # excluded.data[,c("pTime", "sTime", "PSL1", "PSL2", "PSL3", "PSL4", "rm1", "rm2", "rm3", "rm4")]<-NA
+          sdata <- plyr::rbind.fill(sdata, excluded.data)
         } else {
           sdata<-sdata
         }

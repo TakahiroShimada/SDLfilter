@@ -11,7 +11,7 @@ ddfilter(sdata, vmax = 8.9, vmaxlp = 1.8, qi = 4, ia = 90, method = 1)
 The function filters the input data by the unique "id". 
 "DateTime" is date & time in class \code{\link[base]{POSIXct}}. 
 "lat" and "lon" are the latitude and longitude of each location in decimal degrees. 
-"qi" is the numerical quality index associated with each location fix where the greater number indicates the higher accuracy 
+"qi" is the numerical quality index associated with each location fix where a greater number indicates a higher accuracy 
 (e.g. number of GPS satellites used for estimation).}
 
 \item{vmax}{A numeric value specifying a threshold of speed from a previous and/or to a subsequent fix. 
@@ -38,7 +38,7 @@ The following columns are added: "pTime", "sTime", "pDist", "sDist", "pSpeed", "
 "pTime" and "sTime" are hours from a previous and to a subsequent fix respectively. 
 "pDist" and "sDist" are straight distances in kilometres from a previous and to a subsequent fix respectively. 
 "pSpeed" and "sSpeed" are linear speed from a previous and to a subsequent fix respectively. 
-"inAng" is the angle between the bearings of lines joining successive location points.
+"inAng" is the degree between the bearings of lines joining successive location points.
 }
 \description{
 Function to remove locations by a data driven filter as described in Shimada et al. (2012).

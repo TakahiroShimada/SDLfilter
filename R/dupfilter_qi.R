@@ -9,6 +9,7 @@
 #' (e.g. the number of GPS satellites involved in estimation).
 #' @param step.time Consecutive locations less than or equal to \emph{step.time} apart are considered temporal duplicates.
 #' Default is 0 hours.
+#' @importFrom plyr rbind.fill
 #' @export
 #' @details This function is a partial component of \code{\link{dupfilter}}, although works as a stand-alone function. 
 #' First it identifies spatial duplicates by searching for consecutive fixes that were located within \emph{step.dist}. For each group of spatial duplicates, 
@@ -49,15 +50,16 @@ dupfilter_qi<-function (sdata=sdata, step.time=0){
           
     
     ## Hours from a previous and to a subsequent location (pTime & sTime)
-    stepTime<-function(j){
-        timeDiff<-diff(sdata[sdata$id %in% j, "DateTime"])
-        units(timeDiff)<-"hours"
-        c(as.numeric(timeDiff), NA)
-    } 
-    
-    sTime<-unlist(lapply(IDs, stepTime))  
-    sdata$pTime<-c(NA, sTime[-length(sTime)])
-    sdata$sTime<-sTime
+    sdata <- track_param(sdata, param = 'time')
+    # stepTime<-function(j){
+    #     timeDiff<-diff(sdata[sdata$id %in% j, "DateTime"])
+    #     units(timeDiff)<-"hours"
+    #     c(as.numeric(timeDiff), NA)
+    # } 
+    # 
+    # sTime<-unlist(lapply(IDs, stepTime))  
+    # sdata$pTime<-c(NA, sTime[-length(sTime)])
+    # sdata$sTime<-sTime
     
     
     # Remove duplicates by quality index: (0 = remove, 1 = keep)
@@ -79,8 +81,8 @@ dupfilter_qi<-function (sdata=sdata, step.time=0){
     
     #### Bring back excluded data
     if(nrow(excluded.data)>0){
-      excluded.data[,c("pTime", "sTime", "rm")]<-NA
-      sdata<-rbind(sdata, excluded.data)
+      # excluded.data[,c("pTime", "sTime", "rm")]<-NA
+      sdata <- plyr::rbind.fill(sdata, excluded.data)
     } else {
       sdata<-sdata
     }

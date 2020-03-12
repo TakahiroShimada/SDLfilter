@@ -9,6 +9,7 @@
 #' (e.g. the number of GPS satellites involved in estimation).
 #' @import sp
 #' @importFrom raster pointDistance
+#' @importFrom plyr rbind.fill
 #' @export
 #' @details This is a partial component of \code{\link{dupfilter}}, although works as a stand-alone function.
 #' It looks for temporally and spatially exact locations and retains only a single fix (latitude/longitude pair) per time and location. 
@@ -48,34 +49,33 @@ dupfilter_exact<-function (sdata){
       ## Get Id of each animal
       IDs<-levels(factor(sdata$id))
       
-      
-      ## Hours from a previous and to a subsequent location (pTime & sTime)
-      stepTime<-function(j){
-          timeDiff<-diff(sdata[sdata$id %in% j, "DateTime"])
-          units(timeDiff)<-"hours"
-          c(as.numeric(timeDiff), NA)
-      } 
-      
-      sTime<-unlist(lapply(IDs, stepTime))  
-      sdata$pTime<-c(NA, sTime[-length(sTime)])
-      sdata$sTime<-sTime
-      
-      
-      ## Distance from a previous and to a subsequent location (pDist & sDist)
-      # Function to calculate distances
-      calcDist<-function(j){
-        turtle<-sdata[sdata$id %in% j,]  
-        LatLong<-data.frame(Y=turtle$lat, X=turtle$lon)
-        sp::coordinates(LatLong)<-~X+Y
-        sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
-        
-        #pDist
-        c(NA, raster::pointDistance(LatLong[-length(LatLong)], LatLong[-1], lonlat=T)/1000)
-      }
-      
-      sdata$pDist<-unlist(lapply(IDs, calcDist))
-      sdata$sDist<-c(sdata$pDist[-1], NA)
-
+      # ## Hours from a previous and to a subsequent location (pTime & sTime)
+      # stepTime<-function(j){
+      #     timeDiff<-diff(sdata[sdata$id %in% j, "DateTime"])
+      #     units(timeDiff)<-"hours"
+      #     c(as.numeric(timeDiff), NA)
+      # } 
+      # 
+      # sTime<-unlist(lapply(IDs, stepTime))  
+      # sdata$pTime<-c(NA, sTime[-length(sTime)])
+      # sdata$sTime<-sTime
+      # 
+      # 
+      # ## Distance from a previous and to a subsequent location (pDist & sDist)
+      # # Function to calculate distances
+      # calcDist<-function(j){
+      #   turtle<-sdata[sdata$id %in% j,]  
+      #   LatLong<-data.frame(Y=turtle$lat, X=turtle$lon)
+      #   sp::coordinates(LatLong)<-~X+Y
+      #   sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
+      #   
+      #   #pDist
+      #   c(NA, raster::pointDistance(LatLong[-length(LatLong)], LatLong[-1], lonlat=T)/1000)
+      # }
+      # 
+      # sdata$pDist<-unlist(lapply(IDs, calcDist))
+      # sdata$sDist<-c(sdata$pDist[-1], NA)
+      sdata <- track_param(sdata, param = c('time', 'distance'))
       
       ### Identify duplicates (exact time and location)
       ## Function to identify exact duplicates: (0 = remove, 1 = keep)
@@ -100,7 +100,7 @@ dupfilter_exact<-function (sdata){
       }
       
       sdata$rm<-unlist(lapply(IDs, apply.dup))
-      
+     unlist(lapply(IDs[15], apply.dup))
       
       ## First two rows
       #Function to identify exact duplicates
@@ -151,8 +151,8 @@ dupfilter_exact<-function (sdata){
       
       #### Bring back excluded data
       if(nrow(excluded.data)>0){
-        excluded.data[,c("pTime", "sTime", "pDist", "sDist", "rm", "rm2", "rm3")]<-NA
-        sdata<-rbind(sdata, excluded.data)
+        # excluded.data[,c("pTime", "sTime", "pDist", "sDist", "rm", "rm2", "rm3")]<-NA
+        sdata <- plyr::rbind.fill(sdata, excluded.data)
       } else {
         sdata<-sdata
       }

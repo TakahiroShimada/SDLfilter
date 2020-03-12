@@ -10,7 +10,7 @@
   \item{DateTime}{date & time in class \code{\link[base]{POSIXct}}.}
   \item{lat}{latitude in decimal degrees.}
   \item{lon}{longitude in decimal degrees.}
-  \item{qi}{numerical quality index associated with each location fix where the greater number indicates the higher accuracy
+  \item{qi}{numerical quality index associated with each location fix where a greater number indicates a higher accuracy
    (e.g. number of GPS satellites used for estimation).}
 }}
 \source{

@@ -8,9 +8,10 @@ output:
 News for Package 'SDLfilter'
 =========
 
-#### Version 1.2.1.9012 (2020-03-04)
+#### Version 1.2.1.9014 (2020-03-12)
 
-* added four new functions to assess sample sizes of animal tracking data (boot_overlap, boot_area, asymptote, percent_vol).
+* added four new functions (boot_overlap, boot_area, asymptote, percent_vol) to assess sample sizes of animal tracking data.
+* added a new function (track_param) to calculate some parameters of animal tracking data (i.e. time, distance, speed, angle between locations).
 * added a new example data "curtis".
 * added a new argument "type" in the depthfilter function.
 * renamed some functions (ddfilter.loop -> ddfilter_loop; ddfilter.speed -> ddfilter_speed; dupfilter.exact -> dupfilter_exact; dupfilter.qi -> dupfilter_qi; dupfilter.space -> dupfilter_space; dupfilter.time -> dupfilter_time, distantfilter -> distfilter).

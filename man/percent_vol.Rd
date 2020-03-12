@@ -15,7 +15,7 @@ percent_vol(x, percent = 100)
 A vector containing the specified percent volume.
 }
 \description{
-Function to calculate a percent volume on a UD
+Function to calculate a percent volume on a utilisation distribution (UD)
 }
 \details{
 This function calculates a percent volume on a UD. The probability beyond the specified range will be assigned with a zero value.

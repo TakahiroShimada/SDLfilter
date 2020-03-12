@@ -11,7 +11,7 @@ ddfilter_loop(sdata, qi = 4, ia = 90, vmaxlp = 1.8)
 The function filters the input data by the unique "id". 
 "DateTime" is date & time in class \code{\link[base]{POSIXct}}. 
 "lat" and "lon" are the latitude and longitude of each location in decimal degrees. 
-"qi" is the numerical quality index associated with each location fix where the greater number indicates the higher accuracy 
+"qi" is the numerical quality index associated with each location fix where a greater number indicates a higher accuracy 
 (e.g. number of GPS satellites used for estimation).}
 
 \item{qi}{An integer specifying a threshold of quality index, which is used to evaluate the locations of loop trips. 
@@ -30,7 +30,7 @@ The following columns are added: "pTime", "sTime", "pDist", "sDist", "pSpeed", "
 "pTime" and "sTime" are hours from a previous and to a subsequent fix respectively.
 "pDist" and "sDist" are straight distances in kilometres from a previous and to a subsequent fix respectively.
 "pSpeed" and "sSpeed" are linear speed from a previous and to a subsequent fix respectively.
-"inAng" is the angle between the bearings of lines joining successive location points.
+"inAng" is the degree between the bearings of lines joining successive location points.
 }
 \description{
 A partial component of \code{\link{ddfilter}}, although works as a stand-alone function. 

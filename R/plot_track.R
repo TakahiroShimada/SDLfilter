@@ -85,6 +85,7 @@ plot_track<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
   
   #### Get data to plot
   ID<-as.character(unique(sdata$id))
+  ID <- ID[!is.na(ID)]
   
   p.all<-lapply(1:length(ID), function(i){
     #### Subset data
@@ -174,21 +175,10 @@ plot_track<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
     #### Add scale
     # Get parameters
     if(is.null(sb.distance)){
-      sb.distance <- raster::pointDistance(c(xlim[1], ylim[1]), c(xlim[2], ylim[1]), lonlat = TRUE)/1000/4
+      sb.distance <- raster::pointDistance(c(xlim[1], ylim[1]), c(xlim[2], ylim[1]), lonlat = TRUE)/4
       digi <- nchar(trunc(sb.distance))
       sb.distance <- round(sb.distance/10^(digi-1)) * 10^(digi-1)
-      if(sb.distance>0){
-      } else {
-        sb.distance <- 1
-      }
-      
-      # sb.distance<-round(((xlim[2]-xlim[1])*111.139)/4)
-      # sb<-ggsn::scalebar(x.min=xlim[1]+extra2, x.max=xlim[2]-extra2, y.min=ylim[1]+extra2, y.max=ylim[2]-extra2,
-      #                    dist = sb.distance, dist_unit = "km", transform = TRUE, model = 'WGS84', location="bottomleft", st.dist=.03)
-    # } else {
-    #   sb<-ggsn::scalebar(x.min=xlim[1]+extra2, x.max=xlim[2]-extra2, y.min=ylim[1]+extra2, y.max=ylim[2]-extra2,
-    #                      dist = sb.distance, dist_unit = "km", transform = TRUE, model = 'WGS84', location="bottomleft", st.dist=.03)
-    # }
+      sb.distance <- sb.distance/1000
     }
     
     sb<-ggsn::scalebar(x.min=xlim[1]+extra2, x.max=xlim[2]-extra2, y.min=ylim[1]+extra2, y.max=ylim[2]-extra2,

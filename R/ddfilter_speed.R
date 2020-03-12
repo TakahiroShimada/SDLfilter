@@ -16,6 +16,7 @@
 #' Default is 1 (both way).
 #' @import sp
 #' @importFrom raster pointDistance
+#' @importFrom plyr rbind.fill
 #' @export
 #' @details This function removes locations if the speed from a previous and/or to a subsequent location exceeds a given threshold speed. 
 #' If \emph{vmax} is unknown, it can be estimated using the function \code{\link{vmax}}.
@@ -54,38 +55,39 @@ ddfilter_speed<-function (sdata, vmax=8.9, method=1){
       IDs<-levels(factor(sdata$id))
       
       
-      ## Hours from a previous and to a subsequent location (pTime & sTime)
-      stepTime<-function(j){
-          timeDiff<-diff(sdata[sdata$id %in% j, "DateTime"])
-          units(timeDiff)<-"hours"
-          c(as.numeric(timeDiff), NA)
-      } 
-      
-      sTime<-unlist(lapply(IDs, stepTime))  
-      sdata$pTime<-c(NA, sTime[-length(sTime)])
-      sdata$sTime<-sTime
-           
-      
-      ## Distance from a previous and to a subsequent location (pDist & sDist)
-      # Function to calculate distances
-      calcDist<-function(j){
-          turtle<-sdata[sdata$id %in% j,]  
-          LatLong<-data.frame(Y=turtle$lat, X=turtle$lon)
-          sp::coordinates(LatLong)<-~X+Y
-          sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
-          
-          #pDist
-          c(NA, raster::pointDistance(LatLong[-length(LatLong)], LatLong[-1], lonlat=T)/1000)
-      }
-      
-      sdata$pDist<-unlist(lapply(IDs, calcDist))
-      sdata$sDist<-c(sdata$pDist[-1], NA)
-      
-      
-    
-      # Speed from a previous and to a subsequent location in km/h
-      sdata$pSpeed<-sdata$pDist/sdata$pTime
-      sdata$sSpeed<-sdata$sDist/sdata$sTime
+      # ## Hours from a previous and to a subsequent location (pTime & sTime)
+      # stepTime<-function(j){
+      #     timeDiff<-diff(sdata[sdata$id %in% j, "DateTime"])
+      #     units(timeDiff)<-"hours"
+      #     c(as.numeric(timeDiff), NA)
+      # } 
+      # 
+      # sTime<-unlist(lapply(IDs, stepTime))  
+      # sdata$pTime<-c(NA, sTime[-length(sTime)])
+      # sdata$sTime<-sTime
+      #      
+      # 
+      # ## Distance from a previous and to a subsequent location (pDist & sDist)
+      # # Function to calculate distances
+      # calcDist<-function(j){
+      #     turtle<-sdata[sdata$id %in% j,]  
+      #     LatLong<-data.frame(Y=turtle$lat, X=turtle$lon)
+      #     sp::coordinates(LatLong)<-~X+Y
+      #     sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
+      #     
+      #     #pDist
+      #     c(NA, raster::pointDistance(LatLong[-length(LatLong)], LatLong[-1], lonlat=T)/1000)
+      # }
+      # 
+      # sdata$pDist<-unlist(lapply(IDs, calcDist))
+      # sdata$sDist<-c(sdata$pDist[-1], NA)
+      # 
+      # 
+      # 
+      # # Speed from a previous and to a subsequent location in km/h
+      # sdata$pSpeed<-sdata$pDist/sdata$pTime
+      # sdata$sSpeed<-sdata$sDist/sdata$sTime
+      sdata <- track_param(sdata, param = c('time', 'distance', 'speed'))
     
     
       # Select locations at which the speed from a previous and to a subsequent location exceeds maximum linear traveling speed (Vmax)
@@ -121,8 +123,8 @@ ddfilter_speed<-function (sdata, vmax=8.9, method=1){
       
       #### Bring back excluded data
       if(nrow(excluded.data)>0){
-        excluded.data[,c("pTime", "sTime", "pDist", "sDist", "pSpeed", "sSpeed", "overMax")]<-NA
-        sdata<-rbind(sdata, excluded.data)
+        # excluded.data[,c("pTime", "sTime", "pDist", "sDist", "pSpeed", "sSpeed", "overMax")]<-NA
+        sdata <- plyr::rbind.fill(sdata, excluded.data)
       } else {
         sdata<-sdata
       }

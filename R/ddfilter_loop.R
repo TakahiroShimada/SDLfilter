@@ -17,6 +17,7 @@
 #' Default is 90 degrees.
 #' @import sp trip
 #' @importFrom raster pointDistance
+#' @importFrom plyr rbind.fill
 #' @export
 #' @details This function removes locations if all of the following criteria apply: 
 #' the number of source satellites are less than or equal to \emph{qi}, 
@@ -27,7 +28,7 @@
 #' "pTime" and "sTime" are hours from a previous and to a subsequent fix respectively.
 #' "pDist" and "sDist" are straight distances in kilometres from a previous and to a subsequent fix respectively.
 #' "pSpeed" and "sSpeed" are linear speed from a previous and to a subsequent fix respectively.
-#' "inAng" is the angle between the bearings of lines joining successive location points.    
+#' "inAng" is the degree between the bearings of lines joining successive location points.
 #' @author Takahiro Shimada
 #' @references Shimada T, Jones R, Limpus C, Hamann M (2012) Improving data retention and home range estimates by data-driven screening. 
 #' \emph{Marine Ecology Progress Series} 457:171-180 doi:\href{http://doi.org/10.3354/meps09747}{10.3354/meps09747}
@@ -64,45 +65,46 @@ ddfilter_loop<-function(sdata, qi=4, ia=90, vmaxlp=1.8){
             IDs<-levels(factor(sdata$id))
             
             
-            ## Hours from a previous and to a subsequent location (pTime & sTime)
-            stepTime<-function(j){
-                timeDiff<-diff(sdata[sdata$id %in% j, "DateTime"])
-                units(timeDiff)<-"hours"
-                c(as.numeric(timeDiff), NA)
-            } 
-            
-            sTime<-unlist(lapply(IDs, stepTime))  
-            sdata$pTime<-c(NA, sTime[-length(sTime)])
-            sdata$sTime<-sTime
-                        
-            
-            ## Distance from a previous and to a subsequent location (pDist & sDist)
-            # Function to calculate distances
-            calcDist<-function(j){
-                turtle<-sdata[sdata$id %in% j,]  
-                LatLong<-data.frame(Y=turtle$lat, X=turtle$lon)
-                sp::coordinates(LatLong)<-~X+Y
-                sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
-                
-                #pDist
-                c(NA, raster::pointDistance(LatLong[-length(LatLong)], LatLong[-1], lonlat=T)/1000)
-            }
-            
-            sdata$pDist<-unlist(lapply(IDs, calcDist))
-            sdata$sDist<-c(sdata$pDist[-1], NA)
-            
-            
-            # Speed from a previous and to a subsequent location in km/h
-            sdata$pSpeed<-sdata$pDist/sdata$pTime
-            sdata$sSpeed<-sdata$sDist/sdata$sTime
-            
-            
-            ## Calculate inner angle in degree
-            LatLong<-data.frame(Y=sdata$lat, X=sdata$lon, tms=sdata$DateTime, id=sdata$id)
-            sp::coordinates(LatLong)<-~X+Y
-            sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
-            tr<-trip::trip(LatLong, c("tms", "id"))
-            sdata$inAng<-trip::trackAngle(tr)
+            # ## Hours from a previous and to a subsequent location (pTime & sTime)
+            # stepTime<-function(j){
+            #     timeDiff<-diff(sdata[sdata$id %in% j, "DateTime"])
+            #     units(timeDiff)<-"hours"
+            #     c(as.numeric(timeDiff), NA)
+            # } 
+            # 
+            # sTime<-unlist(lapply(IDs, stepTime))  
+            # sdata$pTime<-c(NA, sTime[-length(sTime)])
+            # sdata$sTime<-sTime
+            #             
+            # 
+            # ## Distance from a previous and to a subsequent location (pDist & sDist)
+            # # Function to calculate distances
+            # calcDist<-function(j){
+            #     turtle<-sdata[sdata$id %in% j,]  
+            #     LatLong<-data.frame(Y=turtle$lat, X=turtle$lon)
+            #     sp::coordinates(LatLong)<-~X+Y
+            #     sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
+            #     
+            #     #pDist
+            #     c(NA, raster::pointDistance(LatLong[-length(LatLong)], LatLong[-1], lonlat=T)/1000)
+            # }
+            # 
+            # sdata$pDist<-unlist(lapply(IDs, calcDist))
+            # sdata$sDist<-c(sdata$pDist[-1], NA)
+            # 
+            # 
+            # # Speed from a previous and to a subsequent location in km/h
+            # sdata$pSpeed<-sdata$pDist/sdata$pTime
+            # sdata$sSpeed<-sdata$sDist/sdata$sTime
+            # 
+            # 
+            # ## Calculate inner angle in degree
+            # # LatLong<-data.frame(Y=sdata$lat, X=sdata$lon, tms=sdata$DateTime, id=sdata$id)
+            # # sp::coordinates(LatLong)<-~X+Y
+            # # sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
+            # # tr<-trip::trip(LatLong, c("tms", "id"))
+            # # sdata$inAng<-trip::trackAngle(tr)
+            sdata <- track_param(sdata, param = c('time', 'distance', 'speed', 'angle'))
             
             
             ### Remove location according to qi, inner angle and max LP speed
@@ -134,8 +136,8 @@ ddfilter_loop<-function(sdata, qi=4, ia=90, vmaxlp=1.8){
             
             #### Bring back excluded data
             if(nrow(excluded.data)>0){
-                excluded.data[,c("pTime", "sTime", "pDist", "sDist", "pSpeed", "sSpeed", "inAng", "overLpMax")]<-NA
-                sdata<-rbind(sdata, excluded.data)
+                # excluded.data[,c("pTime", "sTime", "pDist", "sDist", "pSpeed", "sSpeed", "inAng", "overLpMax")]<-NA
+                sdata <- plyr::rbind.fill(sdata, excluded.data)
             } else {
                 sdata<-sdata
             }

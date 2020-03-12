@@ -11,7 +11,7 @@ dupfilter_space(sdata, step.time = 0, step.dist = 0, conditional = FALSE)
 The function filters the input data by the unique "id". 
 "DateTime" is date & time in class \code{\link[base]{POSIXct}}. 
 "lat" and "lon" are the latitude and longitude of each location in decimal degrees. 
-"qi" is the numerical quality index associated with each location fix where the greater number indicates the higher accuracy 
+"qi" is the numerical quality index associated with each location fix where a greater number indicates a higher accuracy 
 (e.g. the number of GPS satellites involved in estimation).}
 
 \item{step.time}{Consecutive locations less than or equal to \emph{step.time} apart are considered temporal duplicates.
@@ -35,7 +35,7 @@ Function to filter spatial duplicates in tracking data.
 \details{
 This function is a partial component of \code{\link{dupfilter}}, although works as a stand-alone function.
 First it identifies spatial duplicates by searching for consecutive fixes that were located within \emph{step.dist}.
-For each group of spatial duplicates, the function then retains a single fix that is the nearest from a previous and to a subsequent locations.
+For each group of spatial duplicates, the function then retains a single fix that is nearest from a previous and to a subsequent location.
 }
 \note{
 A minimum of two locations per id is required.
