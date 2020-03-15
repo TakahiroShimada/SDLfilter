@@ -4,7 +4,9 @@
 \name{SandyStrait}
 \alias{SandyStrait}
 \title{A map of Sandy Strait, Australia}
-\format{A data.frame}
+\format{
+A data.frame
+}
 \usage{
 SandyStrait
 }

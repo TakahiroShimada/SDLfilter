@@ -8,16 +8,17 @@ output:
 News for Package 'SDLfilter'
 =========
 
-#### Version 1.2.1.9014 (2020-03-12)
+#### Version 1.2.1.9015 (2020-03-15)
 
 * added four new functions (boot_overlap, boot_area, asymptote, percent_vol) to assess sample sizes of animal tracking data.
 * added a new function (track_param) to calculate some parameters of animal tracking data (i.e. time, distance, speed, angle between locations).
+* added a new funtion (kml_track) to visualise the tracking data.
 * added a new example data "curtis".
 * added a new argument "type" in the depthfilter function.
 * renamed some functions (ddfilter.loop -> ddfilter_loop; ddfilter.speed -> ddfilter_speed; dupfilter.exact -> dupfilter_exact; dupfilter.qi -> dupfilter_qi; dupfilter.space -> dupfilter_space; dupfilter.time -> dupfilter_time, distantfilter -> distfilter).
 * renamed an argument in ddfilter (maxvlp -> vmaxlp).
-* renamed the plotMap to plot_track
-* improved the plot_track function.
+* renamed the plotMap to map_track
+* improved the map_track function.
 * improved the R documentations.
 
 #### Version 1.2.1 (2019-02-19)

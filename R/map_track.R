@@ -1,5 +1,5 @@
-#' @aliases plot_track
-#' @title Plot location data
+#' @aliases map_track
+#' @title Plot location data on a map
 #' @description Function to plot tracking data on a map or a satellite image. 
 #' @param sdata A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon". 
 #' The function creates a map for each unique "id". 
@@ -46,7 +46,7 @@
 #' @export
 #' @return An arrangelist is returned when \emph{multiplot} is TRUE. Otherwise a list is returned. 
 #' @author Takahiro Shimada
-#' @seealso \code{\link{dupfilter}}, \code{\link{ddfilter}}, \code{\link{vmax}}, \code{\link{vmaxlp}}
+#' @seealso \code{\link{kml_track}}, \code{\link{dupfilter}}, \code{\link{ddfilter}}, \code{\link{vmax}}, \code{\link{vmaxlp}}
 #' @examples
 #' #### Load data sets
 #' ## Fastloc GPS data obtained from two green turtles
@@ -66,16 +66,16 @@
 #' 
 #' #### Plot filtered data for each animal
 #' ## using the low-resolution world map
-#' plot_track(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1)
+#' map_track(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1)
 #'
 #'\dontrun{
 #' ## using the high-resolution google satellite images
-#' plot_track(turtle.dd, bgmap = "satellite", google.key = "key", ncol=2)
+#' map_track(turtle.dd, bgmap = "satellite", google.key = "key", ncol=2)
 #'}
 
 
 #### Plot data removed or retained by ddfilter
-plot_track<-function(sdata, xlim=NULL, ylim=NULL, margin=10, 
+map_track<-function(sdata, xlim=NULL, ylim=NULL, margin=10, 
                    bgmap=NULL, google.key=NULL, map.bg="grey", map.col="black", zoom=NULL, 
                    point.bg="yellow", point.col="black", point.symbol=21, point.size=1,
                    line.col="lightgrey", line.type=1, line.size=0.5,

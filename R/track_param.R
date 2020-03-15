@@ -10,10 +10,11 @@
 #' See \emph{details}.
 #' @param days A numeric value specifying the number of days to calculate mean speeds and angles.
 #' This argument is only used when 'mean speed' and/or 'mean angle' are selected in \emph{param}.  
-#' @import sp trip
+#' @import sp
 #' @importFrom raster pointDistance
 #' @importFrom lubridate days
 #' @importFrom plyr rbind.fill
+#' @importFrom trip trackAngle trip
 #' @export
 #' @details This function calculates various parameters of tracks. 
 #' time (h), distance (km), speed (km/h) and inner angle (degrees) are calculated from each pair of successive locations.

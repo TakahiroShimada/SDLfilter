@@ -4,7 +4,8 @@
 \name{turtle}
 \alias{turtle}
 \title{Green turtle tracking data}
-\format{A data frame with 429 rows and 5 variables:
+\format{
+A data frame with 429 rows and 5 variables:
 \describe{
   \item{id}{identifier for each animal.}
   \item{DateTime}{date & time in class \code{\link[base]{POSIXct}}.}
@@ -12,7 +13,8 @@
   \item{lon}{longitude in decimal degrees.}
   \item{qi}{numerical quality index associated with each location fix where a greater number indicates a higher accuracy
    (e.g. number of GPS satellites used for estimation).}
-}}
+}
+}
 \source{
 Shimada T, Jones R, Limpus C, Groom R, Hamann M (2016) 
 Long-term and seasonal patterns of sea turtle home ranges in warm coastal foraging habitats: Implications for conservation. 

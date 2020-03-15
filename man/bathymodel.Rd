@@ -4,7 +4,9 @@
 \name{bathymodel}
 \alias{bathymodel}
 \title{Bathymetry model for Sandy Strait, Australia}
-\format{A RasterLayer}
+\format{
+A RasterLayer
+}
 \source{
 \url{https://www.deepreef.org/}
 }

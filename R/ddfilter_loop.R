@@ -15,7 +15,7 @@
 #' Default is 4.
 #' @param ia An integer specifying a threshold of inner angle, which is used to evaluate the locations of loop trips. 
 #' Default is 90 degrees.
-#' @import sp trip
+#' @import sp
 #' @importFrom raster pointDistance
 #' @importFrom plyr rbind.fill
 #' @export

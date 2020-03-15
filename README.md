@@ -124,4 +124,4 @@ distributions using the R package SDLfilter.
 Current version
 ---------------
 
-1.2.1.9014 (12 March 2020)
+1.2.1.9015 (15 March 2020)

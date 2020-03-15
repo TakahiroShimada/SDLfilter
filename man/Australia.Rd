@@ -4,7 +4,9 @@
 \name{Australia}
 \alias{Australia}
 \title{A map of Australia}
-\format{A data.frame}
+\format{
+A data.frame
+}
 \usage{
 Australia
 }

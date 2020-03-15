@@ -4,7 +4,9 @@
 \name{curtis}
 \alias{curtis}
 \title{Flatback turtle utilisation distributions}
-\format{A list of 29 RasterLayer objects}
+\format{
+A list of 29 RasterLayer objects
+}
 \source{
 Shimada T et al, (in prep)
 }
