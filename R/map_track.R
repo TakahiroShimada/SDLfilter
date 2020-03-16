@@ -15,7 +15,7 @@
 #' @param google.key If the Google Maps are queried, a valid API key (a string) needs to be specified here. See \code{\link[ggmap]{register_google}} for details.
 #' @param map.bg Background colour of the map. This argument is ignored when any of the Google Maps is selected.
 #' @param map.col Outline colour of the map. This argument is ignored when any of the Google Maps is selected.
-#' @param zoom Map zoom for the Google Maps. Defualt (NULL) to estimate the zoom from each data set. 
+#' @param zoom Map zoom for the Google Maps. Default (NULL) to estimate the zoom from each data set. 
 #' For other options, see \code{\link[ggmap]{get_map}} for details. 
 #' @param point.bg The colour to fill in a symbol.
 #' @param point.col The colour for the outline of a symbol.

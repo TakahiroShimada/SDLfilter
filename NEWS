@@ -1,8 +1,8 @@
-Version 1.2.1.9015 (2020-03-15)
+Version 1.2.1.9016 (2020-03-16)
 
   o added four new functions (boot_overlap, boot_area, asymptote, percent_vol) to assess sample sizes of animal tracking data.
   o added a new function (track_param) to calculate some parameters of animal tracking data (i.e. time, distance, speed, angle between locations).
-  o added a new funtion (kml_track) to visualise the tracking data.
+  o added a new function (kml_track) to visualise the tracking data.
   o added a new example data "curtis".
   o added a new argument "type" in the depthfilter function.
   o renamed some functions (ddfilter.loop -> ddfilter_loop; ddfilter.speed -> ddfilter_speed; dupfilter.exact -> dupfilter_exact; dupfilter.qi -> dupfilter_qi; dupfilter.space -> dupfilter_space; dupfilter.time -> dupfilter_time, distantfilter -> distfilter).

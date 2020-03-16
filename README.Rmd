@@ -146,6 +146,6 @@ Shimada T,.... (in prep) Assessing sample sizes for the analysis of animal distr
 
 Current version
 --------
-1.2.1.9015 (15 March 2020)
+1.2.1.9016 (16 March 2020)
 
 

@@ -58,7 +58,7 @@ The Google Maps ("terrain", "satellite", "roadmap", "hybrid") can also be querie
 
 \item{map.col}{Outline colour of the map. This argument is ignored when any of the Google Maps is selected.}
 
-\item{zoom}{Map zoom for the Google Maps. Defualt (NULL) to estimate the zoom from each data set. 
+\item{zoom}{Map zoom for the Google Maps. Default (NULL) to estimate the zoom from each data set. 
 For other options, see \code{\link[ggmap]{get_map}} for details.}
 
 \item{point.bg}{The colour to fill in a symbol.}

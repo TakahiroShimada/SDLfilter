@@ -4,11 +4,19 @@
 \alias{kml_track}
 \title{Generate KML from locations}
 \usage{
-kml_track(sdata, sdata.CRS = "WGS", output = "open", type = "point", ...)
+kml_track(
+  sdata,
+  sdata.CRS = "WGS",
+  output = "open",
+  type = "point",
+  folder.name,
+  file.name,
+  ...
+)
 }
 \arguments{
-\item{sdata}{A data frame containing locatioin data of \bold{one} individual, 
-with the follwoing column headers: "id", "DateTime", "lat", "lon". 
+\item{sdata}{A data frame containing location data of \bold{one} individual, 
+with the following column headers: "id", "DateTime", "lat", "lon". 
 "id" is the identifier of the individual. 
 "DateTime" is date & time in class \code{\link[base]{POSIXct}}. 
 "lat" and "lon" are the latitude and longitude of each location in decimal degrees.}
@@ -22,10 +30,15 @@ The output will be saved in the current working directory.}
 
 \item{type}{Type of the output. 'point' or 'line.}
 
+\item{folder.name}{Folder name of the kml file. If not specified, the id will be used.}
+
+\item{file.name}{File name of the kml file. 
+If not specified, a combination of id and output type will be used.}
+
 \item{...}{Optional arguments passed to \code{\link[plotKML]{plotKML}} and \code{\link[plotKML]{kml}}.}
 }
 \value{
-
+A kml file
 }
 \description{
 Function to generate a kml file from tracking data. 
@@ -33,14 +46,14 @@ This is a wrapper of \code{\link[plotKML]{plotKML}} and \code{\link[plotKML]{kml
 specifically designed to generate a kml file from tracking data.
 }
 \examples{
-#### Load data sets
-## Fastloc GPS data obtained from a green turtle
+#### Fastloc GPS data obtained from a green turtle
 data(turtle)
 
 \dontrun{
 #### See the data on Google earth
 ## points with time stamps
-kml_track(turtle, output = 'open', type = 'point', points_names = turtle$DateTime, colour_scale = 'yellow')
+kml_track(turtle, output = 'open', type = 'point', 
+points_names = turtle$DateTime, colour_scale = 'yellow')
 
 ## lines
 kml_track(turtle, output = 'open', type = 'line', colour = 'red')

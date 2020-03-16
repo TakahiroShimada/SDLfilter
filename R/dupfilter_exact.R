@@ -100,7 +100,7 @@ dupfilter_exact<-function (sdata){
       }
       
       sdata$rm<-unlist(lapply(IDs, apply.dup))
-     unlist(lapply(IDs[15], apply.dup))
+      
       
       ## First two rows
       #Function to identify exact duplicates
