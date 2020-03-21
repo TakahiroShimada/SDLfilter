@@ -46,44 +46,7 @@ vmaxlp<-function(sdata, qi=4, prob=0.99){
   IDs<-levels(factor(sdata$id))
   
   
-  # ## Hours from a previous and to a subsequent location (pTime & sTime)
-  # stepTime<-function(j){
-  #   timeDiff<-diff(sdata[sdata$id %in% j, "DateTime"])
-  #   units(timeDiff)<-"hours"
-  #   c(as.numeric(timeDiff), NA)
-  # } 
-  # 
-  # sTime<-unlist(lapply(IDs, stepTime))  
-  # sdata$pTime<-c(NA, sTime[-length(sTime)])
-  # sdata$sTime<-sTime
-  # 
-  # 
-  # ## Distance from a previous and to a subsequent location (pDist & sDist)
-  # calcDist<-function(j){
-  #     turtle<-sdata[sdata$id %in% j,]  
-  #     LatLong<-data.frame(Y=turtle$lat, X=turtle$lon)
-  #     sp::coordinates(LatLong)<-~X+Y
-  #     sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
-  #     
-  #     #pDist
-  #     c(NA, raster::pointDistance(LatLong[-length(LatLong)], LatLong[-1], lonlat=T)/1000)
-  # }
-  # 
-  # sdata$pDist<-unlist(lapply(IDs, calcDist))
-  # sdata$sDist<-c(sdata$pDist[-1], NA)
-  # 
-  # 
-  # # Speed from a previous and to a subsequent location in km/h
-  # sdata$pSpeed<-sdata$pDist/sdata$pTime
-  # sdata$sSpeed<-sdata$sDist/sdata$sTime
-  
-  # ## Calculate inner angle in degree
-  # LatLong<-data.frame(Y=sdata$lat, X=sdata$lon, tms=sdata$DateTime, id=sdata$id)
-  # sp::coordinates(LatLong)<-~X+Y
-  # sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
-  # tr<-trip::trip(LatLong, c("tms", "id"))
-  # sdata$inAng<-trip::trackAngle(tr)
-  # sdata<-with(sdata, sdata[complete.cases(inAng),])
+  ## Get movement parameters
   sdata <- track_param(sdata, param = c('time', 'distance', 'speed', 'angle'))
   
   

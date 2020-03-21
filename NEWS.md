@@ -8,7 +8,7 @@ output:
 News for Package 'SDLfilter'
 =========
 
-#### Version 1.2.1.9016 (2020-03-16)
+#### Version 1.2.1.9017 (2020-03-21)
 
 * added four new functions (boot_overlap, boot_area, asymptote, percent_vol) to assess sample sizes of animal tracking data.
 * added a new function (track_param) to calculate some parameters of animal tracking data (i.e. time, distance, speed, angle between locations).

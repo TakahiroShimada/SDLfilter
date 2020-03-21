@@ -51,16 +51,6 @@
 
 track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 'mean speed', 'mean angle'), days=2){
     
-  # OriginalSS <- nrow(sdata)
-  # 
-  # 
-  # #### Exclude data with less than 4 locations
-  # ndata <- table(sdata$id)
-  # id.exclude <- names(ndata[as.numeric(ndata)<4])
-  # excluded.data <- sdata[sdata$id %in% id.exclude,]
-  # sdata <- sdata[!(sdata$id %in% id.exclude),]
-  
-  
   #### Organize data
   ## Sort data in alphabetical and chronological order
   sdata <- with(sdata, sdata[order(id, DateTime),])
@@ -73,34 +63,31 @@ track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 
   
   #### Hours from a previous and to a subsequent location (pTime & sTime)
   if(any(param %in% c("time", "speed", "mean speed"))){
-    sTime <- unlist(lapply(IDs, function(j){
-      timeDiff <- diff(sdata[sdata$id %in% j, "DateTime"])
-      units(timeDiff)<-"hours"
-      c(as.numeric(timeDiff), NA)
+    sdata <- plyr::rbind.fill(lapply(IDs, function(j){
+      sdata.temp <- sdata[sdata$id %in% j,]
+      timeDiff <- diff(sdata.temp$DateTime)
+      units(timeDiff) <- "hours"
+      sdata.temp$pTime <- c(NA, as.numeric(timeDiff))
+      sdata.temp$sTime <- c(as.numeric(timeDiff), NA)
+      return(sdata.temp)
     })) 
-    
-    sdata$pTime <- c(NA, sTime[-length(sTime)])
-    sdata$sTime <- sTime
   }
   
   
   #### Distance from a previous and to a subsequent location (pDist & sDist)
   if(any(param %in% c('distance', 'speed', 'mean speed'))){
-    # Function to calculate distances
-    calcDist <- function(j){
-      turtle <- sdata[sdata$id %in% j,]  
-      LatLong <- data.frame(Y=turtle$lat, X=turtle$lon)
+    sdata <- plyr::rbind.fill(lapply(IDs, function(j){
+      sdata.temp <- sdata[sdata$id %in% j,]
+      LatLong <- data.frame(Y=sdata.temp$lat, X=sdata.temp$lon)
       sp::coordinates(LatLong)<-~X+Y
       sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
-      
-      #pDist
-      c(NA, raster::pointDistance(LatLong[-length(LatLong)], LatLong[-1], lonlat=T)/1000)
-    }
-    
-    sdata$pDist <- unlist(lapply(IDs, calcDist))
-    sdata$sDist <- c(sdata$pDist[-1], NA)
+      Dist <- raster::pointDistance(LatLong[-length(LatLong)], LatLong[-1], lonlat=T)/1000
+      sdata.temp$pDist <- c(NA, Dist)
+      sdata.temp$sDist <- c(Dist, NA)
+      return(sdata.temp)
+    }))
   }
-  
+    
   
   ## Speed from a previous and to a subsequent location in km/h
   if(any(param %in% c('speed', 'mean.speed'))){
@@ -212,22 +199,7 @@ track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 
     sdata <- plyr::rbind.fill(mean_ang)
   }
 
-  # #### Report the summary
-  # ## Data excluded from filtering
-  # ndata <- table(as.character(sdata$id))
-  # id.exclude <- names(ndata[as.numeric(ndata)<4])
-  # 
-  # ## Filtered data
-  # FilteredSS <- nrow(sdata3)
-  # RemovedSamplesN <- OriginalSS-FilteredSS
-  # 
-  # ## Print report
-  # cat("distfilter removed", RemovedSamplesN, "of", OriginalSS, "locations.", fill = TRUE)
-  # if(length(id.exclude)>0){
-  #   message('Warning: speed not applied to the following data. Insufficient data.')
-  #   message(paste(id.exclude, collapse = ', '))
-  # }
-  
+
   ## Delete working columns and return the output
   drops <- c('cumDays', 'cumDaysBack')
   sdata <- sdata[,!(names(sdata) %in% drops)] 
