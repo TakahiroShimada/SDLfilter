@@ -4,7 +4,7 @@
 \alias{vmax}
 \title{Estimate maximum linear speed}
 \usage{
-vmax(sdata, qi = 5, prob = 0.99)
+vmax(sdata, qi = 5, prob = 0.99, ...)
 }
 \arguments{
 \item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon", "qi". 
@@ -18,6 +18,8 @@ vmax(sdata, qi = 5, prob = 0.99)
 Default is 5 (e.g. 5 GPS satellite or more).}
 
 \item{prob}{A numeric value to specify a sample quantile. Default is 0.99.}
+
+\item{...}{Extra arguments passed to \code{\link{dupfilter}}.}
 }
 \value{
 Maximum linear speed (vmax) estimated from the input data. The unit is km/h.
@@ -40,7 +42,7 @@ Improving data retention and home range estimates by data-driven screening.
 \emph{Marine Ecology Progress Series} 457:171-180 doi:\href{http://doi.org/10.3354/meps09747}{10.3354/meps09747}
 }
 \seealso{
-\code{\link{ddfilter}}, \code{\link{ddfilter_speed}}
+\code{\link{ddfilter}}, \code{\link{ddfilter_speed}}, \code{\link{track_param}}, \code{\link{dupfilter}}
 }
 \author{
 Takahiro Shimada

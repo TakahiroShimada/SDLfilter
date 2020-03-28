@@ -10,6 +10,7 @@
 #' @param qi An integer specifying the minimum quality index associated with a location used for the estimation. 
 #' Default is 4 (e.g. 4 GPS satellite or more).
 #' @param prob A numeric value to specify a sample quantile. Default is 0.99.
+#' @param ... Extra arguments passed to \code{\link{dupfilter}}.
 #' @import sp
 #' @importFrom raster pointDistance
 #' @importFrom stats quantile
@@ -22,35 +23,29 @@
 #' It then calculates the one-way travelling speed to or from each turning point for each loop trip. 
 #' The function discards extreme values, based on the specified quantile, to exclude potential outliers from the estimation process.
 #' The maximum value in the retained dataset (i.e. without outliers) represents the maximum one-way linear speed at which 
-#' an animal would travel during a loop trip. 
+#' an animal would travel during a loop trip.
 #' @return Maximum one-way linear speed of a loop trip (vmaxlp) estimated from the input data. The unit km/h.
 #' @author Takahiro Shimada
 #' @note The input data must not contain temporal or spatial duplicates. A minimum of 8 locations are required.
 #' @references Shimada T, Jones R, Limpus C, Hamann M (2012) 
 #' Improving data retention and home range estimates by data-driven screening. 
 #' \emph{Marine Ecology Progress Series} 457:171-180 doi:\href{http://doi.org/10.3354/meps09747}{10.3354/meps09747}
-#' @seealso \code{\link{ddfilter}}, \code{\link{ddfilter_loop}}
+#' @seealso \code{\link{ddfilter}}, \code{\link{ddfilter_loop}}, \code{\link{track_param}}, \code{\link{dupfilter}}
 
 
-vmaxlp<-function(sdata, qi=4, prob=0.99){
+vmaxlp<-function(sdata, qi=4, prob=0.99, ...){
   #### Organize data
   ## Subset data by quality index
   sdata<-sdata[sdata$qi>=qi,]
+  
+  ## Filter duplicate locations
+  sdata <- dupfilter(sdata, ...)
 
-  ## Sort data in alphabetical and chronological order
-  sdata<-with(sdata, sdata[order(id, DateTime),])
-  row.names(sdata)<-1:nrow(sdata)
-  
-  
-  ## Get Id of each animal
-  IDs<-levels(factor(sdata$id))
-  
-  
   ## Get movement parameters
   sdata <- track_param(sdata, param = c('time', 'distance', 'speed', 'angle'))
   
   
-  #### Exclude datasets less than 6 locations
+  #### Exclude datasets less than 8 locations
   ndata<-table(as.character(sdata$id))
   id.exclude<-names(ndata[as.numeric(ndata)<8])
   sdata<-with(sdata, sdata[!id %in% id.exclude,])
@@ -188,20 +183,7 @@ vmaxlp<-function(sdata, qi=4, prob=0.99){
   row.names(sdata)<-1:nrow(sdata)
   
   
-  # #### Calculate speed
-  # sTime<-unlist(lapply(IDs, stepTime))  
-  # sdata$pTime<-c(NA, sTime[-length(sTime)])
-  # sdata$sTime<-sTime
-  # 
-  # 
-  # ## Distance from a previous and to a subsequent location (pDist & sDist)
-  # sdata$pDist<-unlist(lapply(IDs, calcDist))
-  # sdata$sDist<-c(sdata$pDist[-1], NA)
-  # 
-  # 
-  # ## Speed from a previous and to a subsequent location in km/h
-  # sdata$pSpeed<-sdata$pDist/sdata$pTime
-  # sdata$sSpeed<-sdata$sDist/sdata$sTime
+  ## Get movement parameters
   sdata <- track_param(sdata, param = c('time', 'distance', 'speed'))
   
   
@@ -221,7 +203,7 @@ vmaxlp<-function(sdata, qi=4, prob=0.99){
   cat("The maximum one-way linear speed of a loop trip (vmaxlp) was estimated using", SampleSize, "Vlp from", LoopTrips, "loop trips.", fill = TRUE)
   cat("vmaxlp:", round(MaxVlp,1), "km/h", fill = TRUE)
   if(length(id.exclude)>0){
-    message('Warning: vlp cannot be estimated from the following data. Insufficient data.')
+    message('Warning: insufficient data to estimate vlp from:')
     message(paste(id.exclude, collapse = ', '))
   }
 

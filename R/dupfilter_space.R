@@ -22,179 +22,207 @@
 #' For each group of spatial duplicates, the function then retains a single fix that is nearest from a previous and to a subsequent location.
 #' @note A minimum of two locations per id is required.
 #' @return The input data frame is returned with spatial duplicates removed. 
-#' The following columns are added: "pTime", "sTime", "pDist", "sDist". 
-#' "pTime" and "sTime" are hours from a previous and to a subsequent fix respectively. 
-#' "pDist" and "sDist" are straight distances in kilometres from a previous and to a subsequent fix respectively.
 #' @author Takahiro Shimada
 #' @references Shimada T, Limpus C, Jones R, Hazel J, Groom R, Hamann M (2016) 
 #' Sea turtles return home after intentional displacement from coastal foraging areas. 
 #' \emph{Marine Biology} 163:1-14 doi:\href{http://doi.org/10.1007/s00227-015-2771-0}{10.1007/s00227-015-2771-0}
-#' @seealso \code{\link{dupfilter}}, \code{\link{dupfilter_exact}}, \code{\link{dupfilter_time}}, \code{\link{dupfilter_qi}}
+#' @seealso \code{\link{dupfilter}}, \code{\link{dupfilter_exact}}, \code{\link{dupfilter_time}}, \code{\link{dupfilter_qi}}, \code{\link{track_param}}
 
 
-dupfilter_space<-function (sdata, step.time=0, step.dist=0, conditional=FALSE){
+dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE){
+  
+  #### Original columns
+  headers <- names(sdata)
   
   #### Sample size for unfiltered data
   OriginalSS<-nrow(sdata)
   
+  ## Get movement parameters
+  sdata <- track_param(sdata, param = c('time', 'distance'))
   
-  #### Function to filter spatial duplicates
-  dup.location<-function (sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional) {
-    #### Exclude data with less than 4 locations
-    ndata<-table(sdata$id)
-    id.exclude<-names(ndata[as.numeric(ndata)<3])
-    excluded.data<-sdata[sdata$id %in% id.exclude,]
-    sdata<-sdata[!(sdata$id %in% id.exclude),]
-    
-    
-    #### Organize data
-    ## Sort data in alphabetical and chronological order
-    sdata<-with(sdata, sdata[order(id, DateTime),])
-    row.names(sdata)<-1:nrow(sdata)
-    
-    
-    ## Get Id of each animal
-    IDs<-levels(factor(sdata$id))
-    
-    
-    # ## Hours from a previous and to a subsequent location (pTime & sTime)
-    # stepTime<-function(j){
-    #     timeDiff<-diff(sdata[sdata$id %in% j, "DateTime"])
-    #     units(timeDiff)<-"hours"
-    #     c(as.numeric(timeDiff), NA)
-    # } 
-    # 
-    # sTime<-unlist(lapply(IDs, stepTime))  
-    # sdata$pTime<-c(NA, sTime[-length(sTime)])
-    # sdata$sTime<-sTime
-    # 
-    # 
-    # ## Distance from a previous and to a subsequent location (pDist & sDist)
-    # calcDist<-function(j){
-    #   turtle<-sdata[sdata$id %in% j,]  
-    #   LatLong<-data.frame(Y=turtle$lat, X=turtle$lon)
-    #   sp::coordinates(LatLong)<-~X+Y
-    #   sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
-    #   
-    #   #pDist
-    #   c(NA, raster::pointDistance(LatLong[-length(LatLong)], LatLong[-1], lonlat=T)/1000)
-    # }
-    # 
-    # sdata$pDist<-unlist(lapply(IDs, calcDist))
-    # sdata$sDist<-c(sdata$pDist[-1], NA)
-    sdata <- track_param(sdata, param = c('time', 'distance'))
-    
-    #### Select a location from successive spatial duplicates by distance and time 
-    ## middle section 1
-    if(conditional %in% "TRUE"){
-      # Function to select the one to remove (0 = remove, 1 = keep)
-      pick.time<-function(i) {
-        if(sdata$pDist[i]<=step.dist && sdata$pTime[i]<=step.time && sdata$qi[i]<sdata$qi[i-1] &&
-           (!is.na(sdata$pDist[i])) && (!is.na(sdata$pTime[i])) && (!is.na(sdata$qi[i])) && (!is.na(sdata$qi[i-1]))) {
-          0
+  
+  #### Filter successive locations with the exactly same coordinates
+  if(isTRUE(conditional)){
+    while(any(sdata$pTime <= step.time & sdata$pDist == 0, na.rm = TRUE)){
+      ## temporal duplicates
+      sdata1 <- with(sdata, sdata[which((pDist == 0 | sDist == 0) & (pTime <= step.time | sTime <= step.time)),])
+
+      ## other data
+      sdata2 <- dplyr::anti_join(sdata, sdata1, by = c('id', 'DateTime', 'lat', 'lon', 'qi'))
+
+      #### Group temporal duplicates
+      sdata1 <- track_param(sdata1, param = 'distance')
+      index <- 0
+      for(i in 1:nrow(sdata1)){
+        if(any(is.na(sdata1[i, 'pDist']) | sdata1[i, 'sDist'] == 0, na.rm = TRUE)){
+          index <- index + 1
+          sdata1[i, 'group'] <- index
         } else {
-          1
+          sdata1[i, 'group'] <- index
         }
       }
       
-    } else {
-      pick.time<-function(i){
-        if(sdata$pDist[i]<=step.dist && sdata$qi[i]<sdata$qi[i-1] &&
-           (!is.na(sdata$pDist[i])) && (!is.na(sdata$qi[i])) && (!is.na(sdata$qi[i-1]))) {
-          0
-        } else {
-          1
-        }
-      }
-    }
+      #### Filter successive locations with exactly same coordinates
+      sdata1 <- dplyr::distinct(sdata1, id, lat, lon, group, .keep_all = TRUE)
       
-    # Apply the above funtion to each data set seperately
-    rm.time<-function(j){
-      ini<-min(as.numeric(rownames(sdata[sdata$id %in% j,])))+1
-      las<-max(as.numeric(rownames(sdata[sdata$id %in% j,])))
-      rm<-c(1, unlist(lapply(ini:las, pick.time)))
+      #### Combine
+      sdata <- plyr::rbind.fill(sdata1, sdata2)
+      
+      #### Recalculate movement parameters
+      sdata <- track_param(sdata, param = c('time', 'distance'))
     }
-    
-    sdata$rm<-unlist(lapply(IDs, rm.time))
-    
-    
-    ## middle section 2
-    if(conditional %in% "TRUE"){
-      # Function to select the one to remove (0 = remove, 1 = keep)
-      pick.time2<-function(i){
-        if(sdata$sDist[i]<=step.dist && sdata$sTime[i]<=step.time && sdata$qi[i]<=sdata$qi[i+1] &&
-           (!is.na(sdata$sDist[i])) && (!is.na(sdata$sTime[i])) && (!is.na(sdata$qi[i])) && (!is.na(sdata$qi[i+1]))) {
-          0
+  } else {
+    while(any(sdata$pDist == 0, na.rm = TRUE)){
+      ## temporal duplicates
+      sdata1 <- with(sdata, sdata[which(pDist == 0 | sDist == 0),])
+      
+      ## other data
+      sdata2 <- dplyr::anti_join(sdata, sdata1, by = c('id', 'DateTime', 'lat', 'lon', 'qi'))
+      
+      #### Group temporal duplicates
+      sdata1 <- track_param(sdata1, param = 'distance')
+      index <- 0
+      for(i in 1:nrow(sdata1)){
+        if(any(is.na(sdata1[i, 'pDist']) | sdata1[i, 'sDist'] == 0, na.rm = TRUE)){
+          index <- index + 1
+          sdata1[i, 'group'] <- index
         } else {
-          1
+          sdata1[i, 'group'] <- index
         }
       }
-
-    } else {
-      pick.time2<-function(i){
-        if(sdata$sDist[i]<=step.dist && sdata$qi[i]<=sdata$qi[i+1] &&
-           (!is.na(sdata$sDist[i])) && (!is.na(sdata$qi[i])) && (!is.na(sdata$qi[i+1]))) {
-          0
-        } else {
-          1
-        }
-      }
+      
+      #### Filter successive locations with exactly same coordinates
+      sdata1 <- dplyr::distinct(sdata1, id, lat, lon, group, .keep_all = TRUE)
+      
+      #### Combine
+      sdata <- plyr::rbind.fill(sdata1, sdata2)
+      
+      #### Recalculate movement parameters
+      sdata <- track_param(sdata, param = c('time', 'distance'))
     }
-
-    # Apply the above funtion to each data set seperately
-    rm.time2<-function(j){
-      ini<-min(as.numeric(rownames(sdata[sdata$id %in% j,])))
-      las<-max(as.numeric(rownames(sdata[sdata$id %in% j,])))-1
-      rm2<-c(unlist(lapply(ini:las, pick.time2)),1)
-    }
-
-    sdata$rm2<-unlist(lapply(IDs, rm.time2))
-    
-    
-    #### Remove spatial duplicates
-    sdata<-with(sdata, sdata[rm==1 & rm2==1,])
-    
-    
-    #### Bring back excluded data
-    if(nrow(excluded.data)>0){
-      # excluded.data[,c("pTime", "sTime", "pDist", "sDist", "rm", "rm2")]<-NA
-      sdata <- plyr::rbind.fill(sdata, excluded.data)
-    } else {
-      sdata<-sdata
-    }
-    
-  }  
-  
-  
-  #### Repeat the function until no locations can be removed by this filter
-  sdata2<-dup.location(sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional)
-  sdata3<-dup.location(sdata=sdata2, step.time=step.time, step.dist=step.dist, conditional=conditional)
-  while(!(nrow(sdata2) %in% nrow(sdata3)))
-  {
-    sdata3<-dup.location(sdata=sdata2, step.time=step.time, step.dist=step.dist, conditional=conditional)
-    sdata2<-dup.location(sdata=sdata3, step.time=step.time, step.dist=step.dist, conditional=conditional)
   }
   
   
-  #### Report the summary of filtering
-  ## Data excluded from filtering
-  ndata<-table(as.character(sdata$id))
-  id.exclude<-names(ndata[as.numeric(ndata)<3])
+  #### Function to filter spatial duplicates of different coordinates
+  dup.location <- function(sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional){
+
+    #### Subset data 
+    ## temporal duplicates
+    if(isTRUE(conditional)){
+      sdata1 <- with(sdata, sdata[which((pDist <= step.dist | sDist <= step.dist) & (pTime <= step.time | sTime <= step.time)),])
+    } else {
+      sdata1 <- with(sdata, sdata[which(pDist <= step.dist | sDist <= step.dist),])
+    }
+    
+    ## other data
+    sdata2 <- dplyr::anti_join(sdata, sdata1, by = c('id', 'DateTime', 'lat', 'lon', 'qi'))
+    
+    
+    #### Group temporal duplicates
+    sdata1 <- track_param(sdata1, param = 'distance')
+    index <- 0
+    for(i in 1:nrow(sdata1)){
+      if(any(is.na(sdata1[i, 'pDist']) | (sdata1[i, 'sDist'] <= step.dist), na.rm = TRUE)){
+        index <- index + 1
+        sdata1[i, 'group'] <- index
+      } else {
+        sdata1[i, 'group'] <- index
+      }
+    }
+    
+    ## group with more than 1 locations
+    nloc <- aggregate(lat ~ group, data = sdata1, FUN = length)
+    nloc_gp <- unique(nloc[nloc$lat>1, 'group'])
+    sdata3 <- with(sdata1, sdata1[!group %in% nloc_gp,])
+    sdata1 <- with(sdata1, sdata1[group %in% nloc_gp,])
+    
+   
+    #### Find the location which is the closest to the previous and/or successive locations
+    sdata1 <- plyr::rbind.fill(lapply(nloc_gp, function(i){
+      dup_temp <- with(sdata1, sdata1[group %in% i,])
+      minDT <- min(dup_temp$DateTime)
+      maxDT <- max(dup_temp$DateTime)
+      dup_id <- unique(dup_temp$id)
+      
+      ## locations immediately before
+      loc.before <- with(sdata, sdata[id %in% dup_id & DateTime < minDT,])
+      if(nrow(loc.before) > 0){
+        maxDT_before <- max(loc.before$DateTime)
+        loc.before <- loc.before[loc.before$DateTime >= maxDT_before,]
+      }
+      
+      ## locations immediately after
+      loc.after <- with(sdata, sdata[id %in% dup_id & DateTime > maxDT,])
+      if(nrow(loc.after) > 0){
+        minDT_after <- min(loc.after$DateTime)
+        loc.after <- loc.after[loc.after$DateTime <= minDT_after,]
+      }
+      
+      
+      #### Calculate distances
+      if(nrow(loc.before) > 0 & nrow(loc.after) > 0){
+        dist.before <- raster::pointDistance(dup_temp[,c('lon', 'lat')], loc.before[,c('lon', 'lat')], lonlat = TRUE, allpairs = TRUE)
+        dist.after <- raster::pointDistance(dup_temp[,c('lon', 'lat')], loc.after[,c('lon', 'lat')], lonlat = TRUE, allpairs = TRUE)
+        dist.all <- cbind(dist.before, dist.after)
+        dist.sum <- rowSums(dist.all)
+        dist.min <- which.min(dist.sum)[1]
+      } else if(nrow(loc.before) > 0){
+        dist.before <- raster::pointDistance(dup_temp[,c('lon', 'lat')], loc.before[,c('lon', 'lat')], lonlat = TRUE, allpairs = TRUE)
+        dist.sum <- rowSums(as.matrix(dist.before))
+        dist.min <- which.min(dist.sum)[1]
+      } else if(nrow(loc.after) > 0){
+        dist.after <- raster::pointDistance(dup_temp[,c('lon', 'lat')], loc.after[,c('lon', 'lat')], lonlat = TRUE, allpairs = TRUE)
+        dist.sum <- rowSums(as.matrix(dist.after))
+        dist.min <- which.min(dist.sum)[1]
+      } else {
+        dist.min <- 1
+      }
+      
+      #### Return the location which is the closest to the previous and successive locations
+      return(dup_temp[dist.min,])
+    }))
+    
+    
+    #### Combine
+    sdata <- plyr::rbind.fill(sdata1, sdata2, sdata3)
+    sdata$group <- NULL
+    
+    ## Re-calculate
+    sdata <- track_param(sdata, param = c('time', 'distance'))
+    
+    #### Return
+    return(sdata)
+  }
   
+  
+  #### Run the function until no locations can be removed by this filter
+  if(isTRUE(conditional)){
+    if(any(sdata$pTime <= step.time & pDist <= step.dist, na.rm = TRUE)){
+      sdata <- dup.location(sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional)    
+      while(any(sdata$pTime <= step.time & pDist <= step.dist, na.rm = TRUE)){
+        sdata <- dup.location(sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional)
+      }
+    }
+  } else {
+    if(any(sdata$pDist <= step.dist, na.rm = TRUE)){
+      sdata <- dup.location(sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional)    
+      while(any(sdata$pDist <= step.dist, na.rm = TRUE)){
+        sdata <- dup.location(sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional)
+      }
+    }
+  }
+
+ 
   ## Filtered data
-  FilteredSS<-nrow(sdata3)
+  FilteredSS<-nrow(sdata)
   RemovedSamplesN<-OriginalSS-FilteredSS
+  
   
   ## Print report
   cat("dupfilter_space removed", RemovedSamplesN, "of", OriginalSS, "locations.", fill = TRUE)
-  if(length(id.exclude)>0){
-    message('Warning: dupfilter_space not applied to the following data. Insufficient data.')
-    message(paste(id.exclude, collapse = ', '))
-  } 
-
+  
+  
   #### Delete working columns and return the output
-  drops<-c("rm", "rm2")
-  # drops<-c("rm", "rm2", "sTime", "sDist")
-  sdata3<-sdata3[,!(names(sdata3) %in% drops)]
-  return(sdata3)
+  sdata<-sdata[,headers] 
+  return(sdata)
 }

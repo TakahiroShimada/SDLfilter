@@ -24,10 +24,7 @@ Default is 0 kilometres.}
 Default is FALSE.}
 }
 \value{
-The input data frame is returned with spatial duplicates removed. 
-The following columns are added: "pTime", "sTime", "pDist", "sDist". 
-"pTime" and "sTime" are hours from a previous and to a subsequent fix respectively. 
-"pDist" and "sDist" are straight distances in kilometres from a previous and to a subsequent fix respectively.
+The input data frame is returned with spatial duplicates removed.
 }
 \description{
 Function to filter spatial duplicates in tracking data.
@@ -46,7 +43,7 @@ Sea turtles return home after intentional displacement from coastal foraging are
 \emph{Marine Biology} 163:1-14 doi:\href{http://doi.org/10.1007/s00227-015-2771-0}{10.1007/s00227-015-2771-0}
 }
 \seealso{
-\code{\link{dupfilter}}, \code{\link{dupfilter_exact}}, \code{\link{dupfilter_time}}, \code{\link{dupfilter_qi}}
+\code{\link{dupfilter}}, \code{\link{dupfilter_exact}}, \code{\link{dupfilter_time}}, \code{\link{dupfilter_qi}}, \code{\link{track_param}}
 }
 \author{
 Takahiro Shimada

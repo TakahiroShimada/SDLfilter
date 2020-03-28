@@ -39,6 +39,10 @@
 # Hierarchical screening
 ddfilter_loop<-function(sdata, qi=4, ia=90, vmaxlp=1.8){
   
+  #### Original columns
+  headers <- names(sdata)
+  
+  
   OriginalSS<-nrow(sdata)
   
   for(k in 1:qi) {
@@ -64,46 +68,7 @@ ddfilter_loop<-function(sdata, qi=4, ia=90, vmaxlp=1.8){
             ## Get Id of each animal
             IDs<-levels(factor(sdata$id))
             
-            
-            # ## Hours from a previous and to a subsequent location (pTime & sTime)
-            # stepTime<-function(j){
-            #     timeDiff<-diff(sdata[sdata$id %in% j, "DateTime"])
-            #     units(timeDiff)<-"hours"
-            #     c(as.numeric(timeDiff), NA)
-            # } 
-            # 
-            # sTime<-unlist(lapply(IDs, stepTime))  
-            # sdata$pTime<-c(NA, sTime[-length(sTime)])
-            # sdata$sTime<-sTime
-            #             
-            # 
-            # ## Distance from a previous and to a subsequent location (pDist & sDist)
-            # # Function to calculate distances
-            # calcDist<-function(j){
-            #     turtle<-sdata[sdata$id %in% j,]  
-            #     LatLong<-data.frame(Y=turtle$lat, X=turtle$lon)
-            #     sp::coordinates(LatLong)<-~X+Y
-            #     sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
-            #     
-            #     #pDist
-            #     c(NA, raster::pointDistance(LatLong[-length(LatLong)], LatLong[-1], lonlat=T)/1000)
-            # }
-            # 
-            # sdata$pDist<-unlist(lapply(IDs, calcDist))
-            # sdata$sDist<-c(sdata$pDist[-1], NA)
-            # 
-            # 
-            # # Speed from a previous and to a subsequent location in km/h
-            # sdata$pSpeed<-sdata$pDist/sdata$pTime
-            # sdata$sSpeed<-sdata$sDist/sdata$sTime
-            # 
-            # 
-            # ## Calculate inner angle in degree
-            # # LatLong<-data.frame(Y=sdata$lat, X=sdata$lon, tms=sdata$DateTime, id=sdata$id)
-            # # sp::coordinates(LatLong)<-~X+Y
-            # # sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
-            # # tr<-trip::trip(LatLong, c("tms", "id"))
-            # # sdata$inAng<-trip::trackAngle(tr)
+            ## Get movement parameters
             sdata <- track_param(sdata, param = c('time', 'distance', 'speed', 'angle'))
             
             
@@ -148,7 +113,7 @@ ddfilter_loop<-function(sdata, qi=4, ia=90, vmaxlp=1.8){
         sdata2<-rm.maxLPSPD(sdata = sdata, qi = qi, ia = ia, vmaxlp = vmaxlp)
         sdata3<-rm.maxLPSPD(sdata = sdata2, qi = qi, ia = ia, vmaxlp = vmaxlp)
         
-        while(!(nrow(sdata2) %in% nrow(sdata3)))
+        while(!(nrow(sdata2) == nrow(sdata3)))
         {
           sdata3<-rm.maxLPSPD(sdata = sdata2, qi = qi, ia = ia, vmaxlp = vmaxlp)
           sdata2<-rm.maxLPSPD(sdata = sdata3, qi = qi, ia = ia, vmaxlp = vmaxlp)
@@ -174,22 +139,12 @@ ddfilter_loop<-function(sdata, qi=4, ia=90, vmaxlp=1.8){
   cat("ddfilter_loop removed", RemovedSamplesN, "of", OriginalSS, "locations.", fill = TRUE)
   # cat("\n")
   if(length(id.exclude)>0){
-      message('Warning: ddfilter_loop not applied to the following data. Insufficient data.')
+      message('Warning: insufficient data to apply ddfilter_loop to;')
       message(paste(id.exclude, collapse = ', '))
   }
   
-  # if(length(id.exclude)>0){
-  #     cat("ddfilter_loop removed", RemovedSamplesN, "of", OriginalSS, "locations")
-  #     cat("\n")
-  #     cat("  Warning: insufficient data to run ddfilter_loop for", id.exclude)
-  #     cat("\n")
-  # } else {
-  #     message("ddfilter_loop removed", RemovedSamplesN, "of", OriginalSS, "locations")
-  #     cat("\n")
-  # }
-  
- 
+
   #### Delete working columns and return the output
-  sdata$overLpMax<-NULL
+  sdata <- sdata[,headers] 
   return(sdata)
 }

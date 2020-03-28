@@ -29,12 +29,15 @@
 #' @references Shimada T, Jones R, Limpus C, Hamann M (2012) 
 #' Improving data retention and home range estimates by data-driven screening.
 #' \emph{Marine Ecology Progress Series} 457:171-180 doi:\href{http://doi.org/10.3354/meps09747}{10.3354/meps09747}
-#' @seealso \code{\link{ddfilter}}, \code{\link{ddfilter_loop}}, \code{\link{vmax}}
+#' @seealso \code{\link{ddfilter}}, \code{\link{ddfilter_loop}}, \code{\link{vmax}}, \code{\link{track_param}}
 
 
 
 ddfilter_speed<-function (sdata, vmax=8.9, method=1){
   
+  #### Original columns
+  headers <- names(sdata)
+
   OriginalSS<-nrow(sdata)
     
     max.speed<-function(sdata=sdata, vmax=vmax,method=method){
@@ -54,39 +57,7 @@ ddfilter_speed<-function (sdata, vmax=8.9, method=1){
       ## Get Id of each animal
       IDs<-levels(factor(sdata$id))
       
-      
-      # ## Hours from a previous and to a subsequent location (pTime & sTime)
-      # stepTime<-function(j){
-      #     timeDiff<-diff(sdata[sdata$id %in% j, "DateTime"])
-      #     units(timeDiff)<-"hours"
-      #     c(as.numeric(timeDiff), NA)
-      # } 
-      # 
-      # sTime<-unlist(lapply(IDs, stepTime))  
-      # sdata$pTime<-c(NA, sTime[-length(sTime)])
-      # sdata$sTime<-sTime
-      #      
-      # 
-      # ## Distance from a previous and to a subsequent location (pDist & sDist)
-      # # Function to calculate distances
-      # calcDist<-function(j){
-      #     turtle<-sdata[sdata$id %in% j,]  
-      #     LatLong<-data.frame(Y=turtle$lat, X=turtle$lon)
-      #     sp::coordinates(LatLong)<-~X+Y
-      #     sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
-      #     
-      #     #pDist
-      #     c(NA, raster::pointDistance(LatLong[-length(LatLong)], LatLong[-1], lonlat=T)/1000)
-      # }
-      # 
-      # sdata$pDist<-unlist(lapply(IDs, calcDist))
-      # sdata$sDist<-c(sdata$pDist[-1], NA)
-      # 
-      # 
-      # 
-      # # Speed from a previous and to a subsequent location in km/h
-      # sdata$pSpeed<-sdata$pDist/sdata$pTime
-      # sdata$sSpeed<-sdata$sDist/sdata$sTime
+      ## Get movement parameters
       sdata <- track_param(sdata, param = c('time', 'distance', 'speed'))
     
     
@@ -135,7 +106,7 @@ ddfilter_speed<-function (sdata, vmax=8.9, method=1){
   # Repeat the above function until no locations can be removed by this filter.
   sdata2<-max.speed(sdata=sdata, vmax=vmax, method=method)
   sdata3<-max.speed(sdata=sdata2, vmax=vmax, method=method)
-  while(!(nrow(sdata2) %in% nrow(sdata3)))
+  while(!(nrow(sdata2) == nrow(sdata3)))
   {
     sdata3<-max.speed(sdata=sdata2, vmax=vmax, method=method)
     sdata2<-max.speed(sdata=sdata3, vmax=vmax, method=method)
@@ -154,23 +125,12 @@ ddfilter_speed<-function (sdata, vmax=8.9, method=1){
   ## Print report
   cat("ddfilter_speed removed", RemovedSamplesN, "of", OriginalSS, "locations.", fill = TRUE)
   if(length(id.exclude)>0){
-    message('Warning: ddfilter_speed not applied to the following data. Insufficient data.')
+    message('Warning: insufficient data to apply ddfilter_speed to:')
     message(paste(id.exclude, collapse = ', '))
   }
-  # if(length(id.exclude)>0){
-  #     cat('ddfilter.speed removed', RemovedSamplesN, 'of', OriginalSS, 'locations')
-  #     # cat("\n")
-  #     message('insufficient data to run ddfilter.speed for', id.exclude)
-  #     # cat("\n")
-  # } else {
-  #     cat("ddfilter.speed removed", RemovedSamplesN, "of", OriginalSS, "locations")
-  #     # cat("\n")
-  # }
 
   
   # Delete working columns and return the output
-  sdata3$overMax<-NULL
-  # drops<-c("overMax", "sTime", "sDist", "pSpeed", "sSpeed")
-  # sdata3<-sdata3[,!(names(sdata3) %in% drops)] 
+  sdata3<-sdata3[,headers]
   return(sdata3)
 }

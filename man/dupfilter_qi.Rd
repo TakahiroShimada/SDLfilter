@@ -7,10 +7,9 @@
 dupfilter_qi(sdata = sdata, step.time = 0)
 }
 \arguments{
-\item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon", "qi". 
+\item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "qi". 
 The function filters the input data by the unique "id". 
 "DateTime" is date & time in class \code{\link[base]{POSIXct}}. 
-"lat" and "lon" are the latitude and longitude of each location in decimal degrees. 
 "qi" is the numerical quality index associated with each location fix where a greater number indicates a higher accuracy 
 (e.g. the number of GPS satellites involved in estimation).}
 
@@ -18,15 +17,13 @@ The function filters the input data by the unique "id".
 Default is 0 hours.}
 }
 \value{
-The input data frame is returned with temporal duplicates removed by the quality index. 
-The following columns are added: "pTime", "sTime". "pTime" and "sTime" are hours from a previous and to a subsequent fix respectively.
+The input data frame is returned with temporal duplicates removed by the quality index.
 }
 \description{
 Function to filter temporal duplicates in tracking data by quality index.
 }
 \details{
 This function is a partial component of \code{\link{dupfilter}}, although works as a stand-alone function. 
-First it identifies spatial duplicates by searching for consecutive fixes that were located within \emph{step.dist}. For each group of spatial duplicates, 
 It looks for temporal duplicates and retains a fix with the highest quality index.
 }
 \references{
@@ -35,7 +32,7 @@ Sea turtles return home after intentional displacement from coastal foraging are
 \emph{Marine Biology} 163:1-14 doi:\href{http://doi.org/10.1007/s00227-015-2771-0}{10.1007/s00227-015-2771-0}
 }
 \seealso{
-\code{\link{dupfilter}}, \code{\link{dupfilter_exact}}, \code{\link{dupfilter_time}}, \code{\link{dupfilter_space}}
+\code{\link{dupfilter}}, \code{\link{dupfilter_exact}}, \code{\link{dupfilter_time}}, \code{\link{dupfilter_space}}, \code{\link{track_param}}
 }
 \author{
 Takahiro Shimada

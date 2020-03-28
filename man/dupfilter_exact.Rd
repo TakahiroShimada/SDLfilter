@@ -15,10 +15,7 @@ The function filters the input data by the unique "id".
 (e.g. the number of GPS satellites involved in estimation).}
 }
 \value{
-The input data frame is returned with temporally and spatially exact duplicates removed. 
-The following columns are added: "pTime", "sTime", "pDist", "sDist". 
-"pTime" and "sTime" are hours from a previous and to a subsequent fix respectively. 
-"pDist" and "sDist" are straight distances in kilometres from a previous and to a subsequent fix respectively.
+The input data frame is returned with temporally and spatially exact duplicates removed.
 }
 \description{
 Function to filter temporally and spatially exact locations in tracking data.
@@ -33,7 +30,7 @@ Sea turtles return home after intentional displacement from coastal foraging are
 \emph{Marine Biology} 163:1-14 doi:\href{http://doi.org/10.1007/s00227-015-2771-0}{10.1007/s00227-015-2771-0}
 }
 \seealso{
-\code{\link{dupfilter}}, \code{\link{dupfilter_qi}}, \code{\link{dupfilter_time}}, \code{\link{dupfilter_space}}
+\code{\link{dupfilter}}, \code{\link{dupfilter_qi}}, \code{\link{dupfilter_time}}, \code{\link{dupfilter_space}}, \code{\link{track_param}}
 }
 \author{
 Takahiro Shimada

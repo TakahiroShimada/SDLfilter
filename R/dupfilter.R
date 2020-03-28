@@ -21,14 +21,11 @@
 #' When temporal or spatial duplicates are associated with the same quality index, 
 #' the function retains a location that is nearest from a previous and to a subsequent location.
 #' @return The input data frame is returned containing only a single fix (latitude/longitude pair) per time and location. 
-#' The following columns are added: "pTime", "sTime", "pDist", "sDist". 
-#' "pTime" and "sTime" are hours from a previous and to a subsequent fix respectively. 
-#' "pDist" and "sDist" are straight distances in kilometres from a previous and to a subsequent fix respectively. 
 #' @author Takahiro Shimada
 #' @references Shimada T, Limpus C, Jones R, Hazel J, Groom R, Hamann M (2016) 
 #' Sea turtles return home after intentional displacement from coastal foraging areas. 
 #' \emph{Marine Biology} 163:1-14 doi:\href{http://doi.org/10.1007/s00227-015-2771-0}{10.1007/s00227-015-2771-0}
-#' @seealso \code{\link{dupfilter_exact}}, \code{\link{dupfilter_qi}}, \code{\link{dupfilter_time}}, \code{\link{dupfilter_space}}
+#' @seealso \code{\link{dupfilter_exact}}, \code{\link{dupfilter_qi}}, \code{\link{dupfilter_time}}, \code{\link{dupfilter_space}}, \code{\link{track_param}}
 #' @examples 
 #' #### Load data sets
 #' ## Fastloc GPS data obtained from a green turtle
@@ -39,34 +36,34 @@
 #' turtle.dup <- dupfilter(turtle)
 
 
-dupfilter<-function(sdata, step.time=0, step.dist=0, conditional=FALSE){
+dupfilter <- function(sdata, step.time=0, step.dist=0, conditional=FALSE){
   
   #### Sample size for unfiltered data
-  OriginalSS<-nrow(sdata)
+  OriginalSS <- nrow(sdata)
   
   #### Function to filter temporal and/or spatial duplicates
-  dupfilter_all<-function (sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional) {
+  dupfilter_all <- function(sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional){
     ## a. same timing and location
-    sdata<-dupfilter_exact(sdata)
+    sdata <- dupfilter_exact(sdata)
     
     ## b. quality index
-    sdata<-dupfilter_qi(sdata=sdata, step.time=step.time)
+    sdata <- dupfilter_qi(sdata=sdata, step.time=step.time)
     
     ## c. same timing
-    sdata<-dupfilter_time(sdata=sdata, step.time=step.time)
+    sdata <- dupfilter_time(sdata=sdata, step.time=step.time)
     
     ## d. same location
-    sdata<-dupfilter_space(sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional)
+    sdata <- dupfilter_space(sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional)
   }
   
   cat("\n")
-  sdata3<-dupfilter_all(sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional)
+  sdata3 <- dupfilter_all(sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional)
     
 
   #### Report the summary of filtering
-  FilteredSS<-nrow(sdata3)
-  RemovedSamplesN<-OriginalSS-FilteredSS
-  RemovedSamplesP<-round((1-(FilteredSS/OriginalSS))*100,2)
+  FilteredSS <- nrow(sdata3)
+  RemovedSamplesN <- OriginalSS-FilteredSS
+  RemovedSamplesP <- round((1-(FilteredSS/OriginalSS))*100,2)
   
   cat("\n")
   cat("Input data:", OriginalSS, "locations.", fill = TRUE)

@@ -98,11 +98,25 @@ track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 
   
   #### Calculate inner angle in degree
   if('angle' %in% param){
-    LatLong<-data.frame(Y=sdata$lat, X=sdata$lon, tms=sdata$DateTime, id=sdata$id)
+    ## Locations less than 3
+    nloc <- aggregate(lat ~ id, data = sdata, FUN = length)
+    exclude <- nloc[nloc$lat<3,'id']
+    sdata1 <- with(sdata, sdata[!id %in% exclude,])
+    
+    ## others
+    sdata2 <- with(sdata, sdata[id %in% exclude,])
+    
+    ## inner angle
+    LatLong <- data.frame(Y=sdata1$lat, X=sdata1$lon, tms=sdata1$DateTime, id=sdata1$id)
     sp::coordinates(LatLong)<-~X+Y
     sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
     tr<-trip::trip(LatLong, c("tms", "id"))
-    sdata$inAng<-trip::trackAngle(tr)
+    sdata1$inAng<-trip::trackAngle(tr)
+    
+    ## Bring back excluded data
+    sdata <- plyr::rbind.fill(sdata1, sdata2)
+    sdata <- with(sdata, sdata[order(id, DateTime),])
+    row.names(sdata) <- 1:nrow(sdata)
   }
   
   
@@ -202,18 +216,18 @@ track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 
 
   ## Delete working columns and return the output
   drops <- c('cumDays', 'cumDaysBack')
-  sdata <- sdata[,!(names(sdata) %in% drops)] 
-  if(!'time' %in% param){
-    sdata <- sdata[,!(names(sdata) %in% c('pTime', 'sTime'))] 
-  }
-  if(!'distance' %in% param){
-    sdata <- sdata[,!(names(sdata) %in% c('pDist', 'sDist'))] 
-  }
-  if(!'speed' %in% param){
-    sdata <- sdata[,!(names(sdata) %in% c('pSpeed', 'sSpeed'))] 
-  }
-  if(!'angle' %in% param){
-    sdata <- sdata[,!(names(sdata) %in% 'inAng')] 
-  }
+  # sdata <- sdata[,!(names(sdata) %in% drops)] 
+  # if(!'time' %in% param){
+  #   sdata <- sdata[,!(names(sdata) %in% c('pTime', 'sTime'))] 
+  # }
+  # if(!'distance' %in% param){
+  #   sdata <- sdata[,!(names(sdata) %in% c('pDist', 'sDist'))] 
+  # }
+  # if(!'speed' %in% param){
+  #   sdata <- sdata[,!(names(sdata) %in% c('pSpeed', 'sSpeed'))] 
+  # }
+  # if(!'angle' %in% param){
+  #   sdata <- sdata[,!(names(sdata) %in% 'inAng')] 
+  # }
   return(sdata)
 }

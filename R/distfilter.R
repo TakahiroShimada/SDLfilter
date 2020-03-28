@@ -58,6 +58,10 @@
 
 distfilter <- function (sdata, max.dist=100, method=1){
   
+  #### Original columns
+  headers <- names(sdata)
+  
+  
   OriginalSS<-nrow(sdata)
   
   max.distance<-function(sdata=sdata, max.dist=max.dist, method=method){
@@ -141,7 +145,7 @@ distfilter <- function (sdata, max.dist=100, method=1){
   # Repeat the above function until no locations can be removed by this filter.
   sdata2<-max.distance(sdata=sdata, max.dist=max.dist, method=method)
   sdata3<-max.distance(sdata=sdata2, max.dist=max.dist, method=method)
-  while(!(nrow(sdata2) %in% nrow(sdata3)))
+  while(!(nrow(sdata2) == nrow(sdata3)))
   {
     sdata3<-max.distance(sdata=sdata2, max.dist=max.dist, method=method)
     sdata2<-max.distance(sdata=sdata3, max.dist=max.dist, method=method)
@@ -160,12 +164,11 @@ distfilter <- function (sdata, max.dist=100, method=1){
   ## Print report
   cat("distfilter removed", RemovedSamplesN, "of", OriginalSS, "locations.", fill = TRUE)
   if(length(id.exclude)>0){
-    message('Warning: distfilter not applied to the following data. Insufficient data.')
+    message('Warning: insufficient data to apply distfilter to:')
     message(paste(id.exclude, collapse = ', '))
   }
   
   # Delete working columns and return the output
-  drops<-c("overMax")
-  sdata3<-sdata3[,!(names(sdata3) %in% drops)] 
+  sdata3<-sdata3[,headers] 
   return(sdata3)
 }

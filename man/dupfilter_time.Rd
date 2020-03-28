@@ -18,8 +18,7 @@ The function filters the input data by the unique "id".
 Default is 0 hours.}
 }
 \value{
-The input data frame is returned with temporal duplicates removed. 
-The following columns are added: "pTime", "sTime". "pTime" and "sTime" are hours from a previous and to a subsequent fix respectively.
+The input data frame is returned with temporal duplicates removed.
 }
 \description{
 Function to filter temporal duplicates that are associated with the same quality index.
@@ -35,7 +34,7 @@ Sea turtles return home after intentional displacement from coastal foraging are
 \emph{Marine Biology} 163:1-14 doi:\href{http://doi.org/10.1007/s00227-015-2771-0}{10.1007/s00227-015-2771-0}
 }
 \seealso{
-\code{\link{dupfilter}}, \code{\link{dupfilter_exact}}, \code{\link{dupfilter_qi}}, \code{\link{dupfilter_space}}
+\code{\link{dupfilter}}, \code{\link{dupfilter_exact}}, \code{\link{dupfilter_qi}}, \code{\link{dupfilter_space}}, \code{\link{track_param}}
 }
 \author{
 Takahiro Shimada

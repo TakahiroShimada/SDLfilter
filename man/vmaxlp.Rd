@@ -4,7 +4,7 @@
 \alias{vmaxlp}
 \title{Estimate maximum one-way linear speed of a loop trip}
 \usage{
-vmaxlp(sdata, qi = 4, prob = 0.99)
+vmaxlp(sdata, qi = 4, prob = 0.99, ...)
 }
 \arguments{
 \item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon", "qi". 
@@ -18,6 +18,8 @@ vmaxlp(sdata, qi = 4, prob = 0.99)
 Default is 4 (e.g. 4 GPS satellite or more).}
 
 \item{prob}{A numeric value to specify a sample quantile. Default is 0.99.}
+
+\item{...}{Extra arguments passed to \code{\link{dupfilter}}.}
 }
 \value{
 Maximum one-way linear speed of a loop trip (vmaxlp) estimated from the input data. The unit km/h.
@@ -45,7 +47,7 @@ Improving data retention and home range estimates by data-driven screening.
 \emph{Marine Ecology Progress Series} 457:171-180 doi:\href{http://doi.org/10.3354/meps09747}{10.3354/meps09747}
 }
 \seealso{
-\code{\link{ddfilter}}, \code{\link{ddfilter_loop}}
+\code{\link{ddfilter}}, \code{\link{ddfilter_loop}}, \code{\link{track_param}}, \code{\link{dupfilter}}
 }
 \author{
 Takahiro Shimada
