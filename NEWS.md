@@ -8,7 +8,7 @@ output:
 News for Package 'SDLfilter'
 =========
 
-#### Version 1.2.1.9018 (2020-03-28)
+#### Version 2.0.0 (2020-05-04)
 
 * added four new functions (boot_overlap, boot_area, asymptote, percent_vol) to assess sample sizes of animal tracking data.
 * added a new function (track_param) to calculate some parameters of animal tracking data (i.e. time, distance, speed, angle between locations).
@@ -21,7 +21,7 @@ News for Package 'SDLfilter'
 * improved the map_track function.
 * improved the R documentations.
 * improved the processing speed of the dupfilter function and its dependent functions.
-* fixed minor bugs in the vmax and maxvlp functions. This bug did not affect the estimated values. In the previous version, when subset data contain duplicate locations, the function ceased with error messages. These errors are now avoided by applying the dupfilter function on the subset data prior to calculation.
+* updated the vmax and maxvlp functions. In the previous version, when input data contain duplicate locations, the function ceased with error messages. These errors are now avoided by removing duplicate locations using the dupfilter function prior to calculation of vmax and maxvlp.
 
 
 #### Version 1.2.1 (2019-02-19)

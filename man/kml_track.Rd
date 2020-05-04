@@ -4,15 +4,7 @@
 \alias{kml_track}
 \title{Generate KML from locations}
 \usage{
-kml_track(
-  sdata,
-  sdata.CRS = "WGS",
-  output = "open",
-  type = "point",
-  folder.name,
-  file.name,
-  ...
-)
+kml_track(sdata, sdata.CRS = "WGS", output = "open", type = "point", ...)
 }
 \arguments{
 \item{sdata}{A data frame containing location data of \bold{one} individual, 
@@ -29,11 +21,6 @@ If the input data is not in WGS, the specific CRS needs to be supplied as a PROJ
 The output will be saved in the current working directory.}
 
 \item{type}{Type of the output. 'point' or 'line.}
-
-\item{folder.name}{Folder name of the kml file. If not specified, the id will be used.}
-
-\item{file.name}{File name of the kml file. 
-If not specified, a combination of id and output type will be used.}
 
 \item{...}{Optional arguments passed to \code{\link[plotKML]{plotKML}} and \code{\link[plotKML]{kml}}.}
 }

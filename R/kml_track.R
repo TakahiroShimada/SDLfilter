@@ -14,9 +14,6 @@
 #' @param output A string specifying whether to 'open' or 'save' the output. 
 #' The output will be saved in the current working directory.
 #' @param type Type of the output. 'point' or 'line.
-#' @param folder.name Folder name of the kml file. If not specified, the id will be used.
-#' @param file.name File name of the kml file. 
-#' If not specified, a combination of id and output type will be used.
 #' @param ... Optional arguments passed to \code{\link[plotKML]{plotKML}} and \code{\link[plotKML]{kml}}.
 #' @import sp
 #' @importFrom plotKML plotKML kml
@@ -46,7 +43,7 @@
 
 
 
-kml_track<-function(sdata, sdata.CRS = 'WGS', output = 'open', type = 'point', folder.name, file.name, ...){
+kml_track<-function(sdata, sdata.CRS = 'WGS', output = 'open', type = 'point', ...){
   
   sdata <- sdata[stats::complete.cases(sdata[,c("lon","lat")]),]
   
@@ -75,34 +72,11 @@ kml_track<-function(sdata, sdata.CRS = 'WGS', output = 'open', type = 'point', f
     sdata <- sp::SpatialLinesDataFrame(spLines, data=df.lines, match.ID=F)
   }
   
-  
-  #### Output names
-  # folder name
-  if(exists('folder.name')){
-    folder.nam <- folder.name
-  } else {
-    folder.nam <- j
-  }
-
-  # file name
-  if(exists('file.name')){
-    file.nam <- file.name
-  } else {
-    file.nam <- paste(j, type, sep = "_")
-    
-    # kml or kmz
-    if(exists('kmz')){
-      file.nam <- paste0(file.nam, '.kmz')
-    } else {
-      file.nam <- paste0(file.nam, '.kml')
-    }
-  }
-    
 
   #### kml
   if(output == 'open'){
-    plotKML::plotKML(obj=sdata, folder.name=folder.nam, file.name=file.nam, ...)
+    plotKML::plotKML(obj=sdata, ...)
   } else {
-    plotKML::kml(obj=sdata, folder.name=folder.nam, file.name=file.nam, ...)
+    plotKML::kml(obj=sdata, ...)
   }
 }

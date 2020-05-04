@@ -25,7 +25,7 @@ dupfilter_exact <- function(sdata){
   OriginalSS <- nrow(sdata)
 
   #### Filter temporally and spatially exact duplicates
-  sdata <- dplyr::distinct(sdata, id, DateTime, lat, lon, qi, .keep_all = TRUE)
+  sdata <- dplyr::distinct(sdata, .data$id, .data$DateTime, .data$lat, .data$lon, .data$qi, .keep_all = TRUE)
 
   #### Report the summary of filtering
   ## Filtered data

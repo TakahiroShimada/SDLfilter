@@ -33,9 +33,6 @@ It then discards extreme values, based on the specified quantile, to exclude pot
 The maximum value in the retained dataset (i.e. without outliers) represents the maximum linear speed at which 
 an animal would travel between two consecutive locations.
 }
-\note{
-The input data must not contain temporal or spatial duplicates.
-}
 \references{
 Shimada T, Jones R, Limpus C, Hamann M (2012) 
 Improving data retention and home range estimates by data-driven screening. 

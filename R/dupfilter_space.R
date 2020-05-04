@@ -63,7 +63,7 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE){
       }
       
       #### Filter successive locations with exactly same coordinates
-      sdata1 <- dplyr::distinct(sdata1, id, lat, lon, group, .keep_all = TRUE)
+      sdata1 <- dplyr::distinct(sdata1, .data$id, .data$lat, .data$lon, .data$group, .keep_all = TRUE)
       
       #### Combine
       sdata <- plyr::rbind.fill(sdata1, sdata2)
@@ -92,7 +92,7 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE){
       }
       
       #### Filter successive locations with exactly same coordinates
-      sdata1 <- dplyr::distinct(sdata1, id, lat, lon, group, .keep_all = TRUE)
+      sdata1 <- dplyr::distinct(sdata1, .data$id, .data$lat, .data$lon, .data$group, .keep_all = TRUE)
       
       #### Combine
       sdata <- plyr::rbind.fill(sdata1, sdata2)
@@ -197,9 +197,9 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE){
   
   #### Run the function until no locations can be removed by this filter
   if(isTRUE(conditional)){
-    if(any(sdata$pTime <= step.time & pDist <= step.dist, na.rm = TRUE)){
+    if(any(sdata$pTime <= step.time & sdata$pDist <= step.dist, na.rm = TRUE)){
       sdata <- dup.location(sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional)    
-      while(any(sdata$pTime <= step.time & pDist <= step.dist, na.rm = TRUE)){
+      while(any(sdata$pTime <= step.time & sdata$pDist <= step.dist, na.rm = TRUE)){
         sdata <- dup.location(sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional)
       }
     }

@@ -141,11 +141,11 @@ If you use the functions *dupfilter* or *depthfilter*, please cite
 Shimada T, Limpus C, Jones R, Hazel J, Groom R, Hamann M (2016) Sea turtles return home after intentional displacement from coastal foraging areas. *Mar Biol* 163:1-14 doi: [10.1007/s00227-015-2771-0](http://dx.doi.org/10.1007/s00227-015-2771-0)
 
 
-Shimada T,.... (in prep) Assessing sample sizes for the analysis of animal distributions using the R package SDLfilter. 
+Shimada T,.... (under review) Assessing sample sizes for the analysis of animal distributions using the R package SDLfilter. 
 
 
 Current version
 --------
-1.2.1.9018 (28 March 2020)
+2.0.0 (4 May 2020)
 
 

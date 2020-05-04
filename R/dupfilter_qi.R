@@ -84,7 +84,7 @@ dupfilter_qi <- function(sdata = sdata, step.time = 0){
 
     
     #### Filter temporal duplicates by quality index
-    sdata1 <- dplyr::distinct(sdata1, group, .keep_all = TRUE)
+    sdata1 <- dplyr::distinct(sdata1, .data$group, .keep_all = TRUE)
     
 
     #### Bring back the excluded data

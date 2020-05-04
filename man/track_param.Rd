@@ -12,7 +12,7 @@ track_param(
 }
 \arguments{
 \item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon". 
-The function calculates each movement parameters by the unique "id". 
+The function calculates each movement parameter by the unique "id". 
 "DateTime" is date & time in class \code{\link[base]{POSIXct}}. 
 "lat" and "lon" are the latitude and longitude of each location in decimal degrees.}
 
@@ -32,7 +32,7 @@ The input data is returned with new columns containing the requested parameters.
 "meanSpeed" and "meanAngle" are the mean speed and degree over a specified number of days.
 }
 \description{
-Calculate time, distance, speed and inner angle between successive locations
+Calculate time, distance, speed, and inner angle between successive locations
 }
 \details{
 This function calculates various parameters of tracks. 

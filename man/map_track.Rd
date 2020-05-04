@@ -50,15 +50,15 @@ The smaller value increases the margin.}
 
 \item{bgmap}{A data frame of a background map data, containing the following headers: "long", "lat", "group". 
 If not specified, the \code{\link[maps]{world}} map is used. 
-The Google Maps ("terrain", "satellite", "roadmap", "hybrid") can also be queried.}
+Google Maps ("terrain", "satellite", "roadmap", "hybrid") can also be queried.}
 
-\item{google.key}{If the Google Maps are queried, a valid API key (a string) needs to be specified here. See \code{\link[ggmap]{register_google}} for details.}
+\item{google.key}{If Google Maps are queried, a valid API key (a string) needs to be specified here. See \code{\link[ggmap]{register_google}} for details.}
 
-\item{map.bg}{Background colour of the map. This argument is ignored when any of the Google Maps is selected.}
+\item{map.bg}{Background colour of the map. This argument is ignored when any Google Maps is selected.}
 
-\item{map.col}{Outline colour of the map. This argument is ignored when any of the Google Maps is selected.}
+\item{map.col}{Outline colour of the map. This argument is ignored when any Google Maps is selected.}
 
-\item{zoom}{Map zoom for the Google Maps. Default (NULL) to estimate the zoom from each data set. 
+\item{zoom}{Map zoom for Google Maps. Default (NULL) to estimate the zoom from each data set. 
 For other options, see \code{\link[ggmap]{get_map}} for details.}
 
 \item{point.bg}{The colour to fill in a symbol.}

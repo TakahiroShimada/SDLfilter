@@ -58,7 +58,7 @@ dupfilter_time <- function (sdata, step.time=0) {
       }
 
       #### Filter successive locations with exactly same coordinates
-      sdata1 <- dplyr::distinct(sdata1, id, lat, lon, group, .keep_all = TRUE)
+      sdata1 <- dplyr::distinct(sdata1, .data$id, .data$lat, .data$lon, .data$group, .keep_all = TRUE)
 
       #### Combine
       sdata <- plyr::rbind.fill(sdata1, sdata2)

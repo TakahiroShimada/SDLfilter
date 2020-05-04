@@ -11,11 +11,11 @@
 #' The smaller value increases the margin.
 #' @param bgmap A data frame of a background map data, containing the following headers: "long", "lat", "group". 
 #' If not specified, the \code{\link[maps]{world}} map is used. 
-#' The Google Maps ("terrain", "satellite", "roadmap", "hybrid") can also be queried.
-#' @param google.key If the Google Maps are queried, a valid API key (a string) needs to be specified here. See \code{\link[ggmap]{register_google}} for details.
-#' @param map.bg Background colour of the map. This argument is ignored when any of the Google Maps is selected.
-#' @param map.col Outline colour of the map. This argument is ignored when any of the Google Maps is selected.
-#' @param zoom Map zoom for the Google Maps. Default (NULL) to estimate the zoom from each data set. 
+#' Google Maps ("terrain", "satellite", "roadmap", "hybrid") can also be queried.
+#' @param google.key If Google Maps are queried, a valid API key (a string) needs to be specified here. See \code{\link[ggmap]{register_google}} for details.
+#' @param map.bg Background colour of the map. This argument is ignored when any Google Maps is selected.
+#' @param map.col Outline colour of the map. This argument is ignored when any Google Maps is selected.
+#' @param zoom Map zoom for Google Maps. Default (NULL) to estimate the zoom from each data set. 
 #' For other options, see \code{\link[ggmap]{get_map}} for details. 
 #' @param point.bg The colour to fill in a symbol.
 #' @param point.col The colour for the outline of a symbol.

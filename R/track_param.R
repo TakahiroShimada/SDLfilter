@@ -1,8 +1,8 @@
 #' @aliases track_param
 #' @title Calculate parameters between locations 
-#' @description Calculate time, distance, speed and inner angle between successive locations
+#' @description Calculate time, distance, speed, and inner angle between successive locations
 #' @param sdata A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon". 
-#' The function calculates each movement parameters by the unique "id". 
+#' The function calculates each movement parameter by the unique "id". 
 #' "DateTime" is date & time in class \code{\link[base]{POSIXct}}. 
 #' "lat" and "lon" are the latitude and longitude of each location in decimal degrees. 
 #' @param param A string or vector specifying movement parameters to be calculated.

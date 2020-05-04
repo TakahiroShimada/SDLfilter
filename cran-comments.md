@@ -1,5 +1,5 @@
 ## Test environments
-* local ubuntu 18.04 install: R 3.6.2
+* local ubuntu 18.04 install: R 3.6.3
 * win-builder: R-devel
 
 
@@ -18,15 +18,15 @@ There was one NOTE. The maintainer's email address remained the same.
 
 |field    |value                        |
 |:--------|:----------------------------|
-|version  |R version 3.6.2 (2019-12-12) |
-|os       |Ubuntu 18.04.3 LTS           |
+|version  |R version 3.6.3 (2020-02-29) |
+|os       |Ubuntu 18.04.4 LTS           |
 |system   |x86_64, linux-gnu            |
 |ui       |RStudio                      |
 |language |en_AU:en                     |
 |collate  |en_AU.UTF-8                  |
 |ctype    |en_AU.UTF-8                  |
 |tz       |Australia/Perth              |
-|date     |2020-01-29                   |
+|date     |2020-05-04                   |
 
 # Dependencies
 
