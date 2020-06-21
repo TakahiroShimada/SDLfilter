@@ -8,11 +8,13 @@
 A data frame with 276 rows and 5 variables:
 \describe{
   \item{id}{identifier for each animal.}
-  \item{DateTime}{date & time in class \code{\link[base]{POSIXct}}.}
+  \item{DateTime}{GMT date & time of each location in class \code{\link[base]{POSIXct}}".}
   \item{lat}{latitude in decimal degrees.}
   \item{lon}{longitude in decimal degrees.}
-  \item{qi}{numerical quality index associated with each location fix where a greater number indicates a higher accuracy
-   (e.g. number of GPS satellites used for estimation).}
+  \item{qi}{quality index associated with each location fix. 
+The input values can be either the number of GPS satellites or Argos Location Classes. 
+Argos Location Classes will be converted to numerical values, where "A", "B", "Z" will be replaced with "-1", "-2", "-3" respectively.
+The greater number indicates a higher accuracy.}
 }
 }
 \source{

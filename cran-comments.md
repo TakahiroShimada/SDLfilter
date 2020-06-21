@@ -1,5 +1,5 @@
 ## Test environments
-* local ubuntu 18.04 install: R 3.6.3
+* local ubuntu 20.04 install: R 4.0.1
 * win-builder: R-devel
 
 

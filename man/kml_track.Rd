@@ -9,8 +9,8 @@ kml_track(sdata, sdata.CRS = "WGS", output = "open", type = "point", ...)
 \arguments{
 \item{sdata}{A data frame containing location data of \bold{one} individual, 
 with the following column headers: "id", "DateTime", "lat", "lon". 
-"id" is the identifier of the individual. 
-"DateTime" is date & time in class \code{\link[base]{POSIXct}}. 
+"id" is an identifier of the individual. 
+"DateTime" is the GMT date & time of each location in class \code{\link[base]{POSIXct}} or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
 "lat" and "lon" are the latitude and longitude of each location in decimal degrees.}
 
 \item{sdata.CRS}{Coordinate reference system (CRS) for the input location data.

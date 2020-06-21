@@ -8,11 +8,14 @@ vmax(sdata, qi = 5, prob = 0.99, ...)
 }
 \arguments{
 \item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon", "qi". 
-"id" is the unique representing an individual. 
-"DateTime" is date & time in class \code{\link[base]{POSIXct}}. 
+See the data \code{\link{turtle}} for an example.
+The function filters the input data by a unique "id" (e.g. transmitter number, identifier for each animal). 
+"DateTime" is the GMT date & time of each location in class \code{\link[base]{POSIXct}} or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
 "lat" and "lon" are the latitude and longitude of each location in decimal degrees. 
-"qi" is the numerical quality index associated with each location fix where a greater number indicates a higher accuracy 
-(e.g. the number of GPS satellites involved in estimation).}
+"qi" is the quality index associated with each location fix. 
+The input values can be either the number of GPS satellites or Argos Location Classes. 
+Argos Location Classes will be converted to numerical values, where "A", "B", "Z" will be replaced with "-1", "-2", "-3" respectively.
+The greater number indicates a higher accuracy.}
 
 \item{qi}{An integer specifying the lowest quality index of a location that is qualified to be used in the estimation. 
 Default is 5 (e.g. 5 GPS satellite or more).}

@@ -1,4 +1,11 @@
-Version Version 2.0.0 (2020-05-04)
+Version 2.0.1 (2020-05-16)
+
+  o fixed bugs in the track_param function. 
+  o The input qi values can be now either the number of GPS satellites or Argos Location Classes. Argos Location Classes will be converted to numerical values, where "A", "B", "Z" will be replaced with "-1", "-2", "-3" respectively.
+  o The input DateTime (GMT) can be now either in class POSIXct or character with the following format "2012-06-03 01:33:46".
+  o improved the R documentations.
+
+Version 2.0.0 (2020-05-04)
 
   o added four new functions (boot_overlap, boot_area, asymptote, percent_vol) to assess sample sizes of animal tracking data.
   o added a new function (track_param) to calculate some parameters of animal tracking data (i.e. time, distance, speed, angle between locations).

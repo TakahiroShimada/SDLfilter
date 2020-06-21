@@ -1,26 +1,22 @@
 Package: SDLfilter
 Type: Package
-Title: Filtering Satellite-Derived Locations
-Version: 1.2.1
-Date: 2019-02-19
+Title: Filtering and Assessing Sample Size of Tracking Data
+Version: 2.0.0
+Date: 2020-05-04
 Author: Takahiro Shimada
 Maintainer: Takahiro Shimada <taka.shimada@gmail.com>
-Description: Functions to filter GPS and/or Argos locations. The provided
-    filters remove temporal and spatial duplicates, fixes located at a given
-    height from estimated high tide line, and locations with high error as
-    proposed in Shimada et al. (2012) <doi:10.3354/meps09747> and 
-    Shimada et al. (2016) <doi:10.1007/s00227-015-2771-0>.
-Depends: R (>= 2.10), ggplot2
-Imports: sp, raster, trip, data.table, geosphere, ggmap, gridExtra,
-        ggsn, stats, maps
+Description: Functions to filter GPS and/or Argos locations, as well as assessing sample sizes for the analysis of animal distributions. The filters remove temporal and spatial duplicates, fixes located at a given height from estimated high tide line, and locations with high error as described in Shimada et al. (2012) <doi:10.3354/meps09747> and Shimada et al. (2016) <doi:10.1007/s00227-015-2771-0>. Sample sizes for the analysis of animal distributions can be assessed by the conventional area-based approach or the alternative probability-based approach as described in Shimada et al. (in prep). 
+Depends: R (>= 3.5.0), ggplot2
+Imports: plotKML, sp, raster, trip, data.table, gridExtra, ggsn, stats,
+        maps, pracma, plyr, ggmap, lubridate, dplyr
 License: GPL-2 | file LICENSE
 URL: https://github.com/TakahiroShimada/SDLfilter
 BugReports: https://github.com/TakahiroShimada/SDLfilter/issues
 LazyData: true
 Encoding: UTF-8
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 NeedsCompilation: no
-Packaged: 2019-02-26 02:31:44 UTC; taka
+Packaged: 2020-05-04 12:54:54 UTC; taka
 Repository: CRAN
-Date/Publication: 2019-02-27 00:00:07 UTC
-Built: R 3.6.2; ; 2020-01-29 02:57:01 UTC; unix
+Date/Publication: 2020-05-04 13:40:06 UTC
+Built: R 4.0.0; ; 2020-05-09 02:01:21 UTC; unix

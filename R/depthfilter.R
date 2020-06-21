@@ -2,11 +2,14 @@
 #' @title Filter locations by water depth
 #' @description Function to filter locations according to bathymetry and tide.
 #' @param sdata A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon", "qi". 
-#' The function filters the input data by the unique "id". 
-#' "DateTime" is date & time in class \code{\link[base]{POSIXct}}. 
+#' See the data \code{\link{turtle}} for an example.
+#' The function filters the input data by a unique "id" (e.g. transmitter number, identifier for each animal). 
+#' "DateTime" is the GMT date & time of each location in class \code{\link[base]{POSIXct}} or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
 #' "lat" and "lon" are the latitude and longitude of each location in decimal degrees. 
-#' "qi" is the numerical quality index associated with each location fix where a greater number indicates a higher accuracy 
-#' (e.g. number of GPS satellites used for estimation).
+#' "qi" is the quality index associated with each location fix. 
+#' The input values can be either the number of GPS satellites or Argos Location Classes. 
+#' Argos Location Classes will be converted to numerical values, where "A", "B", "Z" will be replaced with "-1", "-2", "-3" respectively.
+#' The greater number indicates a higher accuracy. 
 #' @param bathymetry A RasterLayer object containing bathymetric data in metres. 
 #' Negative and positive values indicate below and above the water respectively. 
 #' Geographic coordinate system is WGS84.
@@ -109,7 +112,21 @@
 
 depthfilter<-function(sdata, bathymetry, extract="bilinear", qi=4, tide, tidal.plane, type = "HT", height=0, filter=TRUE) {
   
-  OriginalSS<-nrow(sdata)
+  ## Original sample size
+  OriginalSS <- nrow(sdata)
+  
+  ## qi format
+  sdata <- within(sdata, {
+    qi[qi %in% "A"] <- "-1"
+    qi[qi %in% "B"] <- "-2"
+    qi[qi %in% "Z"] <- "-3"
+    qi <- as.numeric(as.character(qi))
+  })
+  
+  ## Date & time
+  sdata$DateTime <- with(sdata, as.POSIXct(DateTime, format = "%Y-%m-%d %H:%M:%S", tz = "GMT"))
+  tide$tideDT <- with(tide, as.POSIXct(tideDT, format = "%Y-%m-%d %H:%M:%S", tz = "GMT"))
+  
   
   ### Sort data in alphabetical and chronological order
   # Animal data

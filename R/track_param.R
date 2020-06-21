@@ -2,8 +2,8 @@
 #' @title Calculate parameters between locations 
 #' @description Calculate time, distance, speed, and inner angle between successive locations
 #' @param sdata A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon". 
-#' The function calculates each movement parameter by the unique "id". 
-#' "DateTime" is date & time in class \code{\link[base]{POSIXct}}. 
+#' The function calculates each movement parameter by a unique "id" (e.g. transmitter number, identifier for each animal). 
+#' "DateTime" is the GMT date & time of each location in class \code{\link[base]{POSIXct}} or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
 #' "lat" and "lon" are the latitude and longitude of each location in decimal degrees. 
 #' @param param A string or vector specifying movement parameters to be calculated.
 #' Options are 'time', 'distance', 'speed', 'angle', 'mean speed' and 'mean angle'.
@@ -52,6 +52,9 @@
 track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 'mean speed', 'mean angle'), days=2){
     
   #### Organize data
+  ## Date & time
+  sdata$DateTime <- with(sdata, as.POSIXct(DateTime, format = "%Y-%m-%d %H:%M:%S", tz = "GMT"))
+  
   ## Sort data in alphabetical and chronological order
   sdata <- with(sdata, sdata[order(id, DateTime),])
   row.names(sdata) <- 1:nrow(sdata)
@@ -90,14 +93,14 @@ track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 
     
   
   ## Speed from a previous and to a subsequent location in km/h
-  if(any(param %in% c('speed', 'mean.speed'))){
+  if(any(param %in% c('speed', 'mean speed'))){
     sdata$pSpeed <- sdata$pDist/sdata$pTime
     sdata$sSpeed <- sdata$sDist/sdata$sTime
   }
   
   
   #### Calculate inner angle in degree
-  if('angle' %in% param){
+  if(any(param %in% c('angle', 'mean angle'))){
     ## Locations less than 3
     nloc <- aggregate(lat ~ id, data = sdata, FUN = length)
     exclude <- nloc[nloc$lat<3,'id']
@@ -110,6 +113,7 @@ track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 
     LatLong <- data.frame(Y=sdata1$lat, X=sdata1$lon, tms=sdata1$DateTime, id=sdata1$id)
     sp::coordinates(LatLong)<-~X+Y
     sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
+    # sp::proj4string(LatLong)<-sp::CRS("+init=epsg:4326")
     tr<-trip::trip(LatLong, c("tms", "id"))
     sdata1$inAng<-trip::trackAngle(tr)
     
@@ -216,18 +220,5 @@ track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 
 
   ## Delete working columns and return the output
   drops <- c('cumDays', 'cumDaysBack')
-  # sdata <- sdata[,!(names(sdata) %in% drops)] 
-  # if(!'time' %in% param){
-  #   sdata <- sdata[,!(names(sdata) %in% c('pTime', 'sTime'))] 
-  # }
-  # if(!'distance' %in% param){
-  #   sdata <- sdata[,!(names(sdata) %in% c('pDist', 'sDist'))] 
-  # }
-  # if(!'speed' %in% param){
-  #   sdata <- sdata[,!(names(sdata) %in% c('pSpeed', 'sSpeed'))] 
-  # }
-  # if(!'angle' %in% param){
-  #   sdata <- sdata[,!(names(sdata) %in% 'inAng')] 
-  # }
   return(sdata)
 }

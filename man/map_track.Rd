@@ -38,8 +38,8 @@ map_track(
 }
 \arguments{
 \item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon". 
-The function creates a map for each unique "id". 
-"DateTime" is date & time in class \code{\link[base]{POSIXct}}. 
+The function creates a map for each unique "id" (e.g. transmitter number, identifier for each animal). 
+"DateTime" is the GMT date & time of each location in class \code{\link[base]{POSIXct}} or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
 "lat" and "lon" are the latitude and longitude of each location in decimal degrees.}
 
 \item{xlim, ylim}{Limits for x and y axes. 

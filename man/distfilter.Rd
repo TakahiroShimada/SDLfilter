@@ -8,8 +8,9 @@ distfilter(sdata, max.dist = 100, method = 1)
 }
 \arguments{
 \item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon". 
-The function filters the input data by the unique "id". 
-"DateTime" is date & time in class \code{\link[base]{POSIXct}}. 
+See the data \code{\link{turtle}} for an example.
+The function filters the input data by a unique "id" (e.g. transmitter number, identifier for each animal). 
+"DateTime" is the GMT date & time of each location in class \code{\link[base]{POSIXct}} or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
 "lat" and "lon" are the latitude and longitude of each location in decimal degrees.}
 
 \item{max.dist}{A numeric value specifying a threshold of distance between successive locations. Default is 100 km.}

@@ -8,10 +8,13 @@ dupfilter_qi(sdata = sdata, step.time = 0)
 }
 \arguments{
 \item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "qi". 
-The function filters the input data by the unique "id". 
-"DateTime" is date & time in class \code{\link[base]{POSIXct}}. 
-"qi" is the numerical quality index associated with each location fix where a greater number indicates a higher accuracy 
-(e.g. the number of GPS satellites involved in estimation).}
+See the data \code{\link{turtle}} for an example.
+The function filters the input data by a unique "id" (e.g. transmitter number, identifier for each animal). 
+"DateTime" is the GMT date & time of each location in class \code{\link[base]{POSIXct}} or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
+"qi" is the quality index associated with each location fix. 
+The input values can be either the number of GPS satellites or Argos Location Classes. 
+Argos Location Classes will be converted to numerical values, where "A", "B", "Z" will be replaced with "-1", "-2", "-3" respectively.
+The greater number indicates a higher accuracy.}
 
 \item{step.time}{Consecutive locations less than or equal to \emph{step.time} apart are considered temporal duplicates.
 Default is 0 hours.}

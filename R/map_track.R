@@ -2,8 +2,8 @@
 #' @title Plot location data on a map
 #' @description Function to plot tracking data on a map or a satellite image. 
 #' @param sdata A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon". 
-#' The function creates a map for each unique "id". 
-#' "DateTime" is date & time in class \code{\link[base]{POSIXct}}. 
+#' The function creates a map for each unique "id" (e.g. transmitter number, identifier for each animal). 
+#' "DateTime" is the GMT date & time of each location in class \code{\link[base]{POSIXct}} or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
 #' "lat" and "lon" are the latitude and longitude of each location in decimal degrees. 
 #' @param xlim,ylim Limits for x and y axes. 
 #' If not specified, the values are determined as the maximum range of the input data plus an additional margin (see \emph{margin}).    
@@ -43,6 +43,7 @@
 #' @importFrom ggsn scalebar
 #' @importFrom gridExtra marrangeGrob
 #' @importFrom raster pointDistance
+#' @importFrom maps map
 #' @export
 #' @return An arrangelist is returned when \emph{multiplot} is TRUE. Otherwise a list is returned. 
 #' @author Takahiro Shimada
@@ -86,6 +87,10 @@ map_track<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
   #### Get data to plot
   ID<-as.character(unique(sdata$id))
   ID <- ID[!is.na(ID)]
+  
+  ## Date & time
+  sdata$DateTime <- with(sdata, as.POSIXct(DateTime, format = "%Y-%m-%d %H:%M:%S", tz = "GMT"))
+  
   
   p.all<-lapply(1:length(ID), function(i){
     #### Subset data

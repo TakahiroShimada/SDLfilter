@@ -3,11 +3,14 @@
 #' @description A partial component of \code{\link{ddfilter}}, although works as a stand-alone function. 
 #' This function removes locations by speed, inner angle, and quality index as described in Shimada et al. (2012).
 #' @param sdata A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon", "qi". 
-#' The function filters the input data by the unique "id". 
-#' "DateTime" is date & time in class \code{\link[base]{POSIXct}}. 
+#' See the data \code{\link{turtle}} for an example.
+#' The function filters the input data by a unique "id" (e.g. transmitter number, identifier for each animal). 
+#' "DateTime" is the GMT date & time of each location in class \code{\link[base]{POSIXct}} or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
 #' "lat" and "lon" are the latitude and longitude of each location in decimal degrees. 
-#' "qi" is the numerical quality index associated with each location fix where a greater number indicates a higher accuracy 
-#' (e.g. number of GPS satellites used for estimation).
+#' "qi" is the quality index associated with each location fix. 
+#' The input values can be either the number of GPS satellites or Argos Location Classes. 
+#' Argos Location Classes will be converted to numerical values, where "A", "B", "Z" will be replaced with "-1", "-2", "-3" respectively.
+#' The greater number indicates a higher accuracy. 
 #' @param vmaxlp A numeric value specifying a threshold of speed, which is used to evaluate the locations of loop trips. 
 #' Default is 1.8 km/h.
 #' If this value is unknown, it can be estimated from \emph{sdata} using the function \code{\link{vmaxlp}}.
@@ -39,12 +42,23 @@
 # Hierarchical screening
 ddfilter_loop<-function(sdata, qi=4, ia=90, vmaxlp=1.8){
   
-  #### Original columns
+  ## Original columns
   headers <- names(sdata)
   
+  ## Original sample size
+  OriginalSS <- nrow(sdata)
   
-  OriginalSS<-nrow(sdata)
+  ## qi format
+  sdata <- within(sdata, {
+    qi[qi %in% "A"] <- "-1"
+    qi[qi %in% "B"] <- "-2"
+    qi[qi %in% "Z"] <- "-3"
+    qi <- as.numeric(as.character(qi))
+  })
   
+  ## Date & time
+  sdata$DateTime <- with(sdata, as.POSIXct(DateTime, format = "%Y-%m-%d %H:%M:%S", tz = "GMT"))
+
   for(k in 1:qi) {
 
       LP.filter<-function (sdata = sdata, qi = qi, ia = ia, vmaxlp = vmaxlp){
