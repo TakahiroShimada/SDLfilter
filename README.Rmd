@@ -146,6 +146,6 @@ Shimada T,.... (under review) Assessing the sample size of tracking tag deployme
 
 Current version
 --------
-2.0.0.9003 (21 June 2020)
+2.0.0.9004 (21 June 2020)
 
 

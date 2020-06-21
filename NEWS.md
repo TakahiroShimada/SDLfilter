@@ -8,7 +8,7 @@ output:
 News for Package 'SDLfilter'
 =========
 
-#### Version 2.0.1 (2020-05-16)
+#### Version 2.0.0.9004 (2020-06-21)
 
 * fixed bugs in the track_param function. 
 * The input qi values can be now either the number of GPS satellites or Argos Location Classes. Argos Location Classes will be converted to numerical values, where "A", "B", "Z" will be replaced with "-1", "-2", "-3" respectively.

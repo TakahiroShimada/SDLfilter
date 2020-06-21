@@ -1,7 +1,7 @@
 Package: SDLfilter
 Type: Package
 Title: Filtering and Assessing The Sample Size of Tracking Data
-Version: 2.0.0.9003
+Version: 2.0.0.9004
 Date: 2020-06-21
 Author: Takahiro Shimada
 Maintainer: Takahiro Shimada <taka.shimada@gmail.com>
