@@ -1,5 +1,4 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
 SDLfilter
 =========
 
@@ -10,8 +9,8 @@ Overview
 --------
 
 SDLfilter contains a variety of functions to screen GPS/Argos locations
-and to assess the sample size of tracking data for the analysis of
-animal distributions.
+and to assess the sample size of tracking data to optimise the analysis
+of animal distributions.
 
 Installation
 ------------
@@ -99,7 +98,7 @@ size required to represent the general distribution of the group.
 
 <img src="man/figures/README-example2.png" width="50%" />
 
-> Please see the package help pages and Shimada et al. (2012, 2016) for
+> Please see the package help pages and Shimada et al. (2012, 2016) for
 > more details.
 
 References
@@ -119,10 +118,10 @@ turtles return home after intentional displacement from coastal foraging
 areas. *Mar Biol* 163:1-14 doi:
 [10.1007/s00227-015-2771-0](http://dx.doi.org/10.1007/s00227-015-2771-0)
 
-Shimada T,…. (under review) Assessing the sample size of tracking tag
-deployments for animal distribution analysis.
+Shimada T,…. (under review) Optimising sample sizes for animal
+distribution analysis using tracking data.
 
 Current version
 ---------------
 
-2.0.0.9004 (21 June 2020)
+2.0.0.9005 (25 June 2020)
