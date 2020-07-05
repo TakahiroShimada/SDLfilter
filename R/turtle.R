@@ -4,7 +4,7 @@
 #' @format A data frame with 429 rows and 5 variables:
 #' \describe{
 #'   \item{id}{identifier for each animal.}
-#'   \item{DateTime}{GMT date & time of each location in class \code{\link[base]{POSIXct}}".}
+#'   \item{DateTime}{GMT date & time of each location in class \code{\link[base:DateTimeClasses]{POSIXct}}.}
 #'   \item{lat}{latitude in decimal degrees.}
 #'   \item{lon}{longitude in decimal degrees.}
 #'   \item{qi}{quality index associated with each location fix. 

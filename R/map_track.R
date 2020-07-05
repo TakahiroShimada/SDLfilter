@@ -3,7 +3,8 @@
 #' @description Function to plot tracking data on a map or a satellite image. 
 #' @param sdata A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon". 
 #' The function creates a map for each unique "id" (e.g. transmitter number, identifier for each animal). 
-#' "DateTime" is the GMT date & time of each location in class \code{\link[base]{POSIXct}} or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
+#' "DateTime" is the GMT date & time of each location in class \code{\link[base:DateTimeClasses]{POSIXct}} 
+#' or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
 #' "lat" and "lon" are the latitude and longitude of each location in decimal degrees. 
 #' @param xlim,ylim Limits for x and y axes. 
 #' If not specified, the values are determined as the maximum range of the input data plus an additional margin (see \emph{margin}).    
@@ -19,10 +20,10 @@
 #' For other options, see \code{\link[ggmap]{get_map}} for details. 
 #' @param point.bg The colour to fill in a symbol.
 #' @param point.col The colour for the outline of a symbol.
-#' @param point.symbol An integer or a string to specify the symbol type. See \code{\link[ggplot2]{shape}} for details. 
+#' @param point.symbol An integer or a string to specify the symbol type. See \code{\link[ggplot2:aes_linetype_size_shape]{shape}} for details. 
 #' @param point.size An integer to specify the size of the symbol.
 #' @param line.col The colour of the line that connects consecutive points.
-#' @param line.type The type of the line that connects consecutive points. See \code{\link[ggplot2]{linetype}} for details. 
+#' @param line.type The type of the line that connects consecutive points. See \code{\link[ggplot2:aes_linetype_size_shape]{linetype}} for details. 
 #' @param line.size An integer to specify the thickness (width) of the line that connects consecutive points. 
 #' @param sb.distance An integer to specify the length of the scale bar. If not specified, approximately a quarter of the 
 #' plotting range will be used. 

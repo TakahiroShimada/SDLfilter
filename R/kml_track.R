@@ -6,7 +6,8 @@
 #' @param sdata A data frame containing location data of \bold{one} individual, 
 #' with the following column headers: "id", "DateTime", "lat", "lon". 
 #' "id" is an identifier of the individual. 
-#' "DateTime" is the GMT date & time of each location in class \code{\link[base]{POSIXct}} or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
+#' "DateTime" is the GMT date & time of each location in class \code{\link[base:DateTimeClasses]{POSIXct}} 
+#' or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
 #' "lat" and "lon" are the latitude and longitude of each location in decimal degrees. 
 #' @param sdata.CRS Coordinate reference system (CRS) for the input location data.
 #' If the input data is not in WGS, the specific CRS needs to be supplied as a PROJ.4 notation or EPSG code.

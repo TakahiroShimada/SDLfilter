@@ -3,7 +3,8 @@
 #' @description Calculate time, distance, speed, and inner angle between successive locations
 #' @param sdata A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon". 
 #' The function calculates each movement parameter by a unique "id" (e.g. transmitter number, identifier for each animal). 
-#' "DateTime" is the GMT date & time of each location in class \code{\link[base]{POSIXct}} or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
+#' "DateTime" is the GMT date & time of each location in class \code{\link[base:DateTimeClasses]{POSIXct}} 
+#' or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
 #' "lat" and "lon" are the latitude and longitude of each location in decimal degrees. 
 #' @param param A string or vector specifying movement parameters to be calculated.
 #' Options are 'time', 'distance', 'speed', 'angle', 'mean speed' and 'mean angle'.

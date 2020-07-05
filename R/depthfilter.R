@@ -4,7 +4,7 @@
 #' @param sdata A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon", "qi". 
 #' See the data \code{\link{turtle}} for an example.
 #' The function filters the input data by a unique "id" (e.g. transmitter number, identifier for each animal). 
-#' "DateTime" is the GMT date & time of each location in class \code{\link[base]{POSIXct}} or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
+#' "DateTime" is the GMT date & time of each location in class \code{\link[base:DateTimeClasses]{POSIXct}} or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
 #' "lat" and "lon" are the latitude and longitude of each location in decimal degrees. 
 #' "qi" is the quality index associated with each location fix. 
 #' The input values can be either the number of GPS satellites or Argos Location Classes. 
@@ -16,7 +16,7 @@
 #' @param extract Method to extract cell values from the raster layer as inherited from the \code{\link[raster]{extract}} function of the raster package. 
 #' Default is bilinear.
 #' @param tide A data frame containing columns with the following headers: "tideDT", "reading", "standard.port". 
-#' "tideDT" is date & time in class \code{\link[base]{POSIXct}} at each observation. "reading" is the observed tidal height in metres. 
+#' "tideDT" is date & time in class \code{\link[base:DateTimeClasses]{POSIXct}} at each observation. "reading" is the observed tidal height in metres. 
 #' "standard.port" is the identifier of each tidal station.
 #' @param qi An integer specifying a threshold of quality index. 
 #' \emph{depthfilter} does not filter a location that is associated with a quality index higher than this threshold. 

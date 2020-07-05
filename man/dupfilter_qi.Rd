@@ -10,7 +10,7 @@ dupfilter_qi(sdata = sdata, step.time = 0)
 \item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "qi". 
 See the data \code{\link{turtle}} for an example.
 The function filters the input data by a unique "id" (e.g. transmitter number, identifier for each animal). 
-"DateTime" is the GMT date & time of each location in class \code{\link[base]{POSIXct}} or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
+"DateTime" is the GMT date & time of each location in class \code{\link[base:DateTimeClasses]{POSIXct}} or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
 "qi" is the quality index associated with each location fix. 
 The input values can be either the number of GPS satellites or Argos Location Classes. 
 Argos Location Classes will be converted to numerical values, where "A", "B", "Z" will be replaced with "-1", "-2", "-3" respectively.

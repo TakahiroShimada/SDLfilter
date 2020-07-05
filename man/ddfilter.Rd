@@ -10,7 +10,8 @@ ddfilter(sdata, vmax = 8.9, vmaxlp = 1.8, qi = 4, ia = 90, method = 1)
 \item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon", "qi". 
 See the data \code{\link{turtle}} for an example.
 The function filters the input data by a unique "id" (e.g. transmitter number, identifier for each animal). 
-"DateTime" is the GMT date & time of each location in class \code{\link[base]{POSIXct}} or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
+"DateTime" is the GMT date & time of each location in class \code{\link[base:DateTimeClasses]{POSIXct}} or 
+\code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
 "lat" and "lon" are the latitude and longitude of each location in decimal degrees. 
 "qi" is the quality index associated with each location fix. 
 The input values can be either the number of GPS satellites or Argos Location Classes. 

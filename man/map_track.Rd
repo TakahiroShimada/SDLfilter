@@ -39,7 +39,8 @@ map_track(
 \arguments{
 \item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon". 
 The function creates a map for each unique "id" (e.g. transmitter number, identifier for each animal). 
-"DateTime" is the GMT date & time of each location in class \code{\link[base]{POSIXct}} or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
+"DateTime" is the GMT date & time of each location in class \code{\link[base:DateTimeClasses]{POSIXct}} 
+or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
 "lat" and "lon" are the latitude and longitude of each location in decimal degrees.}
 
 \item{xlim, ylim}{Limits for x and y axes. 
@@ -65,13 +66,13 @@ For other options, see \code{\link[ggmap]{get_map}} for details.}
 
 \item{point.col}{The colour for the outline of a symbol.}
 
-\item{point.symbol}{An integer or a string to specify the symbol type. See \code{\link[ggplot2]{shape}} for details.}
+\item{point.symbol}{An integer or a string to specify the symbol type. See \code{\link[ggplot2:aes_linetype_size_shape]{shape}} for details.}
 
 \item{point.size}{An integer to specify the size of the symbol.}
 
 \item{line.col}{The colour of the line that connects consecutive points.}
 
-\item{line.type}{The type of the line that connects consecutive points. See \code{\link[ggplot2]{linetype}} for details.}
+\item{line.type}{The type of the line that connects consecutive points. See \code{\link[ggplot2:aes_linetype_size_shape]{linetype}} for details.}
 
 \item{line.size}{An integer to specify the thickness (width) of the line that connects consecutive points.}
 
