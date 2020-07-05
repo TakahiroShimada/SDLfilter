@@ -124,4 +124,4 @@ distribution analysis using tracking data.
 Current version
 ---------------
 
-2.0.0.9005 (25 June 2020)
+2.0.1 (4 July 2020)

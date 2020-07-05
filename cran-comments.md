@@ -1,5 +1,5 @@
 ## Test environments
-* local ubuntu 20.04 install: R 4.0.2
+* local ubuntu 18.04.4 install: R 4.0.2
 * win-builder: R-devel
 
 
@@ -18,7 +18,7 @@ There was one NOTE. The maintainer's email address remained the same.
 
 |field    |value                        |
 |:--------|:----------------------------|
-|version  |R version 3.6.3 (2020-02-29) |
+|version  |R version 4.0.2 (2020-06-22) |
 |os       |Ubuntu 18.04.4 LTS           |
 |system   |x86_64, linux-gnu            |
 |ui       |RStudio                      |
@@ -26,17 +26,18 @@ There was one NOTE. The maintainer's email address remained the same.
 |collate  |en_AU.UTF-8                  |
 |ctype    |en_AU.UTF-8                  |
 |tz       |Australia/Perth              |
-|date     |2020-05-04                   |
+|date     |2020-07-04                   |
 
 # Dependencies
 
-|package   |old   |new |Δ  |
-|:---------|:-----|:---|:--|
-|SDLfilter |1.2.1 |NA  |*  |
+|package   |old   |new   |Δ  |
+|:---------|:-----|:-----|:--|
+|SDLfilter |2.0.0 |2.0.1 |*  |
 
 # Revdeps
 
 # Check results
 
 0 packages with problems
+
 

@@ -1,11 +1,11 @@
 Package: SDLfilter
 Type: Package
-Title: Filtering and Assessing Sample Size of Tracking Data
-Version: 2.0.0
-Date: 2020-05-04
+Title: Filtering and Assessing the Sample Size of Tracking Data
+Version: 2.0.1
+Date: 2020-07-04
 Author: Takahiro Shimada
 Maintainer: Takahiro Shimada <taka.shimada@gmail.com>
-Description: Functions to filter GPS and/or Argos locations, as well as assessing sample sizes for the analysis of animal distributions. The filters remove temporal and spatial duplicates, fixes located at a given height from estimated high tide line, and locations with high error as described in Shimada et al. (2012) <doi:10.3354/meps09747> and Shimada et al. (2016) <doi:10.1007/s00227-015-2771-0>. Sample sizes for the analysis of animal distributions can be assessed by the conventional area-based approach or the alternative probability-based approach as described in Shimada et al. (in prep). 
+Description: Functions to filter GPS/Argos locations, as well as assessing the sample size for the analysis of animal distributions. The filters remove temporal and spatial duplicates, fixes located at a given height from estimated high tide line, and locations with high error as described in Shimada et al. (2012) <doi:10.3354/meps09747> and Shimada et al. (2016) <doi:10.1007/s00227-015-2771-0>. Sample size for the analysis of animal distributions can be assessed by the conventional area-based approach or the alternative probability-based approach as described in Shimada et al. (under review). 
 Depends: R (>= 3.5.0), ggplot2
 Imports: plotKML, sp, raster, trip, data.table, gridExtra, ggsn, stats,
         maps, pracma, plyr, ggmap, lubridate, dplyr
@@ -14,10 +14,10 @@ URL: https://github.com/TakahiroShimada/SDLfilter
 BugReports: https://github.com/TakahiroShimada/SDLfilter/issues
 LazyData: true
 Encoding: UTF-8
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 RemoteType: local
 RemoteUrl:
         /home/taka/Documents/Work/Research/Projects/SDLfilter/SDLfilter
 NeedsCompilation: no
-Packaged: 2020-05-09 02:01:37 UTC; taka
-Built: R 4.0.0; ; 2020-05-09 02:01:37 UTC; unix
+Packaged: 2020-07-04 02:16:07 UTC; taka
+Built: R 4.0.2; ; 2020-07-04 02:16:07 UTC; unix
