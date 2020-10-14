@@ -140,12 +140,13 @@ If you use the functions *dupfilter* or *depthfilter*, please cite
 
 Shimada T, Limpus C, Jones R, Hazel J, Groom R, Hamann M (2016) Sea turtles return home after intentional displacement from coastal foraging areas. *Mar Biol* 163:1-14 doi: [10.1007/s00227-015-2771-0](http://dx.doi.org/10.1007/s00227-015-2771-0)
 
+If you use the functions *boot_overlap* or *boot_area*, please cite
 
-Shimada T,.... (under review) Optimising sample sizes for animal distribution analysis using tracking data. 
+Shimada T, Thums M, Hamann M, Limpus CJ, Hays GC, FitzSimmons N, Wildermann NE, Duarte CD, Meekan MG (in press) Optimising sample sizes for animal distribution analysis using tracking data. Methods in Ecology and Evolution, n/a(n/a). doi:10.1111/2041-210X.13506
 
 
 Current version
 --------
-2.0.1 (4 July 2020)
+2.0.1.0002 (14 October 2020)
 
 

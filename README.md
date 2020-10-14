@@ -1,4 +1,5 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
 SDLfilter
 =========
 
@@ -98,7 +99,7 @@ size required to represent the general distribution of the group.
 
 <img src="man/figures/README-example2.png" width="50%" />
 
-> Please see the package help pages and Shimada et al. (2012, 2016) for
+> Please see the package help pages and Shimada et al. (2012, 2016) for
 > more details.
 
 References
@@ -118,8 +119,13 @@ turtles return home after intentional displacement from coastal foraging
 areas. *Mar Biol* 163:1-14 doi:
 [10.1007/s00227-015-2771-0](http://dx.doi.org/10.1007/s00227-015-2771-0)
 
-Shimada T,…. (under review) Optimising sample sizes for animal
-distribution analysis using tracking data.
+If you use the functions *boot\_overlap* or *boot\_area*, please cite
+
+Shimada T, Thums M, Hamann M, Limpus CJ, Hays GC, FitzSimmons N,
+Wildermann NE, Duarte CD, Meekan MG (in press) Optimising sample sizes
+for animal distribution analysis using tracking data. Methods in Ecology
+and Evolution, n/a(n/a).
+<a href="doi:10.1111/2041-210X.13506" class="uri">doi:10.1111/2041-210X.13506</a>
 
 Current version
 ---------------
