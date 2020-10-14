@@ -126,7 +126,7 @@ ggplot(data = overlap$summary)+
 knitr::include_graphics('man/figures/README-example2.png') 
 ```
 
-> Please see the package help pages and Shimada et al. (2012, 2016) for more details.
+> Please see the package help pages and Shimada et al. (2012, 2016, in press) for more details.
 
 
 References

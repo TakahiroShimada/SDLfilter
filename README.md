@@ -99,8 +99,8 @@ size required to represent the general distribution of the group.
 
 <img src="man/figures/README-example2.png" width="50%" />
 
-> Please see the package help pages and Shimada et al. (2012, 2016) for
-> more details.
+> Please see the package help pages and Shimada et al. (2012, 2016, in
+> press) for more details.
 
 References
 ----------
@@ -130,4 +130,4 @@ and Evolution, n/a(n/a).
 Current version
 ---------------
 
-2.0.1 (4 July 2020)
+2.0.1.0002 (14 October 2020)
