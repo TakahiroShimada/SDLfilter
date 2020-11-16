@@ -121,13 +121,12 @@ areas. *Mar Biol* 163:1-14 doi:
 
 If you use the functions *boot\_overlap* or *boot\_area*, please cite
 
-Shimada T, Thums M, Hamann M, Limpus CJ, Hays GC, FitzSimmons N,
-Wildermann NE, Duarte CD, Meekan MG (in press) Optimising sample sizes
-for animal distribution analysis using tracking data. Methods in Ecology
-and Evolution, n/a(n/a).
-<a href="doi:10.1111/2041-210X.13506" class="uri">doi:10.1111/2041-210X.13506</a>
+Shimada, T, Thums, M, Hamann, M, et al. (2020) Optimising sample sizes
+for animal distribution analysis using tracking data. *Methods Ecol
+Evol* 00:1–10 doi:
+[10.1111/2041-210X.13506](https://doi.org/10.1111/2041-210X.13506)
 
 Current version
 ---------------
 
-2.0.1.0002 (14 October 2020)
+2.0.1.0003 (16 November 2020)

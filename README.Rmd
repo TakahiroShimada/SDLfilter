@@ -67,7 +67,7 @@ knitr::include_graphics('man/figures/README-example1.png')
 
 ```{r, message=FALSE, echo=FALSE}
  # Entire area
- p1<-track_map(turtle.dup, bgmap=Australia, point.size = 2, line.size = 0.5, axes.lab.size = 0, 
+ p1<-map_track(turtle.dup, bgmap=Australia, point.size = 2, line.size = 0.5, axes.lab.size = 0, 
              sb.distance=200, multiplot = FALSE, point.bg = "red",
              title.size=15, title="Entire area")[[1]] + 
    geom_point(aes(x=lon, y=lat), data=turtle.dd, size=2, fill="yellow", shape=21)+
@@ -77,7 +77,7 @@ knitr::include_graphics('man/figures/README-example1.png')
             colour="black", size=4, hjust = 0)
 
  # Zoomed in
- p2<-track_map(turtle.dup, bgmap=SandyStrait, xlim=c(152.7, 153.2), ylim=(c(-25.75, -25.24)), 
+ p2<-map_track(turtle.dup, bgmap=SandyStrait, xlim=c(152.7, 153.2), ylim=(c(-25.75, -25.24)), 
              axes.lab.size = 0, sb.distance=10, point.size = 2, point.bg = "red", line.size = 0.5, 
              multiplot = FALSE, title.size=15, title="Zoomed in")[[1]] + 
  geom_path(aes(x=lon, y=lat), data=turtle.dd, size=0.5, colour="black", linetype=1) + 
@@ -142,11 +142,11 @@ Shimada T, Limpus C, Jones R, Hazel J, Groom R, Hamann M (2016) Sea turtles retu
 
 If you use the functions *boot_overlap* or *boot_area*, please cite
 
-Shimada T, Thums M, Hamann M, Limpus CJ, Hays GC, FitzSimmons N, Wildermann NE, Duarte CD, Meekan MG (in press) Optimising sample sizes for animal distribution analysis using tracking data. Methods in Ecology and Evolution, n/a(n/a). doi:10.1111/2041-210X.13506
+Shimada, T, Thums, M, Hamann, M, et al. (2020) Optimising sample sizes for animal distribution analysis using tracking data. *Methods Ecol Evol* 00:1–10 doi: [10.1111/2041-210X.13506](https://doi.org/10.1111/2041-210X.13506)
 
 
 Current version
 --------
-2.0.1.0002 (14 October 2020)
+2.0.1.0003 (16 November 2020)
 
 
