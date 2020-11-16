@@ -36,15 +36,11 @@ library(SDLfilter)
 
 There are three main filtering functions.
 
-1.  *dupfilter* filters temporal and spatial duplicates.
+-   *dupfilter* filters temporal and spatial duplicates.  
+-   *ddfilter* filters locations with high error.  
+-   *depthfilter* filters locations by water depth.
 
-2.  *ddfilter* filters locations with high error.
-
-3.  *depthfilter* filters locations by water depth.
-
-<p>
- 
-</p>
+<!-- <p>&nbsp;</p> -->
 
 ##### 1-1. Load Fastloc GPS data obtained from a green turtle
 
@@ -52,19 +48,11 @@ There are three main filtering functions.
 data(turtle)
 ```
 
-<p>
- 
-</p>
-
 ##### 1-2. Remove temporal and spatial duplicates
 
 ``` r
 turtle.dup <- dupfilter(turtle)
 ```
-
-<p>
- 
-</p>
 
 ##### 1-3. Remove biologically unrealistic fixes
 
@@ -78,10 +66,6 @@ VLP <- vmaxlp(turtle.dup)
 ## Run ddfilter
 turtle.dd <- ddfilter(turtle.dup, vmax=V, vmaxlp=VLP)
 ```
-
-<p>
- 
-</p>
 
 ##### 1-4. Plot data
 
@@ -113,10 +97,6 @@ turtle.dd <- ddfilter(turtle.dup, vmax=V, vmaxlp=VLP)
 
 #### Probability-based approach
 
-<p>
- 
-</p>
-
 ##### 2-1. Load utilisation distributions of flatback turtles.
 
 The input data can be either a matrix or a list of RasterLayer objects.
@@ -132,10 +112,6 @@ the geographical extent was 1901789, 1972789, -2750915, -2653915
 data(curtis)
 ```
 
-<p>
- 
-</p>
-
 ##### 2-2. Calculate overlap probability from 1000 random permutation.
 
 It will take some time to run this code depending on the number of
@@ -144,12 +120,8 @@ iterations and the machine specs. The runtime was about 2.5 minutes for
 RAM).
 
 ``` r
-overlap <- boot_overlap(curtis, R = 1000, method = "PHR")
+overlap <- boot_overlap(curtis, R = 10, method = "PHR")
 ```
-
-<p>
- 
-</p>
 
 ##### 2-3. Find the minimum sample size required to estimate the general distribution.
 
@@ -161,10 +133,6 @@ size required to represent the general distribution of the group.
 ``` r
 a <- asymptote(overlap)
 ```
-
-<p>
- 
-</p>
 
 ##### 2-4. Plot the mean probability and rational function fit relative to the sample sizes (n).
 
@@ -209,4 +177,4 @@ Evol* 00:1-10 doi:
 Current version
 ---------------
 
-2.0.1.0004 (16 November 2020)
+2.0.1.0005 (16 November 2020)
