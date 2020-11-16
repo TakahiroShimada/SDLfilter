@@ -42,7 +42,7 @@ There are three main filtering functions.
 
 <!-- <p>&nbsp;</p> -->
 
-##### 1-1. Load Fastloc GPS data obtained from a green turtle
+##### 1-1. Load tracking data
 
 ``` r
 data(turtle)
@@ -120,7 +120,7 @@ iterations and the machine specs. The runtime was about 2.5 minutes for
 RAM).
 
 ``` r
-overlap <- boot_overlap(curtis, R = 10, method = "PHR")
+overlap <- boot_overlap(curtis, R = 1000, method = "PHR")
 ```
 
 ##### 2-3. Find the minimum sample size required to estimate the general distribution.
