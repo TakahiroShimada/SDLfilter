@@ -10,8 +10,8 @@ Overview
 --------
 
 SDLfilter contains a variety of functions to screen GPS/Argos locations
-and to assess the sample size of tracking data to optimise the analysis
-of animal distributions.
+and to assess the adequacy of sample size of tracking data for animal
+distribution analysis.
 
 Installation
 ------------
@@ -32,7 +32,7 @@ Usage
 library(SDLfilter)
 ```
 
-### Location filtering
+### 1. Location filtering
 
 There are three main filtering functions.
 
@@ -42,27 +42,82 @@ There are three main filtering functions.
 
 3.  *depthfilter* filters locations by water depth.
 
+<p>
+ 
+</p>
+
+##### 1-1. Load Fastloc GPS data obtained from a green turtle
+
 ``` r
-## Fastloc GPS data obtained from a green turtle
 data(turtle)
-
-## Remove temporal and spatial duplicates
-turtle.dup <- dupfilter(turtle)
-
-## Remove biologically unrealistic fixes 
-turtle.dd <- ddfilter(turtle.dup, vmax=9.9, qi=4, ia=90, vmaxlp=2.0)
 ```
 
-<img src="man/figures/README-example1.png" width="80%" />
+<p>
+ 
+</p>
 
-### Assessing sample sizes
+##### 1-2. Remove temporal and spatial duplicates
+
+``` r
+turtle.dup <- dupfilter(turtle)
+```
+
+<p>
+ 
+</p>
+
+##### 1-3. Remove biologically unrealistic fixes
+
+``` r
+## Calculate the maximum linear speed between two consecutive locations
+V <- vmax(turtle.dup)  
+
+## Calculate the maximum one-way linear speed of a loop trip
+VLP <- vmaxlp(turtle.dup) 
+
+## Run ddfilter
+turtle.dd <- ddfilter(turtle.dup, vmax=V, vmaxlp=VLP)
+```
+
+<p>
+ 
+</p>
+
+##### 1-4. Plot data
+
+``` r
+ # Entire area
+ p1 <- map_track(turtle.dup, bgmap=Australia, point.size = 2, line.size = 0.5, axes.lab.size = 0, 
+             sb.distance=200, multiplot = FALSE, point.bg = "red",
+             title.size=15, title="Entire area")[[1]] + 
+   geom_point(aes(x=lon, y=lat), data=turtle.dd, size=2, fill="yellow", shape=21)+
+   geom_point(aes(x=x, y=y), data=data.frame(x=c(154, 154), y=c(-22, -22.5)), 
+              size=3, fill=c("yellow", "red"), shape=21) + 
+   annotate("text", x=c(154.3, 154.3), y=c(-22, -22.5), label=c("Retained", "Removed"), 
+            colour="black", size=4, hjust = 0)
+
+ # Zoomed in
+ p2 <- map_track(turtle.dup, bgmap=SandyStrait, xlim=c(152.7, 153.2), ylim=(c(-25.75, -25.24)), 
+             axes.lab.size = 0, sb.distance=10, point.size = 2, point.bg = "red", line.size = 0.5, 
+             multiplot = FALSE, title.size=15, title="Zoomed in")[[1]] + 
+ geom_path(aes(x=lon, y=lat), data=turtle.dd, size=0.5, colour="black", linetype=1) + 
+ geom_point(aes(x=lon, y=lat), data=turtle.dd, size=2, colour="black", shape=21, fill="yellow")
+ 
+ ## plot
+ gridExtra::grid.arrange(p1, p2, layout_matrix=cbind(1,2))
+```
+
+![](README_files/figure-markdown_github/unnamed-chunk-6-1.png)
+
+### 2. Assessing sample sizes
 
 #### Probability-based approach
 
-``` r
-## 1. Utilisation uistributions of flatback turtles.
-data(curtis)
-```
+<p>
+ 
+</p>
+
+##### 2-1. Load utilisation distributions of flatback turtles.
 
 The input data can be either a matrix or a list of RasterLayer objects.
 Each row of the matrix or each RasterLayer object contains the
@@ -74,9 +129,14 @@ the geographical extent was 1901789, 1972789, -2750915, -2653915
 (EPSG:3577) across all 29 layers.
 
 ``` r
-## 2. Calculate overlap probability from 1000 random permutation.
-overlap <- boot_overlap(curtis, R = 1000, method = "PHR")
+data(curtis)
 ```
+
+<p>
+ 
+</p>
+
+##### 2-2. Calculate overlap probability from 1000 random permutation.
 
 It will take some time to run this code depending on the number of
 iterations and the machine specs. The runtime was about 2.5 minutes for
@@ -84,9 +144,14 @@ iterations and the machine specs. The runtime was about 2.5 minutes for
 RAM).
 
 ``` r
-## 3. Find the minimum sample size required to estimate the general distribution.
-a <- asymptote(overlap)
+overlap <- boot_overlap(curtis, R = 1000, method = "PHR")
 ```
+
+<p>
+ 
+</p>
+
+##### 2-3. Find the minimum sample size required to estimate the general distribution.
 
 As described in the main text, an asymptote was considered once the mean
 overlap probability exceeded 95% of the estimated horizontal asymptote.
@@ -94,13 +159,28 @@ The sample size linked to this value was deemed to be the minimum sample
 size required to represent the general distribution of the group.
 
 ``` r
-## 4. Plot the mean probability and rational function fit relative to the sample sizes.
+a <- asymptote(overlap)
 ```
 
-<img src="man/figures/README-example2.png" width="80%" />
+<p>
+ 
+</p>
 
-> Please see the package help pages and Shimada et al. (2012, 2016, in
-> press) for more details.
+##### 2-4. Plot the mean probability and rational function fit relative to the sample sizes (n).
+
+``` r
+ggplot(data = overlap$summary)+
+  geom_point(aes(x = N, y = mu), alpha = 0.5) + 
+  geom_path(data = a$results, aes(x = x, y = ys)) + 
+  geom_vline(xintercept = a$min.n, linetype = 2) +
+  scale_x_continuous(breaks = seq(0, 30, 5), limits = c(2,29), name = "Animals tracked (n)") +
+  scale_y_continuous(limits = c(0,1), name = "Overlap probability")
+```
+
+![](README_files/figure-markdown_github/unnamed-chunk-10-1.png)
+
+> Please see the package help pages and Shimada et al. (2012, 2016,
+> 2020) for more details.
 
 References
 ----------
@@ -123,7 +203,7 @@ If you use the functions *boot\_overlap* or *boot\_area*, please cite
 
 Shimada, T, Thums, M, Hamann, M, et al. (2020) Optimising sample sizes
 for animal distribution analysis using tracking data. *Methods Ecol
-Evol* 00:1–10 doi:
+Evol* 00:1-10 doi:
 [10.1111/2041-210X.13506](https://doi.org/10.1111/2041-210X.13506)
 
 Current version
