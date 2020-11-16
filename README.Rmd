@@ -119,7 +119,8 @@ ggplot(data = overlap$summary)+
   geom_point(aes(x = N, y = mu), alpha = 0.5) + 
   geom_path(data = a$results, aes(x = x, y = ys)) + 
   geom_vline(xintercept = a$min.n, linetype = 2) +
-  labs(x = "N", y = "Overlap probability")
+  scale_x_continuous(breaks = seq(0, 30, 5), limits = c(2,29), name = "Animals tracked (n)") +
+  scale_y_continuous(limits = c(0,1), name = "Overlap probability")
 ```
 
 ```{r message=FALSE, out.width = "50%", eval = TRUE, echo=FALSE}
@@ -147,6 +148,6 @@ Shimada, T, Thums, M, Hamann, M, et al. (2020) Optimising sample sizes for anima
 
 Current version
 --------
-2.0.1.0003 (16 November 2020)
+2.0.1.0004 (16 November 2020)
 
 
