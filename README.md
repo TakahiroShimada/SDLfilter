@@ -97,7 +97,7 @@ size required to represent the general distribution of the group.
 ## 4. Plot the mean probability and rational function fit relative to the sample sizes.
 ```
 
-<img src="man/figures/README-example2.png" width="50%" />
+<img src="man/figures/README-example2.png" width="80%" />
 
 > Please see the package help pages and Shimada et al. (2012, 2016, in
 > press) for more details.
