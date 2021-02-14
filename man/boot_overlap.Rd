@@ -20,7 +20,8 @@ Each row of the matrix or each RasterLayer object contains a utilisation distrib
 The function assumes that each column of the matrix is associated with a unique geographical location or 
 that each RasterLayer has exactly the same geographical extent and resolution.}
 
-\item{R}{An integer specifying the number of iterations.}
+\item{R}{An integer specifying the number of iterations. A larger \emph{R} is required when the sample size is large.
+R = sample size x 100 is often sufficient (e.g. R = 1000 for a sample size 10).}
 
 \item{method}{The overlap quantification method. 
 "HR" is for the proportion of an individual's home range overlapped by the known habitats of other individuals. 
@@ -47,11 +48,11 @@ or the probability distribution of an individual and an averaged probability dis
 \examples{
 \dontrun{
 
-#1 Utilisation uistributions of flatback turtles.
+#1 Utilisation uistributions of flatback turtles (n = 29).
 data(curtis)
 
-#2 Calculate overlap probability from 1000 random permutation.
-overlap <- boot_overlap(curtis, R = 1000, method = "PHR")
+#2 Calculate overlap probability from 3000 random permutation.
+overlap <- boot_overlap(curtis, R = 3000, method = "PHR")
 
 #3 Find the minimum sample size required to estimate the general distribution.
 a <- asymptote(overlap)
@@ -65,12 +66,12 @@ ggplot(data = overlap$summary)+
 }
 }
 \references{
+Shimada T, Thums M, Hamann M, Limpus CJ, Hays GC, FitzSimmons N, Wildermann NE, Duarte CD, Meekan MG (2021) 
+Optimising sample sizes for animal distribution analysis using tracking data. 
+\emph{Methods in Ecology and Evolution} 12(2):288-297 doi:\href{http://doi.org/10.1111/2041-210X.13506}{10.1111/2041-210X.13506}
+
 Fieberg J & Kochanny CO (2005) Quantifying home-range overlap: The importance of the utilization distribution. 
 \emph{The Journal of Wildlife Management}, 69(4), 1346–1359. doi: 10.2193/0022-541x(2005)69[1346:Qhotio]2.0.Co;2
-
-Shimada T, Thums M, Hamann M, Limpus CJ, Hays GC, FitzSimmons N, Wildermann NE, Duarte CD, Meekan MG (in press) 
-Optimising sample sizes for animal distribution analysis using tracking data. 
-\emph{Methods in Ecology and Evolution} n/a(n/a) doi:\href{http://doi.org/10.1111/2041-210X.13506}{10.1111/2041-210X.13506}
 }
 \author{
 Takahiro Shimada

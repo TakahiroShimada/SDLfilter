@@ -114,7 +114,6 @@ track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 
     LatLong <- data.frame(Y=sdata1$lat, X=sdata1$lon, tms=sdata1$DateTime, id=sdata1$id)
     sp::coordinates(LatLong)<-~X+Y
     sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
-    # sp::proj4string(LatLong)<-sp::CRS("+init=epsg:4326")
     tr<-trip::trip(LatLong, c("tms", "id"))
     sdata1$inAng<-trip::trackAngle(tr)
     

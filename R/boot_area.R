@@ -8,7 +8,8 @@
 #' The function assumes that each column of the matrix is associated with a unique geographical location or 
 #' that each RasterLayer has exactly the same geographical extent and resolution. 
 #' @param cell.size A numeric value specifying the grid cell size of the input data in metres. 
-#' @param R An integer specifying the number of iterations.
+#' @param R An integer specifying the number of iterations. A larger \emph{R} is required when the sample size is large. 
+#' R = sample size x 100 is often sufficient (e.g. R = 1000 for a sample size 10).
 #' @param percent An integer specifying the percent volume of each UD to be considered in the analysis. 
 #' @param quantiles A vector or a number to specify the quantiles to be calculated in the summary of the results. 
 #' @importFrom raster values
@@ -20,17 +21,17 @@
 #' @details This function calculates collective areas (e.g. 50\% UDs) of 1 to n individuals by bootstrapping.
 #' @return A list containing two data frames - raw results and summary (mean, sd, sem and quantiles at each sample size).
 #' @author Takahiro Shimada
-#' @references Shimada T, Thums M, Hamann M, Limpus CJ, Hays GC, FitzSimmons N, Wildermann NE, Duarte CD, Meekan MG (in press) 
+#' @references Shimada T, Thums M, Hamann M, Limpus CJ, Hays GC, FitzSimmons N, Wildermann NE, Duarte CD, Meekan MG (2021) 
 #' Optimising sample sizes for animal distribution analysis using tracking data. 
-#' \emph{Methods in Ecology and Evolution} n/a(n/a) doi:\href{http://doi.org/10.1111/2041-210X.13506}{10.1111/2041-210X.13506}
+#' \emph{Methods in Ecology and Evolution} 12(2):288-297 doi:\href{http://doi.org/10.1111/2041-210X.13506}{10.1111/2041-210X.13506}
 #' @examples
 #' \dontrun{
 #' 
-#' #1 Utilisation distributions of flatback turtles.
+#' #1 Utilisation distributions of flatback turtles (n = 29).
 #' data(curtis)
 #' 
-#' #2 Calculate collective areas from 1000 random permutation
-#' area <- boot_area(curtis, R = 1000, percent = 50)
+#' #2 Calculate collective areas from 3000 random permutation
+#' area <- boot_area(curtis, R = 3000, percent = 50)
 #' 
 #' #3 Find the minimum sample size required to estimate the general distribution.
 #' a <- asymptote(area)

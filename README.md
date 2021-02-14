@@ -1,20 +1,17 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-SDLfilter
-=========
+# SDLfilter
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3631115.svg)](https://doi.org/10.5281/zenodo.3631115)
-[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/SDLfilter)](https://cran.r-project.org/package=SDLfilter)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/SDLfilter)](https://cran.r-project.org/package=SDLfilter)
 
-Overview
---------
+## Overview
 
 SDLfilter contains a variety of functions to screen GPS/Argos locations
 and to assess the adequacy of sample size of tracking data for animal
 distribution analysis.
 
-Installation
-------------
+## Installation
 
 ``` r
 # The official version from CRAN:
@@ -25,8 +22,7 @@ install.packages("devtools")
 devtools::install_github("TakahiroShimada/SDLfilter")
 ```
 
-Usage
------
+## Usage
 
 ``` r
 library(SDLfilter)
@@ -148,10 +144,9 @@ ggplot(data = overlap$summary)+
 ![](README_files/figure-markdown_github/unnamed-chunk-10-1.png)
 
 > Please see the package help pages and Shimada et al. (2012, 2016,
-> 2020) for more details.
+> 2021) for more details.
 
-References
-----------
+## References
 
 If you use the function *ddfilter*, please cite
 
@@ -167,14 +162,13 @@ turtles return home after intentional displacement from coastal foraging
 areas. *Mar Biol* 163:1-14 doi:
 [10.1007/s00227-015-2771-0](http://dx.doi.org/10.1007/s00227-015-2771-0)
 
-If you use the functions *boot\_overlap* or *boot\_area*, please cite
+If you use the functions *boot_overlap* or *boot_area*, please cite
 
 Shimada, T, Thums, M, Hamann, M, et al. (2020) Optimising sample sizes
 for animal distribution analysis using tracking data. *Methods Ecol
-Evol* 00:1-10 doi:
+Evol* 12:288-297 doi:
 [10.1111/2041-210X.13506](https://doi.org/10.1111/2041-210X.13506)
 
-Current version
----------------
+## Current version
 
-2.0.1.0005 (16 November 2020)
+2.0.1.0006 (10 February 2021)

@@ -95,7 +95,7 @@ ddfilter_speed<-function (sdata, vmax=8.9, method=1){
         }
       }
       
-      ## Apply the above funtion to each data set seperately
+      ## Apply the above function to each data set separately
       set.rm<-function(j){
         start<-as.numeric(rownames(sdata[sdata$id %in% j,][2,]))
         end<-as.numeric(rownames(sdata[sdata$id %in% j,][1,]))+(nrow(sdata[sdata$id %in% j,])-2)

@@ -38,14 +38,13 @@ citEntry(
 FitzSimmons, Natalie E. Wildermann, Carlos M. Duarte. Mark G. Meekan",
   title		  = "Optimising sample sizes for animal distribution analysis using tracking data",
   journal	  = "Methods in Ecology and Evolution",
-  year        = "in press",
-  volume      = "n/a",
-  number      = "n/a",
-  pages       = "",
-  month       = "",
+  year        = "2021",
+  volume      = "12",
+  number      = "2",
+  pages       = "288-297",
+  month       = "February",
   doi	      = "10.1111/2041-210X.13506",
-  textVersion = "Shimada, T., Thums, M., Hamann, M., Limpus, C. J., Hays, G. C., FitzSimmons, N., 
-Wildermann, N. E., Duarte, C. M., & Meekan, M. G. (in press). 
-Optimising sample sizes for animal distribution analysis using tracking data. 
-Methods in Ecology and Evolution, n/a(n/a). doi:10.1111/2041-210X.13506"
+  textVersion = "Shimada, T., Thums, M., Hamann, M., Limpus, C. J., Hays, G. C., FitzSimmons, N. N., Wildermann, N. E., Duarte, C. M., & Meekan, M. G. (2021).
+        Optimising sample sizes for animal distribution analysis using tracking data. 
+        Methods in Ecology and Evolution, 12(2):288-297. doi:10.1111/2041-210X.13506"
 )

@@ -8,8 +8,10 @@ asymptote(
   data = NULL,
   x = NULL,
   y = NULL,
-  d1 = 1,
-  d2 = 1,
+  degree = "optim",
+  upper.degree = 2,
+  d1 = NA,
+  d2 = NA,
   threshold = 0.95,
   proportional = TRUE
 )
@@ -20,7 +22,17 @@ asymptote(
 \item{x, y}{Numeric vectors of independent (x) and dependent (y) variables. 
 These parameters will be ignored if \emph{data} is supplied.}
 
-\item{d1, d2}{Maximal degrees of numerator (d1) and denominator (d2) of a rational function.}
+\item{degree}{The default 'optim' option selects the maximal degree of numerator and denominator of a rational function 
+that minimises the mean squared error. 
+Alternatively, an integer can be used to specify the maximal degree.
+The 'optim' option is recommended unless there is a strong reason that a maximal degree should be specified.}
+
+\item{upper.degree}{The upper limit of the maximal degree to be assessed when the 'optim' option is selected. 
+Default is 2, meaning the "optimal" degree is searched from 1 and 2. 
+The default usually gives good results. If the fit does not look good, a larger value may result in a better fit.}
+
+\item{d1, d2}{(Deprecated) Maximal degrees of numerator (d1) and denominator (d2) of a rational function. d1 and d2 must be equal. 
+Use \emph{degree} instead.}
 
 \item{threshold}{Threshold value for considering an asymptote. 
 Once the y value reaches the threshold, it is considered that an asymptote is reached.}
@@ -30,7 +42,7 @@ If FALSE, the value specified in \emph{threshold} is used in the analysis.}
 }
 \value{
 A list containing a data frame (rational function fit associated with x values), an estimated horizontal asymptote, 
-and the minimum sample size if an asymptote is reached.
+the minimum sample size if an asymptote is reached, and the estimated optimal degree of numerator and denominator of the rational function.
 }
 \description{
 Function to find horizontal asymptotes of a rational function.
@@ -40,14 +52,17 @@ This function fits a rational function to the input data.
 When an output object from \code{\link{boot_overlap}} or \code{\link{boot_area}} is supplied, 
 a rational function is fit to the means of the bootstrap results (e.g. mean overlap probability) as a function of \emph{x} (e.g. sample size).
 It then estimates horizontal asymptotes and identifies the sample size when an asymptote is considered.
+Please caution when estimated horizontal asymptote is very different from the expected asymptote. 
+For example, the estimated horizontal asymptote should be around 1 if overlaps between UDs are calculated using the "PHR" method.
+see \code{\link{boot_overlap}}.
 }
 \references{
+Shimada T, Thums M, Hamann M, Limpus CJ, Hays GC, FitzSimmons N, Wildermann NE, Duarte CD, Meekan MG (2021) 
+Optimising sample sizes for animal distribution analysis using tracking data. 
+\emph{Methods in Ecology and Evolution} 12(2):288-297 doi:\href{http://doi.org/10.1111/2041-210X.13506}{10.1111/2041-210X.13506}
+
 Press, W. H., S. A. Teukolsky, W. T. Vetterling, and B. P. Flannery (2007). 
 \emph{Numerical Recipes: The Art of Numerical Computing}. Third Edition, Cambridge University Press, New York.
-
-Shimada T, Thums M, Hamann M, Limpus CJ, Hays GC, FitzSimmons N, Wildermann NE, Duarte CD, Meekan MG (in press) 
-Optimising sample sizes for animal distribution analysis using tracking data. 
-\emph{Methods in Ecology and Evolution} n/a(n/a) doi:\href{http://doi.org/10.1111/2041-210X.13506}{10.1111/2041-210X.13506}
 }
 \seealso{
 \code{\link{boot_overlap}}, \code{\link{boot_area}}
