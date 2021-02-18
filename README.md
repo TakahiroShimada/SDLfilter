@@ -93,30 +93,30 @@ turtle.dd <- ddfilter(turtle.dup, vmax=V, vmaxlp=VLP)
 
 #### Probability-based approach
 
-##### 2-1. Load utilisation distributions of flatback turtles.
+##### 2-1. Load utilisation distributions of flatback turtles (n = 29).
 
 The input data can be either a matrix or a list of RasterLayer objects.
 Each row of the matrix or each RasterLayer object contains the
 probability distribution of an animal. The function assumes that each
 column of a matrix is associated with a unique geographical location,
 therefore it is critical that the grid size and geographical extent are
-the consistent across UDs. In this example, the grid size was 1km and
-the geographical extent was 1901789, 1972789, -2750915, -2653915
-(EPSG:3577) across all 29 layers.
+consistent across UDs. In this example, the grid size was 1km and the
+geographical extent was 1901789, 1972789, -2750915, -2653915 (EPSG:3577)
+across all 29 layers.
 
 ``` r
 data(curtis)
 ```
 
-##### 2-2. Calculate overlap probability from 1000 random permutation.
+##### 2-2. Calculate overlap probability from 3000 random permutation (\~sample size x 100).
 
 It will take some time to run this code depending on the number of
-iterations and the machine specs. The runtime was about 2.5 minutes for
-1000 iterations on a linux machine (Intel i7-8650U CPU @ 1.90GHz, 32GB
+iterations and the machine specs. The runtime was about 7 minutes for
+3000 iterations on a linux machine (Intel i7-8650U CPU @ 1.90GHz, 32GB
 RAM).
 
 ``` r
-overlap <- boot_overlap(curtis, R = 1000, method = "PHR")
+overlap <- boot_overlap(curtis, R = 3000, method = "PHR")
 ```
 
 ##### 2-3. Find the minimum sample size required to estimate the general distribution.
@@ -127,7 +127,7 @@ The sample size linked to this value was deemed to be the minimum sample
 size required to represent the general distribution of the group.
 
 ``` r
-a <- asymptote(overlap)
+a <- asymptote(overlap, upper.degree = 10)
 ```
 
 ##### 2-4. Plot the mean probability and rational function fit relative to the sample sizes (n).
@@ -166,9 +166,9 @@ If you use the functions *boot_overlap* or *boot_area*, please cite
 
 Shimada, T, Thums, M, Hamann, M, et al. (2020) Optimising sample sizes
 for animal distribution analysis using tracking data. *Methods Ecol
-Evol* 12:288-297 doi:
+Evol* 12(2):288-297 doi:
 [10.1111/2041-210X.13506](https://doi.org/10.1111/2041-210X.13506)
 
 ## Current version
 
-2.0.1.0006 (10 February 2021)
+2.0.1.0006 (14 February 2021)
