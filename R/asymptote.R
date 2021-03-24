@@ -39,7 +39,7 @@
 
 
 
-asymptote <- function(data = NULL, x = NULL, y = NULL, degree = 'optim', upper.degree = 2, 
+asymptote <- function(data = NULL, x = NULL, y = NULL, degree = 'optim', upper.degree = 10, 
                       d1 = NA, d2 = NA, threshold = 0.95, proportional = TRUE){
     
     if(!is.null(data)){
@@ -64,10 +64,20 @@ asymptote <- function(data = NULL, x = NULL, y = NULL, degree = 'optim', upper.d
             p1 <- RF$p1; p2 <- RF$p2
             ys <- pracma::polyval(p1, x) / pracma::polyval(p2, x)
             
-            ## Optimal degree for a rational function
+            # mean square error
             msq[i] <- sum((ys - y)^2)/length(y)
+            
+            # exclude if there are decrements
+            if(any(diff(ys)<0)){
+                msq[i] <- NA
+            }
         }
+        ## Optimal degree for a rational function
         degree <- which.min(msq)
+    }
+    
+    if(length(degree)<1){
+        stop('Decrements were detected in the rational fit. Try a larger upper.degree. \nIf the issue persists, re-run boot_overlap/boot_area with a larger number of iterations (R).\nR = sample size x 100 is a good start.')
     }
     
     
@@ -77,7 +87,7 @@ asymptote <- function(data = NULL, x = NULL, y = NULL, degree = 'optim', upper.d
     
     p1 <- RF$p1; p2 <- RF$p2
     ys <- pracma::polyval(p1, x) / pracma::polyval(p2, x)
-    overlap_values <- data.frame(x, value = ys)
+    overlap_values <- data.frame(x, ys)
     
     asymp <- p1[1]/p2[1]
     if(asymp < 0){
@@ -87,9 +97,9 @@ asymptote <- function(data = NULL, x = NULL, y = NULL, degree = 'optim', upper.d
 
     #### Minimum sample size to achieve x% of asymptote as specified by the 'threshold' argument
     if(isTRUE(proportional)){
-        above.asymp <- overlap_values$value > asymp * threshold
+        above.asymp <- overlap_values$ys > asymp * threshold
     } else {
-        above.asymp <- overlap_values$value > threshold
+        above.asymp <- overlap_values$ys > threshold
     }
     
     
@@ -105,5 +115,5 @@ asymptote <- function(data = NULL, x = NULL, y = NULL, degree = 'optim', upper.d
     
     cat('Estimated horizontal asymptote ~', asymp, fill = TRUE)
     
-    return(list(results = data.frame(ys, x), h.asymptote = asymp, min.n=min.n, optimal.degree = degree))
+    return(list(results = data.frame(x, ys), h.asymptote = asymp, min.n=min.n, optimal.degree = degree))
 }

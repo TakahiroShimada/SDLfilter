@@ -9,7 +9,7 @@ asymptote(
   x = NULL,
   y = NULL,
   degree = "optim",
-  upper.degree = 2,
+  upper.degree = 10,
   d1 = NA,
   d2 = NA,
   threshold = 0.95,
