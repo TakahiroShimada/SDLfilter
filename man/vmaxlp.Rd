@@ -28,7 +28,7 @@ Default is 4 (e.g. 4 GPS satellite or more).}
 Maximum one-way linear speed of a loop trip (vmaxlp) estimated from the input data. The unit km/h.
 }
 \description{
-Function to estimate the maximum one-way linear speed of a loop trip as described in Shimada et al. (2012).
+Function to estimate the maximum one-way linear speed of a loop trip as described in \href{http://doi.org/10.3354/meps09747}{(Shimada et al 2012)}.
 }
 \details{
 The function first detects a "loop trip". 
@@ -47,7 +47,7 @@ The input data must not contain temporal or spatial duplicates. A minimum of 8 l
 \references{
 Shimada T, Jones R, Limpus C, Hamann M (2012) 
 Improving data retention and home range estimates by data-driven screening. 
-\emph{Marine Ecology Progress Series} 457:171-180 doi:\href{http://doi.org/10.3354/meps09747}{10.3354/meps09747}
+\emph{Marine Ecology Progress Series} 457:171-180 \doi{10.3354/meps09747}
 }
 \seealso{
 \code{\link{ddfilter}}, \code{\link{ddfilter_loop}}, \code{\link{track_param}}, \code{\link{dupfilter}}

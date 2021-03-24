@@ -34,7 +34,7 @@
 #' "inAng" is the degree between the bearings of lines joining successive location points.
 #' @author Takahiro Shimada
 #' @references Shimada T, Jones R, Limpus C, Hamann M (2012) Improving data retention and home range estimates by data-driven screening. 
-#' \emph{Marine Ecology Progress Series} 457:171-180 doi:\href{http://doi.org/10.3354/meps09747}{10.3354/meps09747}
+#' \emph{Marine Ecology Progress Series} 457:171-180 \doi{10.3354/meps09747}
 #' @seealso \code{\link{ddfilter}}, \code{\link{ddfilter_speed}}, \code{\link{vmaxlp}}
 
 

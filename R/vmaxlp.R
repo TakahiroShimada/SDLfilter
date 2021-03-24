@@ -1,6 +1,6 @@
 #' @aliases vmaxlp
 #' @title Estimate maximum one-way linear speed of a loop trip
-#' @description Function to estimate the maximum one-way linear speed of a loop trip as described in Shimada et al. (2012).
+#' @description Function to estimate the maximum one-way linear speed of a loop trip as described in \href{http://doi.org/10.3354/meps09747}{Shimada et al. (2012)}.
 #' @param sdata A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon", "qi". 
 #' See the data \code{\link{turtle}} for an example.
 #' The function filters the input data by a unique "id" (e.g. transmitter number, identifier for each animal). 
@@ -20,7 +20,7 @@
 #' @export
 #' @details The function first detects a "loop trip". 
 #' Loop trip behaviour is represented by spatial departure and return involving more than 3 consecutive locations 
-#' \href{http://doi.org/10.3354/meps09747}{(Shimada et al 2012)}. 
+#' \href{http://doi.org/10.3354/meps09747}{(Shimada et al. 2012)}. 
 #' The function calculates the net (i.e. straight-line) distance between the departure and turning point as well as 
 #' the turning point and return location of a loop trip. 
 #' It then calculates the one-way travelling speed to or from each turning point for each loop trip. 
@@ -32,7 +32,7 @@
 #' @note The input data must not contain temporal or spatial duplicates. A minimum of 8 locations are required.
 #' @references Shimada T, Jones R, Limpus C, Hamann M (2012) 
 #' Improving data retention and home range estimates by data-driven screening. 
-#' \emph{Marine Ecology Progress Series} 457:171-180 doi:\href{http://doi.org/10.3354/meps09747}{10.3354/meps09747}
+#' \emph{Marine Ecology Progress Series} 457:171-180 \doi{10.3354/meps09747}
 #' @seealso \code{\link{ddfilter}}, \code{\link{ddfilter_loop}}, \code{\link{track_param}}, \code{\link{dupfilter}}
 
 

@@ -14,5 +14,5 @@
 #' }
 #' @source Shimada T, Jones R, Limpus C, Groom R, Hamann M (2016) 
 #' Long-term and seasonal patterns of sea turtle home ranges in warm coastal foraging habitats: Implications for conservation. 
-#' \emph{Marine Ecology Progress Series} 562:163-179. doi:\href{http://doi.org/10.3354/meps11972}{10.3354/meps11972}
+#' \emph{Marine Ecology Progress Series} 562:163-179. \doi{10.3354/meps11972}
 "turtle2"

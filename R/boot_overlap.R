@@ -29,9 +29,9 @@
 #' @author Takahiro Shimada
 #' @references Shimada T, Thums M, Hamann M, Limpus CJ, Hays GC, FitzSimmons N, Wildermann NE, Duarte CD, Meekan MG (2021) 
 #' Optimising sample sizes for animal distribution analysis using tracking data. 
-#' \emph{Methods in Ecology and Evolution} 12(2):288-297 doi:\href{http://doi.org/10.1111/2041-210X.13506}{10.1111/2041-210X.13506}
+#' \emph{Methods in Ecology and Evolution} 12(2):288-297 \doi{10.1111/2041-210X.13506}
 #' @references Fieberg J & Kochanny CO (2005) Quantifying home-range overlap: The importance of the utilization distribution. 
-#' \emph{The Journal of Wildlife Management}, 69(4), 1346–1359. doi: 10.2193/0022-541x(2005)69[1346:Qhotio]2.0.Co;2
+#' \emph{The Journal of Wildlife Management}, 69(4), 1346–1359. \doi{10.2193/0022-541x(2005)69[1346:Qhotio]2.0.Co;2}
 #' @examples
 #' \dontrun{
 #' 

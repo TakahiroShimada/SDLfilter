@@ -43,7 +43,7 @@ A minimum of two locations per id is required.
 \references{
 Shimada T, Limpus C, Jones R, Hazel J, Groom R, Hamann M (2016) 
 Sea turtles return home after intentional displacement from coastal foraging areas. 
-\emph{Marine Biology} 163:1-14 doi:\href{http://doi.org/10.1007/s00227-015-2771-0}{10.1007/s00227-015-2771-0}
+\emph{Marine Biology} 163:1-14 \doi{10.1007/s00227-015-2771-0}
 }
 \seealso{
 \code{\link{dupfilter}}, \code{\link{dupfilter_exact}}, \code{\link{dupfilter_time}}, \code{\link{dupfilter_qi}}, \code{\link{track_param}}
