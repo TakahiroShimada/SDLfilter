@@ -8,7 +8,7 @@ output:
 News for Package 'SDLfilter'
 =========
 
-#### Version 2.0.1.0008 (2021-03-24)
+#### Version 2.0.1.0009 (2021-03-26)
 * improved the asymptote function.
 * added a new citation for functions 'boot_overlap', 'boot_area' and 'asymptote'. Shimada T, Thums M, Hamann M, Limpus CJ, Hays GC, FitzSimmons NN, Wildermann NE, Duarte CD, Meekan MG (2021) Optimising sample sizes for animal distribution analysis using tracking data. Methods in Ecology and Evolution, 12(2):288-297. doi:10.1111/2041-210X.13506
 * updated the README file.

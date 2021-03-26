@@ -17,6 +17,7 @@
 #' Once the y value reaches the threshold, it is considered that an asymptote is reached.
 #' @param proportional If TRUE (default), a threshold is calculated as \emph{estimated asymptote * threshold}. 
 #' If FALSE, the value specified in \emph{threshold} is used in the analysis.
+#' @param max.asymptote The maximum limit of an expected asymptote. Default is 1.  
 #' @importFrom pracma rationalfit
 #' @importFrom pracma polyval
 #' @export
@@ -40,7 +41,7 @@
 
 
 asymptote <- function(data = NULL, x = NULL, y = NULL, degree = 'optim', upper.degree = 10, 
-                      d1 = NA, d2 = NA, threshold = 0.95, proportional = TRUE){
+                      d1 = NA, d2 = NA, threshold = 0.95, proportional = TRUE, max.asymptote = 1){
     
     if(!is.null(data)){
         x <- data$summary$N
@@ -56,13 +57,18 @@ asymptote <- function(data = NULL, x = NULL, y = NULL, degree = 'optim', upper.d
     
     ## Find optimal degree based on mean squared error
     if(degree == 'optim'){
-        msq <- rep(0, upper.degree)
+        msq <- asymp <- rep(0, upper.degree)
+        overlap_values <- list()
         for(i in 1:upper.degree){
+            
+            # Fit rational function
             RF <- pracma::rationalfit(x, y, d1 = i, d2 = i)
             RF <- lapply(RF, Re)
             
             p1 <- RF$p1; p2 <- RF$p2
             ys <- pracma::polyval(p1, x) / pracma::polyval(p2, x)
+            overlap_values[[i]] <- data.frame(x, ys)
+            asymp[i] <- p1[1]/p2[1]
             
             # mean square error
             msq[i] <- sum((ys - y)^2)/length(y)
@@ -72,26 +78,35 @@ asymptote <- function(data = NULL, x = NULL, y = NULL, degree = 'optim', upper.d
                 msq[i] <- NA
             }
         }
-        ## Optimal degree for a rational function
-        degree <- which.min(msq)
-    }
-    
-    if(length(degree)<1){
-        stop('Decrements were detected in the rational fit. Try a larger upper.degree. \nIf the issue persists, re-run boot_overlap/boot_area with a larger number of iterations (R).\nR = sample size x 100 is a good start.')
-    }
-    
-    
-    ## Fit rational function
-    RF <- pracma::rationalfit(x, y, d1 = degree, d2 = degree)
-    RF <- lapply(RF, Re)
-    
-    p1 <- RF$p1; p2 <- RF$p2
-    ys <- pracma::polyval(p1, x) / pracma::polyval(p2, x)
-    overlap_values <- data.frame(x, ys)
-    
-    asymp <- p1[1]/p2[1]
-    if(asymp < 0){
-        stop('Unable to estimate horizontal asymptotes. The sample size is probably too small.')
+        degrees <- data.frame(degree = 1:upper.degree, asymp, msq)
+        degrees <- with(degrees, degrees[asymp <= max.asymptote,])
+        degrees <- with(degrees, degrees[order(msq),])
+        
+        # Optimal degree for a rational function
+        degree <- degrees[1,'degree']
+        
+        # Estimated asymptote
+        asymp <- degrees[1,'asymp']
+        
+        # Estimated overlap values
+        overlap_values <- overlap_values[[degree]]
+        
+        if(all(is.na(degrees[,'asymp']))){
+            stop('Decrements were detected in the rational fit. Try a larger upper.degree. \nIf the issue persists, re-run boot_overlap/boot_area with a larger number of iterations (R).\nR = sample size x 100 is a good start.')
+        }
+    } else {
+        ## Fit rational function
+        RF <- pracma::rationalfit(x, y, d1 = degree, d2 = degree)
+        RF <- lapply(RF, Re)
+        
+        p1 <- RF$p1; p2 <- RF$p2
+        ys <- pracma::polyval(p1, x) / pracma::polyval(p2, x)
+        overlap_values <- data.frame(x, ys)
+        
+        asymp <- p1[1]/p2[1]
+        if(asymp < 0){
+            stop('Unable to estimate horizontal asymptotes. The sample size is probably too small.')
+        } 
     }
     
 
