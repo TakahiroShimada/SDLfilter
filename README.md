@@ -112,7 +112,7 @@ across all 29 layers.
 data(curtis)
 ```
 
-##### 2-2. Calculate overlap probability from 3000 random permutation (\~sample size x 100).
+##### 2-2. Calculate overlap probability from 6000 random permutation (\~sample size x 200).
 
 It will take some time to run this code depending on the number of
 iterations and the machine specs. The runtime was about 7 minutes for
@@ -120,7 +120,7 @@ iterations and the machine specs. The runtime was about 7 minutes for
 RAM).
 
 ``` r
-overlap <- boot_overlap(curtis, R = 3000, method = "PHR")
+overlap <- boot_overlap(curtis, R = 6000, method = "PHR")
 ```
 
 ##### 2-3. Find the minimum sample size required to estimate the general distribution.

@@ -105,10 +105,10 @@ The input data can be either a matrix or a list of RasterLayer objects. Each row
 data(curtis)
 ```
 
-##### 2-2. Calculate overlap probability from 3000 random permutation (~sample size x 100).
+##### 2-2. Calculate overlap probability from 6000 random permutation (~sample size x 200).
 It will take some time to run this code depending on the number of iterations and the machine specs. The runtime was about 7 minutes for 3000 iterations on a linux machine (Intel i7-8650U CPU @ 1.90GHz, 32GB RAM).
 ```{r results=FALSE}
-overlap <- boot_overlap(curtis, R = 3000, method = "PHR")
+overlap <- boot_overlap(curtis, R = 6000, method = "PHR")
 ```
 
 ##### 2-3. Find the minimum sample size required to estimate the general distribution.
