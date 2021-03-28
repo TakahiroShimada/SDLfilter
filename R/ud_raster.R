@@ -1,5 +1,5 @@
 #' @aliases ud_raster
-#' @title Utilisation distributions (raster)
+#' @title A list of raster data containing probability distributions of flatback turtles
 #' @description Inter-nesting utilisation distributions of 29 flatback turtles (\emph{Natator depressus}) that nested in Curtis Island, Australia.
 #' As a demonstration, the resolution of the UDs is reduced to 1km grid instead of 50m as used in Shimada et al (2021).
 #' @format A list of 29 RasterLayer objects

@@ -101,13 +101,7 @@ turtle.dd <- ddfilter(turtle.dup, vmax=V, vmaxlp=VLP)
 
 ### 2. Assessing sample sizes (probability-based approach)
 
-##### 2-1. Calculate utilisation distributions (UDs) of flatback turtles (n = 29).
-
-The UDs can be estimated using any R package or other computer software
-but the UDs must be converted to a matrix or a list of RasterLayer
-objects.
-
-##### 2-2. Input UDs
+##### 2-1. Input UDs
 
 The input data can be either a matrix or a list of RasterLayer objects.
 Each row of the matrix or each RasterLayer object contains the
