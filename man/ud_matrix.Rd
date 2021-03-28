@@ -3,7 +3,7 @@
 \docType{data}
 \name{ud_matrix}
 \alias{ud_matrix}
-\title{Utilisation distributions (matrix)}
+\title{A matrix containing probability distributions of flatback turtles}
 \format{
 A matrix
 }

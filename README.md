@@ -42,19 +42,19 @@ There are three main filtering functions.
 
 <!-- <p>&nbsp;</p> -->
 
-##### 1-1. Load tracking data
+#### 1-1. Load tracking data
 
 ``` r
 data(turtle)
 ```
 
-##### 1-2. Remove temporal and spatial duplicates
+#### 1-2. Remove temporal and spatial duplicates
 
 ``` r
 turtle.dup <- dupfilter(turtle)
 ```
 
-##### 1-3. Remove biologically unrealistic fixes
+#### 1-3. Remove biologically unrealistic fixes
 
 ``` r
 ## Calculate the maximum linear speed between two consecutive locations
@@ -67,7 +67,7 @@ VLP <- vmaxlp(turtle.dup)
 turtle.dd <- ddfilter(turtle.dup, vmax=V, vmaxlp=VLP)
 ```
 
-##### 1-4. Plot data
+#### 1-4. Plot data
 
 <details>
 
@@ -101,7 +101,7 @@ turtle.dd <- ddfilter(turtle.dup, vmax=V, vmaxlp=VLP)
 
 ### 2. Assessing sample sizes (probability-based approach)
 
-##### 2-1. Input UDs
+#### 2-1. Input UDs
 
 The input data can be either a matrix or a list of RasterLayer objects.
 Each row of the matrix or each RasterLayer object contains the
@@ -176,7 +176,7 @@ data(ud_matrix)
 data(ud_raster)
 ```
 
-##### 2-2. Calculate overlap probability from 6000 random permutation (\~sample size x 200)
+#### 2-2. Calculate overlap probability from 6000 random permutation (\~sample size x 200)
 
 It will take some time to run this code depending on the number of
 iterations and the machine specs. The runtime was about 15 minutes for
@@ -184,10 +184,10 @@ iterations and the machine specs. The runtime was about 15 minutes for
 RAM).
 
 ``` r
-overlap <- boot_overlap(ud_matrix, R = 10, method = "PHR")
+overlap <- boot_overlap(ud_matrix, R = 6000, method = "PHR")
 ```
 
-##### 2-3. Find the minimum sample size required to estimate the general distribution
+#### 2-3. Find the minimum sample size required to estimate the general distribution
 
 As described in the main text, an asymptote was considered once the mean
 overlap probability exceeded 95% of the estimated horizontal asymptote.
@@ -198,7 +198,7 @@ size required to represent the general distribution of the group.
 a <- asymptote(overlap, upper.degree = 10)
 ```
 
-##### 2-4. Plot the mean probability and rational function fit relative to the sample sizes (n).
+#### 2-4. Plot the mean probability and rational function fit relative to the sample sizes (n).
 
 <details>
 

@@ -3,7 +3,7 @@
 \docType{data}
 \name{ud_raster}
 \alias{ud_raster}
-\title{Utilisation distributions (raster)}
+\title{A list of raster data containing probability distributions of flatback turtles}
 \format{
 A list of 29 RasterLayer objects
 }
