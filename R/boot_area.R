@@ -9,7 +9,7 @@
 #' that each RasterLayer has exactly the same geographical extent and resolution. 
 #' @param cell.size A numeric value specifying the grid cell size of the input data in metres. 
 #' @param R An integer specifying the number of iterations. A larger \emph{R} is required when the sample size is large. 
-#' R = sample size x 100 is often sufficient (e.g. R = 1000 for a sample size 10).
+#' R = sample size x 200 is often sufficient (e.g. R = 2000 for a sample size 10).
 #' @param percent An integer specifying the percent volume of each UD to be considered in the analysis. 
 #' @param quantiles A vector or a number to specify the quantiles to be calculated in the summary of the results. 
 #' @importFrom raster values
@@ -30,8 +30,8 @@
 #' #1 Utilisation distributions of flatback turtles (n = 29).
 #' data(curtis)
 #' 
-#' #2 Calculate collective areas from 3000 random permutation
-#' area <- boot_area(curtis, R = 3000, percent = 50)
+#' #2 Calculate collective areas from 6000 random permutation
+#' area <- boot_area(curtis, R = 6000, percent = 50)
 #' 
 #' #3 Find the minimum sample size required to estimate the general distribution.
 #' a <- asymptote(area)

@@ -40,7 +40,9 @@ There are three main filtering functions.
 -   *ddfilter* filters locations with high error.  
 -   *depthfilter* filters locations by water depth.
 
-<!-- <p>&nbsp;</p> -->
+<p>
+ 
+</p>
 
 ##### 1-1. Load tracking data
 
@@ -48,11 +50,19 @@ There are three main filtering functions.
 data(turtle)
 ```
 
+<p>
+ 
+</p>
+
 ##### 1-2. Remove temporal and spatial duplicates
 
 ``` r
 turtle.dup <- dupfilter(turtle)
 ```
+
+<p>
+ 
+</p>
 
 ##### 1-3. Remove biologically unrealistic fixes
 
@@ -67,7 +77,15 @@ VLP <- vmaxlp(turtle.dup)
 turtle.dd <- ddfilter(turtle.dup, vmax=V, vmaxlp=VLP)
 ```
 
+<p>
+ 
+</p>
+
 ##### 1-4. Plot data
+
+<details>
+
+<summary>Click to show code</summary>
 
 ``` r
  # Entire area
@@ -91,39 +109,118 @@ turtle.dd <- ddfilter(turtle.dup, vmax=V, vmaxlp=VLP)
  gridExtra::grid.arrange(p1, p2, layout_matrix=cbind(1,2))
 ```
 
-![](README_files/figure-markdown_github/unnamed-chunk-6-1.png)
+</details>
 
-### 2. Assessing sample sizes
+![](README_files/figure-markdown_github/unnamed-chunk-7-1.png)
 
-#### Probability-based approach
+### 2. Assessing sample sizes (probability-based approach)
 
-##### 2-1. Load utilisation distributions of flatback turtles (n = 29).
+<p>
+ 
+</p>
 
-The input data can be either a matrix or a list of RasterLayer objects.
-Each row of the matrix or each RasterLayer object contains the
-probability distribution of an animal. The function assumes that each
-column of a matrix is associated with a unique geographical location,
-therefore it is critical that the grid size and geographical extent are
-consistent across UDs. In this example, the grid size was 1km and the
-geographical extent was 1901789, 1972789, -2750915, -2653915 (EPSG:3577)
-across all 29 layers.
+##### 2-1. Calculate utilisation distributions (UDs) of flatback turtles (n = 29).
+
+The UDs can be estimated using any R package or other computer software
+but the UDs must be converted to a matrix or a list of RasterLayer
+objects. \#\#\#\#\# 2-2. Input UDs The input data can be either a matrix
+or a list of RasterLayer objects. Each row of the matrix or each
+RasterLayer object contains the probability distribution of an animal.
+The function assumes that each column of a matrix is associated with a
+unique geographical location, therefore it is critical that the grid
+size and geographical extent are consistent across UDs. In this example,
+the grid size was 1km and the geographical extent was 1901789, 1972789,
+-2750915, -2653915 (EPSG:3577) across all 29 layers.
+<p>
+ 
+</p>
+<details>
+
+<summary>Click to show an example code of UD estimation.</summary>
 
 ``` r
-data(curtis)
+library(adehabitatHR); library(raster)
+
+## Tracking data
+data(flatback)
+flatback_id <- unique(flatback$id)
+
+## Data range with 5km buffer
+buff <- 5e+3
+xmin <- min(flatback$x) - buff; xmax <- max(flatback$x) + buff
+ymin <- min(flatback$y) - buff; ymax <- max(flatback$y) + buff
+
+## Make a grid layer
+cell.size <- 1e+3 # (1km x 1km)
+x <- seq(xmin, xmax, cell.size)
+y <- seq(ymin, ymax, cell.size)
+xy.df <- expand.grid(x = x, y = y)
+xy.coords <- SpatialPixels(SpatialPoints(xy.df))
+xy.sp <- SpatialPoints(xy.coords, proj4string = CRS("+init=epsg:3577"))
+z <- rep(1, nrow(xy.df))
+xyz <- cbind(xy.df, z)
+grid_spdf <- SpatialPixelsDataFrame(xy.coords, xyz)
+
+## UD per turtle
+ud.raster <- list()
+for(i in 1:length(flatback_id)){
+  
+  ## ID
+  ID <- flatback_id[i]
+
+  ## Tracking data
+  turtle.data <- with(flatback, flatback[id %in% ID, ])
+
+  ## Creates an object of class Itraj
+  data.ltraj <- with(turtle.data, as.ltraj(turtle.data[,c("x", "y")], date=DateTime, id=ID, burst=ID))
+  
+  ## Parameters for BRB
+  TM = 12*60*60
+  LM = 50
+  dp = BRB.likD(data.ltraj, Tmax=TM, Lmin=LM)
+  HM = 100
+  
+  ## Estimate the UD
+  ud <- BRB(data.ltraj, D=dp, Tmax=TM, Lmin=LM, hmin=HM, grid=grid_spdf, type="UD")
+  
+  ## Convert SpatialPixelsDataFrame to raster
+  ud.raster[[i]] <- raster(ud)
+}
 ```
 
-##### 2-2. Calculate overlap probability from 6000 random permutation (\~sample size x 200).
+</details>
+<p>
+ 
+</p>
+
+``` r
+# A matrix
+data(ud_matrix)
+
+# Or a list of RasterLayer
+data(ud_raster)
+```
+
+<p>
+ 
+</p>
+
+##### 2-2. Calculate overlap probability from 6000 random permutation (\~sample size x 200)
 
 It will take some time to run this code depending on the number of
-iterations and the machine specs. The runtime was about 7 minutes for
-3000 iterations on a linux machine (Intel i7-8650U CPU @ 1.90GHz, 32GB
+iterations and the machine specs. The runtime was about 15 minutes for
+6000 iterations on a linux machine (Intel i7-8850H CPU @ 2.60GHz, 32GB
 RAM).
 
 ``` r
-overlap <- boot_overlap(curtis, R = 6000, method = "PHR")
+overlap <- boot_overlap(ud_matrix, R = 6000, method = "PHR")
 ```
 
-##### 2-3. Find the minimum sample size required to estimate the general distribution.
+<p>
+ 
+</p>
+
+##### 2-3. Find the minimum sample size required to estimate the general distribution
 
 As described in the main text, an asymptote was considered once the mean
 overlap probability exceeded 95% of the estimated horizontal asymptote.
@@ -134,7 +231,15 @@ size required to represent the general distribution of the group.
 a <- asymptote(overlap, upper.degree = 10)
 ```
 
+<p>
+ 
+</p>
+
 ##### 2-4. Plot the mean probability and rational function fit relative to the sample sizes (n).
+
+<details>
+
+<summary>Click to show code</summary>
 
 ``` r
 ggplot(data = overlap$summary)+
@@ -145,7 +250,9 @@ ggplot(data = overlap$summary)+
   scale_y_continuous(limits = c(0,1), name = "Overlap probability")
 ```
 
-![](README_files/figure-markdown_github/unnamed-chunk-10-1.png)
+</details>
+
+![](README_files/figure-markdown_github/unnamed-chunk-13-1.png)
 
 > Please see the package help pages and Shimada et al. (2012, 2016,
 > 2021) for more details.
@@ -177,4 +284,4 @@ Evol* 12(2):288-297 doi:
 Current version
 ---------------
 
-2.0.1.0009 (26 March 2021)
+2.0.1.0010 (28 March 2021)
