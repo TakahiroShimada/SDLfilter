@@ -153,7 +153,7 @@ xyz <- cbind(xy.df, z)
 grid_spdf <- SpatialPixelsDataFrame(xy.coords, xyz)
 
 ## UD per turtle
-ud.raster <- list()
+ud_raster <- list()
 for(i in 1:length(flatback_id)){
   
   ## ID
@@ -175,7 +175,7 @@ for(i in 1:length(flatback_id)){
   ud <- BRB(data.ltraj, D=dp, Tmax=TM, Lmin=LM, hmin=HM, grid=grid_spdf, type="UD")
   
   ## Convert SpatialPixelsDataFrame to raster
-  ud.raster[[i]] <- raster(ud)
+  ud_raster[[i]] <- raster(ud)
 }
 ```
 </details>

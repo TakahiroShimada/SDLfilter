@@ -21,7 +21,7 @@ The function assumes that each column of the matrix is associated with a unique 
 that each RasterLayer has exactly the same geographical extent and resolution.}
 
 \item{R}{An integer specifying the number of iterations. A larger \emph{R} is required when the sample size is large.
-R = sample size x 100 is often sufficient (e.g. R = 1000 for a sample size 10).}
+R = sample size x 200 is often sufficient (e.g. R = 2000 for a sample size 10).}
 
 \item{method}{The overlap quantification method. 
 "HR" is for the proportion of an individual's home range overlapped by the known habitats of other individuals. 
@@ -49,10 +49,10 @@ or the probability distribution of an individual and an averaged probability dis
 \dontrun{
 
 #1 Utilisation uistributions of flatback turtles (n = 29).
-data(curtis)
+data(ud_matrix)
 
-#2 Calculate overlap probability from 3000 random permutation.
-overlap <- boot_overlap(curtis, R = 3000, method = "PHR")
+#2 Calculate overlap probability from 6000 random permutation.
+overlap <- boot_overlap(ud_matrix, R = 6000, method = "PHR")
 
 #3 Find the minimum sample size required to estimate the general distribution.
 a <- asymptote(overlap)

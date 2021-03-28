@@ -36,10 +36,10 @@
 #' \dontrun{
 #' 
 #' #1 Utilisation uistributions of flatback turtles (n = 29).
-#' data(curtis)
+#' data(ud_matrix)
 #' 
 #' #2 Calculate overlap probability from 6000 random permutation.
-#' overlap <- boot_overlap(curtis, R = 6000, method = "PHR")
+#' overlap <- boot_overlap(ud_matrix, R = 6000, method = "PHR")
 #' 
 #' #3 Find the minimum sample size required to estimate the general distribution.
 #' a <- asymptote(overlap)

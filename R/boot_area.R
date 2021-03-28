@@ -28,10 +28,10 @@
 #' \dontrun{
 #' 
 #' #1 Utilisation distributions of flatback turtles (n = 29).
-#' data(curtis)
+#' data(ud_matrix)
 #' 
 #' #2 Calculate collective areas from 6000 random permutation
-#' area <- boot_area(curtis, R = 6000, percent = 50)
+#' area <- boot_area(ud_matrix, R = 6000, percent = 50)
 #' 
 #' #3 Find the minimum sample size required to estimate the general distribution.
 #' a <- asymptote(area)
