@@ -1,20 +1,17 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-SDLfilter
-=========
+# SDLfilter
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3631115.svg)](https://doi.org/10.5281/zenodo.3631115)
-[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/SDLfilter)](https://cran.r-project.org/package=SDLfilter)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/SDLfilter)](https://cran.r-project.org/package=SDLfilter)
 
-Overview
---------
+## Overview
 
 SDLfilter contains a variety of functions to screen GPS/Argos locations
 and to assess the adequacy of sample size of tracking data for animal
 distribution analysis.
 
-Installation
-------------
+## Installation
 
 ``` r
 # The official version from CRAN:
@@ -25,14 +22,13 @@ install.packages("devtools")
 devtools::install_github("TakahiroShimada/SDLfilter")
 ```
 
-Usage
------
+## Usage
 
 ``` r
 library(SDLfilter)
 ```
 
-### 1. Location filtering
+## 1. Location filtering
 
 There are three main filtering functions.
 
@@ -70,8 +66,9 @@ turtle.dd <- ddfilter(turtle.dup, vmax=V, vmaxlp=VLP)
 #### 1-4. Plot data
 
 <details>
-
-<summary>Click to show code</summary>
+<summary>
+Click to show code
+</summary>
 
 ``` r
  # Entire area
@@ -99,7 +96,7 @@ turtle.dd <- ddfilter(turtle.dup, vmax=V, vmaxlp=VLP)
 
 ![](README_files/figure-markdown_github/unnamed-chunk-7-1.png)
 
-### 2. Assessing sample sizes (probability-based approach)
+## 2. Assessing sample sizes (probability-based approach)
 
 #### 2-1. Input UDs
 
@@ -110,18 +107,21 @@ column of a matrix is associated with a unique geographical location,
 therefore it is critical that the grid size and geographical extent are
 consistent across UDs. In this example, the grid size was 1km and the
 geographical extent was 1901789, 1972789, -2750915, -2653915 (EPSG:3577)
-across all 29 layers.
+across all 15 layers.
 
 <details>
-
-<summary>Click to show an example code of UD estimation.</summary>
+<summary>
+Click to show an example code of UD estimation.
+</summary>
 
 ``` r
 library(adehabitatHR); library(raster)
 
 ## Tracking data
 data(flatback)
+flatback <- track_param(flatback, param = "time") # calculate time between successive locations
 flatback_id <- unique(flatback$id)
+
 
 ## Data range with 5km buffer
 buff <- 5e+3
@@ -153,7 +153,7 @@ for(i in 1:length(flatback_id)){
   data.ltraj <- with(turtle.data, as.ltraj(turtle.data[,c("x", "y")], date=DateTime, id=ID, burst=ID))
   
   ## Parameters for BRB
-  TM = 12*60*60
+  TM = quantile(turtle.data$pTime, probs = 0.95, na.rm = TRUE)*3600
   LM = 50
   dp = BRB.likD(data.ltraj, Tmax=TM, Lmin=LM)
   HM = 100
@@ -176,15 +176,15 @@ data(ud_matrix)
 data(ud_raster)
 ```
 
-#### 2-2. Calculate overlap probability from 6000 random permutation (\~sample size x 200)
+#### 2-2. Calculate overlap probability from 3000 random permutation (\~sample size x 200)
 
 It will take some time to run this code depending on the number of
-iterations and the machine specs. The runtime was about 15 minutes for
-6000 iterations on a linux machine (Intel i7-8850H CPU @ 2.60GHz, 32GB
+iterations and the machine specs. The runtime was about 7 minutes for
+3000 iterations on a linux machine (Intel i7-8850H CPU @ 2.60GHz, 32GB
 RAM).
 
 ``` r
-overlap <- boot_overlap(ud_matrix, R = 6000, method = "PHR")
+overlap <- boot_overlap(ud_matrix, R = 3000, method = "PHR")
 ```
 
 #### 2-3. Find the minimum sample size required to estimate the general distribution
@@ -201,8 +201,9 @@ a <- asymptote(overlap, upper.degree = 10)
 #### 2-4. Plot the mean probability and rational function fit relative to the sample sizes (n).
 
 <details>
-
-<summary>Click to show code</summary>
+<summary>
+Click to show code
+</summary>
 
 ``` r
 ggplot(data = overlap$summary)+
@@ -220,8 +221,7 @@ ggplot(data = overlap$summary)+
 > Please see the package help pages and Shimada et al. (2012, 2016,
 > 2021) for more details.
 
-References
-----------
+## References
 
 If you use the function *ddfilter*, please cite
 
@@ -237,14 +237,13 @@ turtles return home after intentional displacement from coastal foraging
 areas. *Mar Biol* 163:1-14 doi:
 [10.1007/s00227-015-2771-0](http://dx.doi.org/10.1007/s00227-015-2771-0)
 
-If you use the functions *boot\_overlap* or *boot\_area*, please cite
+If you use the functions *boot_overlap* or *boot_area*, please cite
 
 Shimada, T, Thums, M, Hamann, M, et al. (2021) Optimising sample sizes
 for animal distribution analysis using tracking data. *Methods Ecol
 Evol* 12(2):288-297 doi:
 [10.1111/2041-210X.13506](https://doi.org/10.1111/2041-210X.13506)
 
-Current version
----------------
+## Current version
 
-2.0.1.0010 (28 March 2021)
+2.0.1.0011 (30 March 2021)

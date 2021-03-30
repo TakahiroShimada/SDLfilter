@@ -41,7 +41,7 @@ Once the y value reaches the threshold, it is considered that an asymptote is re
 \item{proportional}{If TRUE (default), a threshold is calculated as \emph{estimated asymptote * threshold}. 
 If FALSE, the value specified in \emph{threshold} is used in the analysis.}
 
-\item{max.asymptote}{The maximum limit of an expected asymptote. Default is 1.}
+\item{max.asymptote}{The maximum limit of an expected asymptote. Default is 1 (i.e. maximum probability).}
 }
 \value{
 A list containing a data frame (rational function fit associated with x values), an estimated horizontal asymptote, 

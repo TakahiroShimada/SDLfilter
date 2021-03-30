@@ -17,7 +17,7 @@
 #' Once the y value reaches the threshold, it is considered that an asymptote is reached.
 #' @param proportional If TRUE (default), a threshold is calculated as \emph{estimated asymptote * threshold}. 
 #' If FALSE, the value specified in \emph{threshold} is used in the analysis.
-#' @param max.asymptote The maximum limit of an expected asymptote. Default is 1.  
+#' @param max.asymptote The maximum limit of an expected asymptote. Default is 1 (i.e. maximum probability).  
 #' @importFrom pracma rationalfit
 #' @importFrom pracma polyval
 #' @export
