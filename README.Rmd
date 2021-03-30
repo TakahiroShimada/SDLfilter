@@ -208,7 +208,7 @@ ggplot(data = overlap$summary)+
   geom_point(aes(x = N, y = mu), alpha = 0.5) + 
   geom_path(data = a$results, aes(x = x, y = ys)) + 
   geom_vline(xintercept = a$min.n, linetype = 2) +
-  scale_x_continuous(breaks = seq(0, 30, 5), limits = c(2,29), name = "Animals tracked (n)") +
+  scale_x_continuous(breaks = seq(0, 15, 3), limits = c(2,15), name = "Animals tracked (n)") +
   scale_y_continuous(limits = c(0,1), name = "Overlap probability")
 ```
 </details>
@@ -218,7 +218,7 @@ ggplot(data = overlap$summary)+
   geom_point(aes(x = N, y = mu), alpha = 0.5) + 
   geom_path(data = a$results, aes(x = x, y = ys)) + 
   geom_vline(xintercept = a$min.n, linetype = 2) +
-  scale_x_continuous(breaks = seq(0, 30, 5), limits = c(2,29), name = "Animals tracked (n)") +
+  scale_x_continuous(breaks = seq(0, 15, 3), limits = c(2,15), name = "Animals tracked (n)") +
   scale_y_continuous(limits = c(0,1), name = "Overlap probability")
 ```
 
