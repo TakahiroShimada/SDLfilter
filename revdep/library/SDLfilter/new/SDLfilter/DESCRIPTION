@@ -1,11 +1,11 @@
 Package: SDLfilter
 Type: Package
 Title: Filtering and Assessing the Sample Size of Tracking Data
-Version: 2.0.1
-Date: 2020-07-04
+Version: 2.1.0
+Date: 2021-04-01
 Author: Takahiro Shimada
 Maintainer: Takahiro Shimada <taka.shimada@gmail.com>
-Description: Functions to filter GPS/Argos locations, as well as assessing the sample size for the analysis of animal distributions. The filters remove temporal and spatial duplicates, fixes located at a given height from estimated high tide line, and locations with high error as described in Shimada et al. (2012) <doi:10.3354/meps09747> and Shimada et al. (2016) <doi:10.1007/s00227-015-2771-0>. Sample size for the analysis of animal distributions can be assessed by the conventional area-based approach or the alternative probability-based approach as described in Shimada et al. (under review). 
+Description: Functions to filter GPS/Argos locations, as well as assessing the sample size for the analysis of animal distributions. The filters remove temporal and spatial duplicates, fixes located at a given height from estimated high tide line, and locations with high error as described in Shimada et al. (2012) <doi:10.3354/meps09747> and Shimada et al. (2016) <doi:10.1007/s00227-015-2771-0>. Sample size for the analysis of animal distributions can be assessed by the conventional area-based approach or the alternative probability-based approach as described in Shimada et al. (2021) <doi:10.1111/2041-210X.13506>. 
 Depends: R (>= 3.5.0), ggplot2
 Imports: plotKML, sp, raster, trip, data.table, gridExtra, ggsn, stats,
         maps, pracma, plyr, ggmap, lubridate, dplyr
@@ -19,5 +19,5 @@ RemoteType: local
 RemoteUrl:
         /home/taka/Documents/Work/Research/Projects/SDLfilter/SDLfilter
 NeedsCompilation: no
-Packaged: 2020-07-04 02:16:07 UTC; taka
-Built: R 4.0.2; ; 2020-07-04 02:16:07 UTC; unix
+Packaged: 2021-04-02 01:18:58 UTC; root
+Built: R 4.0.4; ; 2021-04-02 01:18:59 UTC; unix

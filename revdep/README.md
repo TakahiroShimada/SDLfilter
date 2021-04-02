@@ -2,21 +2,21 @@
 
 |field    |value                        |
 |:--------|:----------------------------|
-|version  |R version 4.0.2 (2020-06-22) |
-|os       |Ubuntu 18.04.4 LTS           |
+|version  |R version 4.0.4 (2021-02-15) |
+|os       |Debian GNU/Linux 10 (buster) |
 |system   |x86_64, linux-gnu            |
-|ui       |RStudio                      |
+|ui       |X11                          |
 |language |en_AU:en                     |
 |collate  |en_AU.UTF-8                  |
 |ctype    |en_AU.UTF-8                  |
 |tz       |Australia/Perth              |
-|date     |2020-07-04                   |
+|date     |2021-04-02                   |
 
 # Dependencies
 
 |package   |old   |new   |Δ  |
 |:---------|:-----|:-----|:--|
-|SDLfilter |2.0.0 |2.0.1 |*  |
+|SDLfilter |2.0.1 |2.1.0 |*  |
 
 # Revdeps
 

@@ -8,6 +8,13 @@ output:
 News for Package 'SDLfilter'
 =========
 
+#### Version 2.0.1 (2020-07-04)
+
+* fixed bugs in the track_param function. 
+* The input qi values can be now either the number of GPS satellites or Argos Location Classes. Argos Location Classes will be converted to numerical values, where "A", "B", "Z" will be replaced with "-1", "-2", "-3" respectively.
+* The input DateTime (GMT) can be now either in class POSIXct or Character with the following format "2012-06-03 01:33:46".
+* improved the R documentations.
+
 #### Version 2.0.0 (2020-05-04)
 
 * added four new functions (boot_overlap, boot_area, asymptote, percent_vol) to assess sample sizes of animal tracking data.

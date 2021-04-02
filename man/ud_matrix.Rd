@@ -19,6 +19,6 @@ ud_matrix
 Inter-nesting utilisation distributions of 15 flatback turtles (\emph{Natator depressus}) that nested in Curtis Island, Australia.
 The UDs were calculated using the sample tracking data \code{\link{flatback}} and reduced grid resolution (1 km)
 instead of 50m as used in \href{http://doi.org/10.1111/2041-210X.13506}{Shimada et al. (2021)}. 
-See \href{https://github.com/TakahiroShimada/SDLfilter} for an example code of UD estimation.
+See \href{https://github.com/TakahiroShimada/SDLfilter}{GitHub} for an example code of UD estimation.
 }
 \keyword{datasets}
