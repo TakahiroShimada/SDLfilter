@@ -28,7 +28,8 @@ Default is 4 (e.g. 4 GPS satellite or more).}
 Maximum one-way linear speed of a loop trip (vmaxlp) estimated from the input data. The unit km/h.
 }
 \description{
-Function to estimate the maximum one-way linear speed of a loop trip as described in \href{http://doi.org/10.3354/meps09747}{Shimada et al. (2012)}.
+Function to estimate the maximum one-way linear speed of a loop trip as described in 
+\href{http://www.int-res.com/abstracts/meps/v457/p171-180/}{Shimada et al. (2012)}.
 }
 \details{
 The function first detects a "loop trip". 

@@ -23,6 +23,6 @@ flatback
 }
 \description{
 Satellite tracking data of 15 flatback turtles (\emph{Natator depressus}) that nested in Curtis Island, Australia.
-This sample data is a subset of the tracking data used in \href{http://doi.org/10.1111/2041-210X.13506}{Shimada et al. (2021)}.
+This sample data is a subset of the tracking data used in \href{https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.13506}{Shimada et al. (2021)}.
 }
 \keyword{datasets}

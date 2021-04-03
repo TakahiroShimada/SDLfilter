@@ -28,7 +28,7 @@ R = sample size x 200 is often sufficient (e.g. R = 2000 for a sample size 10).}
 "PHR" is for the probability of an individual to be within the known habitats of other individuals. 
 "VI", "BA" and "UDOI" quantify overlap between UDs using the full probabilistic properties as described in Fieberg and Kochanny (2005). 
 For the latter three options, the function calculates overlaps between each additional UD and a collective UD. 
-To generate a collective UD, each UD is overlaid and averaged at each grid cell so the probability density of the collective UD sums up to 1 (Shimada et al. in prep).}
+To generate a collective UD, each UD is overlaid and averaged at each grid cell so the probability density of the collective UD sums up to 1.}
 
 \item{percent}{An integer specifying the percent volume of each UD to be considered in the analysis.}
 
@@ -70,8 +70,7 @@ Shimada T, Thums M, Hamann M, Limpus CJ, Hays GC, FitzSimmons N, Wildermann NE, 
 Optimising sample sizes for animal distribution analysis using tracking data. 
 \emph{Methods in Ecology and Evolution} 12(2):288-297 \doi{10.1111/2041-210X.13506}
 
-Fieberg J & Kochanny CO (2005) Quantifying home-range overlap: The importance of the utilization distribution. 
-\emph{The Journal of Wildlife Management}, 69(4), 1346–1359. \doi{10.2193/0022-541x(2005)69[1346:Qhotio]2.0.Co;2}
+
 }
 \author{
 Takahiro Shimada

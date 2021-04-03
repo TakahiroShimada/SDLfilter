@@ -1,6 +1,7 @@
 #' @aliases vmaxlp
 #' @title Estimate maximum one-way linear speed of a loop trip
-#' @description Function to estimate the maximum one-way linear speed of a loop trip as described in \href{http://doi.org/10.3354/meps09747}{Shimada et al. (2012)}.
+#' @description Function to estimate the maximum one-way linear speed of a loop trip as described in 
+#' \href{http://www.int-res.com/abstracts/meps/v457/p171-180/}{Shimada et al. (2012)}.
 #' @param sdata A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon", "qi". 
 #' See the data \code{\link{turtle}} for an example.
 #' The function filters the input data by a unique "id" (e.g. transmitter number, identifier for each animal). 

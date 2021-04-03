@@ -14,7 +14,7 @@
 #' "PHR" is for the probability of an individual to be within the known habitats of other individuals. 
 #' "VI", "BA" and "UDOI" quantify overlap between UDs using the full probabilistic properties as described in Fieberg and Kochanny (2005). 
 #' For the latter three options, the function calculates overlaps between each additional UD and a collective UD. 
-#' To generate a collective UD, each UD is overlaid and averaged at each grid cell so the probability density of the collective UD sums up to 1 (Shimada et al. in prep).
+#' To generate a collective UD, each UD is overlaid and averaged at each grid cell so the probability density of the collective UD sums up to 1.
 #' @param percent An integer specifying the percent volume of each UD to be considered in the analysis. 
 #' @param quantiles A vector or a number to specify the quantiles to be calculated in the summary of the results. 
 #' @importFrom raster values
@@ -31,7 +31,8 @@
 #' Optimising sample sizes for animal distribution analysis using tracking data. 
 #' \emph{Methods in Ecology and Evolution} 12(2):288-297 \doi{10.1111/2041-210X.13506}
 #' @references Fieberg J & Kochanny CO (2005) Quantifying home-range overlap: The importance of the utilization distribution. 
-#' \emph{The Journal of Wildlife Management}, 69(4), 1346–1359. \doi{10.2193/0022-541x(2005)69[1346:Qhotio]2.0.Co;2}
+#' \emph{The Journal of Wildlife Management}, 69(4), 1346–1359. 
+#' \doi{https://bioone.org/journals/journal-of-wildlife-management/volume-69/issue-4/0022-541X(2005)69%5b1346%3aQHOTIO%5d2.0.CO%3b2/QUANTIFYING-HOME-RANGE-OVERLAP--THE-IMPORTANCE-OF-THE-UTILIZATION/10.2193/0022-541X(2005)69[1346:QHOTIO]2.0.CO;2.short}
 #' @examples
 #' \dontrun{
 #' 
