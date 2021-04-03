@@ -97,7 +97,7 @@ turtle.dd <- ddfilter(turtle.dup, vmax=V, vmaxlp=VLP)
 
 </details>
 
-![](README_files/figure-markdown_github/unnamed-chunk-7-1.png)
+![](man/figures/unnamed-chunk-7-1.png)
 
 ### 2. Assessing sample sizes (probability-based approach)
 
@@ -217,7 +217,7 @@ ggplot(data = overlap$summary)+
 
 </details>
 
-![](README_files/figure-markdown_github/unnamed-chunk-13-1.png)
+![](man/figures/unnamed-chunk-13-1.png)
 
 > Please see the package help pages and Shimada et al. (2012, 2016,
 > 2021) for more details.

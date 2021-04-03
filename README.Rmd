@@ -7,7 +7,7 @@ output:
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo=TRUE, message=FALSE, warning = FALSE, results=FALSE)
+knitr::opts_chunk$set(echo=TRUE, message=FALSE, warning = FALSE, results=FALSE, fig.path = 'man/figures/')
 library(SDLfilter)
 ```
 
