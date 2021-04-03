@@ -10,7 +10,8 @@ vmaxlp(sdata, qi = 4, prob = 0.99, ...)
 \item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon", "qi". 
 See the data \code{\link{turtle}} for an example.
 The function filters the input data by a unique "id" (e.g. transmitter number, identifier for each animal). 
-"DateTime" is the GMT date & time of each location in class \code{\link[base:DateTimeClasses]{POSIXct}} or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
+"DateTime" is the GMT date & time of each location in class \code{\link[base:DateTimeClasses]{POSIXct}} or 
+\code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
 "lat" and "lon" are the recorded latitude and longitude in decimal degrees. 
 "qi" is the quality index associated with each location fix. 
 The input values can be either the number of GPS satellites or Argos Location Classes. 
@@ -34,7 +35,7 @@ Function to estimate the maximum one-way linear speed of a loop trip as describe
 \details{
 The function first detects a "loop trip". 
 Loop trip behaviour is represented by spatial departure and return involving more than 3 consecutive locations 
-\href{http://doi.org/10.3354/meps09747}{(Shimada et al. 2012)}. 
+\href{http://www.int-res.com/abstracts/meps/v457/p171-180/}{(Shimada et al. 2012)}. 
 The function calculates the net (i.e. straight-line) distance between the departure and turning point as well as 
 the turning point and return location of a loop trip. 
 It then calculates the one-way travelling speed to or from each turning point for each loop trip. 

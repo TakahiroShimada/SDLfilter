@@ -32,8 +32,7 @@ Usage
 library(SDLfilter)
 ```
 
-1. Location filtering
----------------------
+### 1. Location filtering
 
 There are three main filtering functions.
 
@@ -100,8 +99,7 @@ turtle.dd <- ddfilter(turtle.dup, vmax=V, vmaxlp=VLP)
 
 ![](README_files/figure-markdown_github/unnamed-chunk-7-1.png)
 
-2. Assessing sample sizes (probability-based approach)
-------------------------------------------------------
+### 2. Assessing sample sizes (probability-based approach)
 
 #### 2-1. Input UDs
 
