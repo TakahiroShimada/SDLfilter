@@ -41,7 +41,6 @@ library(SDLfilter)
 
 
 ## 1. Location filtering
-
 There are three main filtering functions.  
 
 - *dupfilter* filters temporal and spatial duplicates.  
@@ -121,7 +120,6 @@ turtle.dd <- ddfilter(turtle.dup, vmax=V, vmaxlp=VLP)
 
 
 ## 2. Assessing sample sizes (probability-based approach)
-
 #### 2-1. Input UDs
 The input data can be either a matrix or a list of RasterLayer objects. Each row of the matrix or each RasterLayer object contains the probability distribution of an animal. The function assumes that each column of a matrix is associated with a unique geographical location, therefore it is critical that the grid size and geographical extent are consistent across UDs. In this example, the grid size was 1km and the geographical extent was 1901789, 1972789, -2750915, -2653915 (EPSG:3577) across all 15 layers.
 
