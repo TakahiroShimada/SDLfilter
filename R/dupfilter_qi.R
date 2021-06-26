@@ -145,6 +145,8 @@ dupfilter_qi <- function(sdata = sdata, step.time = 0){
 
 
   #### Delete working columns and return the output
+  drops <- c("pQI", "sQI")
+  sdata <- sdata[,!(names(sdata) %in% drops)] 
   # sdata <- sdata[,headers]
   return(sdata)
 }
