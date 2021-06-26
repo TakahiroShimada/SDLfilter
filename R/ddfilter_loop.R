@@ -43,7 +43,7 @@
 ddfilter_loop<-function(sdata, qi=4, ia=90, vmaxlp=1.8){
   
   ## Original columns
-  headers <- names(sdata)
+  # headers <- names(sdata)
   
   ## Original sample size
   OriginalSS <- nrow(sdata)
@@ -159,6 +159,6 @@ ddfilter_loop<-function(sdata, qi=4, ia=90, vmaxlp=1.8){
   
 
   #### Delete working columns and return the output
-  sdata <- sdata[,headers] 
+  # sdata <- sdata[,headers] 
   return(sdata)
 }

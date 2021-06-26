@@ -25,8 +25,9 @@
 
 
 dupfilter_qi <- function(sdata = sdata, step.time = 0){
+  
   ## Original columns
-  headers <- names(sdata)
+  # headers <- names(sdata)
   
   ## Original sample size
   OriginalSS <- nrow(sdata)
@@ -144,6 +145,6 @@ dupfilter_qi <- function(sdata = sdata, step.time = 0){
 
 
   #### Delete working columns and return the output
-  sdata <- sdata[,headers]
+  # sdata <- sdata[,headers]
   return(sdata)
 }

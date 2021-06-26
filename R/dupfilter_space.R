@@ -35,7 +35,7 @@
 dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE){
   
   ## Original columns
-  headers <- names(sdata)
+  # headers <- names(sdata)
   
   ## Original sample size
   OriginalSS <- nrow(sdata)
@@ -238,6 +238,6 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE){
   
   
   #### Delete working columns and return the output
-  sdata<-sdata[,headers] 
+  # sdata<-sdata[,headers] 
   return(sdata)
 }

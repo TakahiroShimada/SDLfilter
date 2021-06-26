@@ -60,7 +60,7 @@
 distfilter <- function (sdata, max.dist=100, method=1){
   
   ## Original columns
-  headers <- names(sdata)
+  # headers <- names(sdata)
   
   ## Original sample size
   OriginalSS <- nrow(sdata)
@@ -182,6 +182,6 @@ distfilter <- function (sdata, max.dist=100, method=1){
   }
   
   # Delete working columns and return the output
-  sdata3<-sdata3[,headers] 
+  # sdata3<-sdata3[,headers] 
   return(sdata3)
 }

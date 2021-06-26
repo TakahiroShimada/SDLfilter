@@ -220,5 +220,6 @@ track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 
 
   ## Delete working columns and return the output
   drops <- c('cumDays', 'cumDaysBack')
+  sdata <- sdata[,!(names(sdata) %in% drops)] 
   return(sdata)
 }
