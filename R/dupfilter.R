@@ -23,7 +23,10 @@
 #' It then looks for temporal duplicates and retains a fix with the highest quality index.
 #' When temporal or spatial duplicates are associated with the same quality index, 
 #' the function retains a location that is nearest from a previous and to a subsequent location.
-#' @return The input data frame is returned containing only a single fix (latitude/longitude pair) per time and location. 
+#' @return The input data frame is returned containing only a single fix (latitude/longitude pair) per time and location.
+#' The following columns are added: "pTime", "sTime", "pDist", "sDist". 
+#' "pTime" and "sTime" are hours from a previous and to a subsequent fix respectively. 
+#' "pDist" and "sDist" are straight distances in kilometres from a previous and to a subsequent fix respectively. 
 #' @author Takahiro Shimada
 #' @references Shimada T, Limpus C, Jones R, Hazel J, Groom R, Hamann M (2016) 
 #' Sea turtles return home after intentional displacement from coastal foraging areas. 

@@ -28,6 +28,9 @@ Default is FALSE.}
 }
 \value{
 The input data frame is returned with spatial duplicates removed.
+The following columns are added: "pTime", "sTime", "pDist", "sDist". 
+"pTime" and "sTime" are hours from a previous and to a subsequent fix respectively. 
+"pDist" and "sDist" are straight distances in kilometres from a previous and to a subsequent fix respectively.
 }
 \description{
 Function to filter spatial duplicates in tracking data.

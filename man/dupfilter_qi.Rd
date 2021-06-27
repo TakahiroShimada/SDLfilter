@@ -21,6 +21,8 @@ Default is 0 hours.}
 }
 \value{
 The input data frame is returned with temporal duplicates removed by the quality index.
+The following columns are added: "pTime", "sTime". 
+"pTime" and "sTime" are hours from a previous and to a subsequent fix respectively.
 }
 \description{
 Function to filter temporal duplicates in tracking data by quality index.

@@ -21,7 +21,10 @@
 #' @details This is a partial component of \code{\link{dupfilter}}, although works as a stand-alone function.
 #' First it identifies temporal duplicates by searching for consecutive locations that were obtained within \emph{step.time}.
 #' For each group of temporal duplicates, the function then retains a single fix that is nearest from a previous and to a subsequent location.
-#' @return The input data frame is returned with temporal duplicates removed. 
+#' @return The input data frame is returned with temporal duplicates removed.
+#' The following columns are added: "pTime", "sTime", "pDist", "sDist". 
+#' "pTime" and "sTime" are hours from a previous and to a subsequent fix respectively. 
+#' "pDist" and "sDist" are straight distances in kilometres from a previous and to a subsequent fix respectively. 
 #' @author Takahiro Shimada
 #' @references Shimada T, Limpus C, Jones R, Hazel J, Groom R, Hamann M (2016) 
 #' Sea turtles return home after intentional displacement from coastal foraging areas. 

@@ -15,7 +15,9 @@
 #' @export
 #' @details This function is a partial component of \code{\link{dupfilter}}, although works as a stand-alone function. 
 #' It looks for temporal duplicates and retains a fix with the highest quality index.
-#' @return The input data frame is returned with temporal duplicates removed by the quality index. 
+#' @return The input data frame is returned with temporal duplicates removed by the quality index.
+#' The following columns are added: "pTime", "sTime". 
+#' "pTime" and "sTime" are hours from a previous and to a subsequent fix respectively. 
 #' @author Takahiro Shimada
 #' @references Shimada T, Limpus C, Jones R, Hazel J, Groom R, Hamann M (2016) 
 #' Sea turtles return home after intentional displacement from coastal foraging areas. 

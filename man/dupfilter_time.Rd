@@ -23,6 +23,9 @@ Default is 0 hours.}
 }
 \value{
 The input data frame is returned with temporal duplicates removed.
+The following columns are added: "pTime", "sTime", "pDist", "sDist". 
+"pTime" and "sTime" are hours from a previous and to a subsequent fix respectively. 
+"pDist" and "sDist" are straight distances in kilometres from a previous and to a subsequent fix respectively.
 }
 \description{
 Function to filter temporal duplicates that are associated with the same quality index.
