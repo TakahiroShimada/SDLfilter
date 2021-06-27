@@ -96,19 +96,21 @@ distfilter <- function (sdata, max.dist=100, method=1){
     
     
     ## Distance from a previous and to a subsequent location (pDist & sDist)
-    # Function to calculate distances
-    calcDist<-function(j){
-      turtle<-sdata[sdata$id %in% j,]  
-      LatLong<-data.frame(Y=turtle$lat, X=turtle$lon)
-      sp::coordinates(LatLong)<-~X+Y
-      sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
-      
-      #pDist
-      c(NA, raster::pointDistance(LatLong[-length(LatLong)], LatLong[-1], lonlat=T)/1000)
-    }
+    sdata <- track_param(sdata, param = 'distance')
     
-    sdata$pDist<-unlist(lapply(IDs, calcDist))
-    sdata$sDist<-c(sdata$pDist[-1], NA)
+    # # Function to calculate distances
+    # calcDist<-function(j){
+    #   turtle<-sdata[sdata$id %in% j,]  
+    #   LatLong<-data.frame(Y=turtle$lat, X=turtle$lon)
+    #   sp::coordinates(LatLong)<-~X+Y
+    #   sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
+    #   
+    #   #pDist
+    #   c(NA, raster::pointDistance(LatLong[-length(LatLong)], LatLong[-1], lonlat=T)/1000)
+    # }
+    # 
+    # sdata$pDist<-unlist(lapply(IDs, calcDist))
+    # sdata$sDist<-c(sdata$pDist[-1], NA)
     
     
     
@@ -130,7 +132,7 @@ distfilter <- function (sdata, max.dist=100, method=1){
         }
     }
     
-    ## Apply the above funtion to each data set seperately
+    ## Apply the above function to each data set separately
     set.rm<-function(j){
       start<-as.numeric(rownames(sdata[sdata$id %in% j,][2,]))
       end<-as.numeric(rownames(sdata[sdata$id %in% j,][1,]))+(nrow(sdata[sdata$id %in% j,])-2)
@@ -182,6 +184,7 @@ distfilter <- function (sdata, max.dist=100, method=1){
   }
   
   # Delete working columns and return the output
-  # sdata3<-sdata3[,headers] 
+  drop.vars <- c("pTime", "sTime", "pSpeed", "sSpeed", "inAng", "meanSpeed", "meanAngle")
+  sdata3 <- sdata3[,!(names(sdata3) %in% drop.vars)] 
   return(sdata3)
 }

@@ -147,6 +147,8 @@ ddfilter_speed<-function (sdata, vmax=8.9, method=1){
 
   
   # Delete working columns and return the output
-  sdata3$overMax <- NULL
+  drop.vars <- c("overMax", "inAng", "meanSpeed", "meanAngle")
+  sdata3 <- sdata3[,!(names(sdata3) %in% drop.vars)] 
+  # sdata3$overMax <- NULL
   return(sdata3)
 }

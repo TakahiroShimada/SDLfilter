@@ -191,6 +191,7 @@ dupfilter_time <- function (sdata, step.time=0) {
 
   
   #### Delete working columns and return the output
-  # sdata <- sdata[,headers]
+  drop.vars <- c("pSpeed", "sSpeed", "inAng", "meanSpeed", "meanAngle")
+  sdata <- sdata[,!(names(sdata) %in% drop.vars)] 
   return(sdata)
 }

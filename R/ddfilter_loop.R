@@ -115,8 +115,7 @@ ddfilter_loop<-function(sdata, qi=4, ia=90, vmaxlp=1.8){
             
             #### Bring back excluded data
             if(nrow(excluded.data)>0){
-                # excluded.data[,c("pTime", "sTime", "pDist", "sDist", "pSpeed", "sSpeed", "inAng", "overLpMax")]<-NA
-                sdata <- plyr::rbind.fill(sdata, excluded.data)
+                 sdata <- plyr::rbind.fill(sdata, excluded.data)
             } else {
                 sdata<-sdata
             }
@@ -159,6 +158,8 @@ ddfilter_loop<-function(sdata, qi=4, ia=90, vmaxlp=1.8){
   
 
   #### Delete working columns and return the output
-  sdata$overLpMax <- NULL
+  drop.vars <- c("overLpMax", "meanSpeed", "meanAngle")
+  sdata <- sdata[,!(names(sdata) %in% drop.vars)] 
+  # sdata$overLpMax <- NULL
   return(sdata)
 }
