@@ -1,5 +1,5 @@
 ## Test environments
-* local debian 10 install: R 4.0.4
+* local debian 10 install: R 4.1.0
 * win-builder: R-devel
 
 
@@ -18,21 +18,21 @@ There was one NOTE. The maintainer's email address remained the same.
 
 |field    |value                        |
 |:--------|:----------------------------|
-|version  |R version 4.0.4 (2021-02-15) |
+|version  |R version 4.1.0 (2021-05-18) |
 |os       |Debian GNU/Linux 10 (buster) |
 |system   |x86_64, linux-gnu            |
-|ui       |X11                          |
+|ui       |RStudio                      |
 |language |en_AU:en                     |
 |collate  |en_AU.UTF-8                  |
 |ctype    |en_AU.UTF-8                  |
-|tz       |Australia/Perth              |
-|date     |2021-04-02                   |
+|tz       |Australia/Brisbane           |
+|date     |2021-07-04                   |
 
 # Dependencies
 
 |package   |old   |new   |Δ  |
 |:---------|:-----|:-----|:--|
-|SDLfilter |2.0.1 |2.1.0 |*  |
+|SDLfilter |2.1.0 |2.1.1 |*  |
 
 # Revdeps
 

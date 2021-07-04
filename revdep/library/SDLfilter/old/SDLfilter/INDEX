@@ -6,7 +6,6 @@ boot_area               Cumulative analysis of collective areas by
                         bootstrapping
 boot_overlap            Bootstrap overlaps between Utilisation
                         Distributions (UDs)
-curtis                  Flatback turtle utilisation distributions
 ddfilter                Filter locations using a data driven filter
 ddfilter_loop           Filter locations by quality index, inner angle,
                         and speed
@@ -19,6 +18,7 @@ dupfilter_exact         Filter temporally and spatially exact
 dupfilter_qi            Filter temporal duplicates by quality index
 dupfilter_space         Filter spatial duplicates
 dupfilter_time          Filter temporal duplicates
+flatback                Flatback turtle tracking data
 kml_track               Generate KML from locations
 map_track               Plot location data on a map
 percent_vol             UD percent volume
@@ -27,6 +27,10 @@ tidedata                Tidal data for Sandy Strait, Australia
 track_param             Calculate parameters between locations
 turtle                  Green turtle tracking data
 turtle2                 Green turtle tracking data 2
+ud_matrix               A matrix containing probability distributions
+                        of flatback turtles
+ud_raster               A list of raster data containing probability
+                        distributions of flatback turtles
 vmax                    Estimate maximum linear speed
 vmaxlp                  Estimate maximum one-way linear speed of a loop
                         trip

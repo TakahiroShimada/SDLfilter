@@ -8,7 +8,11 @@ output:
 News for Package 'SDLfilter'
 =========
 
-#### Version 2.1.0 (2021-03-30)
+#### Version 2.1.1 (2021-07-04)
+
+* amended the ddfilter, dupfilter, and their depending functions (e.g. ddfilter_speed) to return movement parameters used in each function.
+
+#### Version 2.1.0 (2021-04-02)
 * improved the asymptote function.
 * added a new citation for functions 'boot_overlap', 'boot_area' and 'asymptote'. Shimada T, Thums M, Hamann M, Limpus CJ, Hays GC, FitzSimmons NN, Wildermann NE, Duarte CD, Meekan MG (2021) Optimising sample sizes for animal distribution analysis using tracking data. Methods in Ecology and Evolution, 12(2):288-297. doi:10.1111/2041-210X.13506
 * updated the README file.
