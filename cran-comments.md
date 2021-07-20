@@ -5,8 +5,7 @@
 
 ## R CMD check results
 
-There were no ERRORs or WARNINGs when run on debian (local) or windows (win-builder).
-There was one NOTE. The maintainer's email address remained the same.
+There were no ERRORs, WARNINGs, or NOTEs when run on debian (local) or windows (win-builder).
 
 
 ## Reverse dependencies
