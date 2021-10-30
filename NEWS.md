@@ -10,6 +10,10 @@ News for Package 'SDLfilter'
 
 #### Version 2.1.1 (2021-07-04)
 
+* fixed a minor bug related with the max.asymptote argument within the asymptote function.
+
+#### Version 2.1.1 (2021-07-04)
+
 * amended the ddfilter, dupfilter, and their depending functions (e.g. ddfilter_speed) to return movement parameters used in each function.
 
 #### Version 2.1.0 (2021-04-02)

@@ -72,9 +72,9 @@ dupfilter <- function(sdata, step.time=0, step.dist=0, conditional=FALSE){
   RemovedSamplesP <- round((1-(FilteredSS/OriginalSS))*100,2)
   
   cat("\n")
-  cat("Input data:", OriginalSS, "locations.", fill = TRUE)
-  cat("Filtered data:", FilteredSS, "locations.", fill = TRUE)
-  cat("dupfilter removed ", RemovedSamplesN, " locations (", RemovedSamplesP, "% of original data).", sep="", fill = TRUE)
+  cat("Input data:", OriginalSS, "locations", fill = TRUE)
+  cat("Filtered data:", FilteredSS, "locations", fill = TRUE)
+  cat("dupfilter removed ", RemovedSamplesN, " locations (", RemovedSamplesP, "% of original data)", sep="", fill = TRUE)
   cat("\n")
   
   #### Return the filtered data set

@@ -1,5 +1,5 @@
 ## Test environments
-* local debian 10 install: R 4.1.0
+* local debian 10 install: R 4.1.1
 * win-builder: R-devel
 
 

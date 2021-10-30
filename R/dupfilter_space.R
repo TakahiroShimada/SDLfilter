@@ -237,7 +237,7 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE){
   
   
   ## Print report
-  cat("dupfilter_space removed", RemovedSamplesN, "of", OriginalSS, "locations.", fill = TRUE)
+  cat("dupfilter_space removed", RemovedSamplesN, "of", OriginalSS, "locations", fill = TRUE)
   
   
   #### Delete working columns and return the output

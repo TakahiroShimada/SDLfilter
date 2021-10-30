@@ -71,7 +71,7 @@ Optimising sample sizes for animal distribution analysis using tracking data.
 \emph{Methods in Ecology and Evolution} 12(2):288-297 \doi{10.1111/2041-210X.13506}
 
 Fieberg J & Kochanny CO (2005) Quantifying home-range overlap: The importance of the utilization distribution. 
-\emph{The Journal of Wildlife Management}, 69(4), 1346–1359.
+\emph{The Journal of Wildlife Management}, 69(4), 1346–1359. \doi{10.2193/0022-541x(2005)69[1346:Qhotio]2.0.Co;2}
 }
 \author{
 Takahiro Shimada

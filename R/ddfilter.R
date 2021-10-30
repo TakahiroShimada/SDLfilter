@@ -105,9 +105,9 @@ ddfilter<-function(sdata, vmax=8.9, vmaxlp=1.8, qi=4, ia=90, method=1) {
   RemovedSamplesP<-round((1-(FilteredSS/OriginalSS))*100,2)
   
   cat("\n")
-  cat("Input data:", OriginalSS, "locations.", fill = TRUE)
-  cat("Filtered data:", FilteredSS, "locations.", fill = TRUE)
-  cat("ddfilter removed ", RemovedSamplesN, " locations (", RemovedSamplesP, "% of original data).", sep="", fill = TRUE)
+  cat("Input data:", OriginalSS, "locations", fill = TRUE)
+  cat("Filtered data:", FilteredSS, "locations", fill = TRUE)
+  cat("ddfilter removed ", RemovedSamplesN, " locations (", RemovedSamplesP, "% of original data)", sep="", fill = TRUE)
   cat("\n")
   
   #### Return the filtered data set

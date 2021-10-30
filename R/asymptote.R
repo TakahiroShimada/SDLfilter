@@ -2,6 +2,8 @@
 #' @title Horizontal asymptotes of rational functions
 #' @description Function to find horizontal asymptotes of a rational function.
 #' @param data An output object from \code{\link{boot_overlap}} or \code{\link{boot_area}}.
+#' @param max.asymptote The maximum limit of an expected asymptote. Default is 1 (i.e. maximum probability). 
+#' If it is unknown, set as NA (e.g. max.asymptote = NA).
 #' @param x,y Numeric vectors of independent (x) and dependent (y) variables. 
 #' These parameters will be ignored if \emph{data} is supplied.
 #' @param degree The default 'optim' option selects the maximal degree of numerator and denominator of a rational function 
@@ -9,7 +11,7 @@
 #' Alternatively, an integer can be used to specify the maximal degree.
 #' The 'optim' option is recommended unless there is a strong reason that a maximal degree should be specified.
 #' @param upper.degree The upper limit of the maximal degree to be assessed when the 'optim' option is selected. 
-#' Default is 2, meaning the "optimal" degree is searched from 1 and 2. 
+#' Default is 10, meaning the "optimal" degree is searched from 1 and 10. 
 #' The default usually gives good results. If the fit does not look good, a larger value may result in a better fit.
 #' @param d1,d2 (Deprecated) Maximal degrees of numerator (d1) and denominator (d2) of a rational function. d1 and d2 must be equal. 
 #' Use \emph{degree} instead.
@@ -17,7 +19,6 @@
 #' Once the y value reaches the threshold, it is considered that an asymptote is reached.
 #' @param proportional If TRUE (default), a threshold is calculated as \emph{estimated asymptote * threshold}. 
 #' If FALSE, the value specified in \emph{threshold} is used in the analysis.
-#' @param max.asymptote The maximum limit of an expected asymptote. Default is 1 (i.e. maximum probability).  
 #' @importFrom pracma rationalfit
 #' @importFrom pracma polyval
 #' @export
@@ -79,7 +80,9 @@ asymptote <- function(data = NULL, x = NULL, y = NULL, degree = 'optim', upper.d
             }
         }
         degrees <- data.frame(degree = 1:upper.degree, asymp, msq)
-        degrees <- with(degrees, degrees[asymp <= max.asymptote,])
+        if(!is.na(max.asymptote)){
+            degrees <- with(degrees, degrees[asymp <= max.asymptote,])
+        }
         degrees <- with(degrees, degrees[order(msq),])
         
         # Optimal degree for a rational function

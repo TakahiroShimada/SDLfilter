@@ -190,7 +190,7 @@ dupfilter_time <- function (sdata, step.time=0) {
   
   
   ## Print report
-  cat("dupfilter_time removed", RemovedSamplesN, "of", OriginalSS, "locations.", fill = TRUE)
+  cat("dupfilter_time removed", RemovedSamplesN, "of", OriginalSS, "locations", fill = TRUE)
 
   
   #### Delete working columns and return the output

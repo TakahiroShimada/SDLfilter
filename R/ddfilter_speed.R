@@ -139,7 +139,7 @@ ddfilter_speed<-function (sdata, vmax=8.9, method=1){
   RemovedSamplesN<-OriginalSS-FilteredSS
   
   ## Print report
-  cat("ddfilter_speed removed", RemovedSamplesN, "of", OriginalSS, "locations.", fill = TRUE)
+  cat("ddfilter_speed removed", RemovedSamplesN, "of", OriginalSS, "locations", fill = TRUE)
   if(length(id.exclude)>0){
     message('Warning: insufficient data to apply ddfilter_speed to:')
     message(paste(id.exclude, collapse = ', '))

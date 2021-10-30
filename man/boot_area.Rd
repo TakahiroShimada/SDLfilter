@@ -33,10 +33,10 @@ R = sample size x 200 is often sufficient (e.g. R = 2000 for a sample size 10).}
 A list containing two data frames - raw results and summary (mean, sd, sem and quantiles at each sample size).
 }
 \description{
-Function to calculate collective areas (merged x\% Utilisation Distributions or UDs) of n individuals by bootstrapping.
+Function to calculate collective areas (merged x\% Utilisation Distributions or UDs) of \emph{n} individuals by bootstrapping.
 }
 \details{
-This function calculates collective areas (e.g. 50\% UDs) of 1 to n individuals by bootstrapping.
+This function calculates collective areas (e.g. 50\% UDs) of 1 to \emph{n} individuals by bootstrapping.
 }
 \examples{
 \dontrun{

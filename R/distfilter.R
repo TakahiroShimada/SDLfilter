@@ -177,7 +177,7 @@ distfilter <- function (sdata, max.dist=100, method=1){
   RemovedSamplesN<-OriginalSS-FilteredSS
   
   ## Print report
-  cat("distfilter removed", RemovedSamplesN, "of", OriginalSS, "locations.", fill = TRUE)
+  cat("distfilter removed", RemovedSamplesN, "of", OriginalSS, "locations", fill = TRUE)
   if(length(id.exclude)>0){
     message('Warning: insufficient data to apply distfilter to:')
     message(paste(id.exclude, collapse = ', '))

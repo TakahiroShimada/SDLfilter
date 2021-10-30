@@ -143,7 +143,7 @@ dupfilter_qi <- function(sdata = sdata, step.time = 0){
   RemovedSamplesN<-OriginalSS-FilteredSS
   
   ## Print report
-  cat("dupfilter_qi removed", RemovedSamplesN, "of", OriginalSS, "locations.", fill = TRUE)
+  cat("dupfilter_qi removed", RemovedSamplesN, "of", OriginalSS, "locations", fill = TRUE)
 
 
   #### Delete working columns and return the output

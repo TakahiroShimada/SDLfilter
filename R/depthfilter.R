@@ -375,8 +375,8 @@ depthfilter<-function(sdata, bathymetry, extract="bilinear", qi=4, tide, tidal.p
       DepthEst<-nrow(sdata[!(is.na(sdata$depth.exp)),])
 
       cat("\n")
-      message("No location was removed (filter option was desabled).")
-      cat("Experienced water depth (bathymetry + tide) was estiamted for", DepthEst, "of", OriginalSS, "locations.", fill = TRUE)
+      message("No location was removed (filter option was desabled)")
+      cat("Experienced water depth (bathymetry + tide) was estiamted for", DepthEst, "of", OriginalSS, "locations", fill = TRUE)
       cat("\n")
       
       

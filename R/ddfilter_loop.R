@@ -149,7 +149,7 @@ ddfilter_loop<-function(sdata, qi=4, ia=90, vmaxlp=1.8){
   RemovedSamplesN<-OriginalSS-FilteredSS
   
   ## Print report
-  cat("ddfilter_loop removed", RemovedSamplesN, "of", OriginalSS, "locations.", fill = TRUE)
+  cat("ddfilter_loop removed", RemovedSamplesN, "of", OriginalSS, "locations", fill = TRUE)
   # cat("\n")
   if(length(id.exclude)>0){
       message('Warning: insufficient data to apply ddfilter_loop to;')

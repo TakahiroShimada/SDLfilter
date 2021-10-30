@@ -48,7 +48,7 @@ dupfilter_exact <- function(sdata){
   RemovedSamplesN <- OriginalSS-FilteredSS
   
   ## Print report
-  cat("dupfilter_exact removed", RemovedSamplesN, "of", OriginalSS, "locations.", fill = TRUE)
+  cat("dupfilter_exact removed", RemovedSamplesN, "of", OriginalSS, "locations", fill = TRUE)
 
   #### return the output
   return(sdata)

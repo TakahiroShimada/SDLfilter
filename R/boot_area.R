@@ -1,6 +1,6 @@
 #' @aliases boot_area
 #' @title Cumulative analysis of collective areas by bootstrapping 
-#' @description Function to calculate collective areas (merged x\% Utilisation Distributions or UDs) of n individuals by bootstrapping.
+#' @description Function to calculate collective areas (merged x\% Utilisation Distributions or UDs) of \emph{n} individuals by bootstrapping.
 #' @param data A matrix or list of RasterLayer objects. 
 #' Each row of the matrix or each RasterLayer object contains a utilisation distribution 
 #' (or other statistics that sums to 1 - e.g. proportion of time spent).
@@ -18,7 +18,7 @@
 #' @importFrom stats aggregate sd
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @export
-#' @details This function calculates collective areas (e.g. 50\% UDs) of 1 to n individuals by bootstrapping.
+#' @details This function calculates collective areas (e.g. 50\% UDs) of 1 to \emph{n} individuals by bootstrapping.
 #' @return A list containing two data frames - raw results and summary (mean, sd, sem and quantiles at each sample size).
 #' @author Takahiro Shimada
 #' @references Shimada T, Thums M, Hamann M, Limpus CJ, Hays GC, FitzSimmons N, Wildermann NE, Duarte CD, Meekan MG (2021) 
