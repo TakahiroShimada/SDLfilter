@@ -1,2 +1,3 @@
 package,old,new,delta
-SDLfilter,2.1.0,2.1.1,*
+SDLfilter,2.0.1,2.1.2,*
+plotKML,NA,0.8-2,*

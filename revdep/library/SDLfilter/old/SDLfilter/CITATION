@@ -1,5 +1,5 @@
 citHeader("To cite SDLfilter in publications, please use:
-2012 for ddfilter; 2016 for dupfilter or depthfilter; in press for boot_overlpa, boot_area, or asymptote")
+2012 for ddfilter; 2016 for dupfilter or depthfilter")
 
 citEntry(
   entry		  = "Article",
@@ -32,19 +32,3 @@ citEntry(
 				Marine Biology, 163(1):8. doi:10.1007/s00227-015-2771-0"
 )
 
-citEntry(
-  entry		  = "Article",
-  author	  = "Takahiro Shimada, Michele Thums, Mark Hamann, Colin J. Limpus, Graeme C. Hays, Nancy
-FitzSimmons, Natalie E. Wildermann, Carlos M. Duarte. Mark G. Meekan",
-  title		  = "Optimising sample sizes for animal distribution analysis using tracking data",
-  journal	  = "Methods in Ecology and Evolution",
-  year        = "2021",
-  volume      = "12",
-  number      = "2",
-  pages       = "288-297",
-  month       = "February",
-  doi	      = "10.1111/2041-210X.13506",
-  textVersion = "Shimada, T., Thums, M., Hamann, M., Limpus, C. J., Hays, G. C., FitzSimmons, N. N., Wildermann, N. E., Duarte, C. M., & Meekan, M. G. (2021).
-        Optimising sample sizes for animal distribution analysis using tracking data. 
-        Methods in Ecology and Evolution, 12(2):288-297. doi:10.1111/2041-210X.13506"
-)
