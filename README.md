@@ -246,4 +246,4 @@ Evol* 12(2):288-297 doi:
 
 ## Current version
 
-2.1.1 (04 July 2021)
+2.1.2 (31 October 2021)
