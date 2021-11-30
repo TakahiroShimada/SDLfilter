@@ -8,11 +8,11 @@ output:
 News for Package 'SDLfilter'
 =========
 
-#### Version 2.1.1 (2021-07-04)
+#### Version 2.2.0.9001 (2021-11-30)
 
 * added an option to estimate the confidence intervals for bootstrapped overlap estimates. The new default is to use the CIs when considering an asymptote.
 
-#### Version 2.1.1 (2021-07-04)
+#### Version 2.1.2 (2021-10-31)
 
 * fixed a minor bug related with the max.asymptote argument within the asymptote function.
 

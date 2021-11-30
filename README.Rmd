@@ -244,6 +244,6 @@ Shimada, T, Thums, M, Hamann, M, et al. (2021) Optimising sample sizes for anima
 
 Current version
 --------
-2.1.2 (31 October 2021)
+2.2.0.9001 (30 November 2021)
 
 
