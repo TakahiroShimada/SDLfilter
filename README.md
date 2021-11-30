@@ -105,9 +105,9 @@ Each row of the matrix or each RasterLayer object contains the
 probability distribution of an animal. The function assumes that each
 column of a matrix is associated with a unique geographical location,
 therefore it is critical that the grid size and geographical extent are
-consistent across UDs. In this example, the grid size was 1km and the
-geographical extent was 1901789, 1972789, -2750915, -2653915 (EPSG:3577)
-across all 15 layers.
+consistent across UDs. In this example (15 tracks of flatback turtles),
+the grid size was 1km and the geographical extent was 1901789, 1972789,
+-2750915, -2653915 (EPSG:3577) across all 15 layers.
 
 <details>
 <summary>
@@ -176,15 +176,15 @@ data(ud_matrix)
 data(ud_raster)
 ```
 
-#### 2-2. Calculate overlap probability from 3000 random permutation (\~sample size x 200)
+#### 2-2. Calculate overlap probability from 2000 random permutation (\> sample size x 100)
 
 It will take some time to run this code depending on the number of
 iterations and the machine specs. The runtime was about 7 minutes for
-3000 iterations on a linux machine (Intel i7-8850H CPU @ 2.60GHz, 32GB
+2000 iterations on a linux machine (Intel i7-8850H CPU @ 2.60GHz, 32GB
 RAM).
 
 ``` r
-overlap <- boot_overlap(ud_matrix, R = 3000, method = "PHR")
+overlap <- boot_overlap(ud_matrix, R = 2000, method = "PHR")
 ```
 
 #### 2-3. Find the minimum sample size required to estimate the general distribution
@@ -195,10 +195,10 @@ The sample size linked to this value was deemed to be the minimum sample
 size required to represent the general distribution of the group.
 
 ``` r
-a <- asymptote(overlap, upper.degree = 10)
+a <- asymptote(overlap, upper.degree = 10, estimator = 'glm', family = binomial)
 ```
 
-#### 2-4. Plot the mean probability and rational function fit relative to the sample sizes (n).
+#### 2-4. Plot the estimated overlap probabilities relative to the sample sizes (black points), the 95% confidence intervals (grey lines), and 95% of the estimated asymptote (dashed line).
 
 <details>
 <summary>
@@ -206,12 +206,13 @@ Click to show code
 </summary>
 
 ``` r
-ggplot(data = overlap$summary)+
-  geom_point(aes(x = N, y = mu), alpha = 0.5) + 
-  geom_path(data = a$results, aes(x = x, y = ys)) + 
-  geom_vline(xintercept = a$min.n, linetype = 2) +
-  scale_x_continuous(breaks = seq(0, 15, 3), limits = c(2,15), name = "Animals tracked (n)") +
-  scale_y_continuous(limits = c(0,1), name = "Overlap probability")
+ggplot(data = a$results, aes(x = x))+
+  geom_errorbar(aes(ymin = y_lwr, ymax = y_upr), width = 0.2, colour = 'darkgrey', size = 1) + 
+  geom_point(aes(y = y), size = 2) + 
+  geom_hline(yintercept = a$h.asymptote*0.95, linetype = 2) +
+  scale_x_continuous(breaks = seq(0, 15, 3), limits = c(1.9,15.1), name = "Animals tracked (n)") +
+  scale_y_continuous(limits = c(0.5,1), name = "Overlap probability") +
+  theme_light()
 ```
 
 </details>

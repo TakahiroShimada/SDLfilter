@@ -27,20 +27,21 @@
 #' @examples
 #' \dontrun{
 #' 
-#' #1 Utilisation distributions of flatback turtles (n = 29).
-#' data(ud_matrix)
+#' #1 Utilisation distributions of flatback turtles (n = 15).
+#' data(ud_raster)
 #' 
-#' #2 Calculate collective areas from 6000 random permutation
-#' area <- boot_area(ud_matrix, R = 6000, percent = 50)
+#' #2 Calculate collective areas from 3000 random permutation
+#' area <- boot_area(ud_raster, R = 3000, percent = 50)
 #' 
 #' #3 Find the minimum sample size required to estimate the general distribution.
-#' a <- asymptote(area)
+#' a <- asymptote(area, upper.degree = 10, estimator = 'glm', family = gaussian, max.asymptote = NA)
 #' 
 #' #4 Plot the mean collective area and rational function fit relative to the sample sizes.
-#' ggplot(data = area$summary)+
-#'   geom_point(aes(x = N, y = mu/1e+6), alpha = 0.5) + 
-#'   geom_path(data = a$results, aes(x = x, y = ys/1e+6)) +        
-#'   labs(x = "N", y = expression(Area~(km^2)))
+#' ggplot(data = a$results, aes(x = x))+
+#'   geom_pointrange(aes(y = y, ymin = y_lwr, ymax = y_upr)) + 
+#'   geom_point(aes(y = y), size = 2) + 
+#'   scale_x_continuous(breaks = seq(0, 15, 3), limits = c(2,15), name = "Animals tracked (n)") +
+#'   scale_y_continuous(name = expression(Area~(km^2)))
 #' }
 
 
@@ -67,9 +68,11 @@ boot_area <- function(data, cell.size = NA, R = 1000, percent = 50, quantiles = 
       
       ## Cell size
       cell.size <- raster::res(data[[1]])
+      cell <- cell.size[1] * cell.size[2]
       
     } else {
       dens_all <- data
+      cell <- cell.size^2
     }
     
     #### Names
@@ -103,8 +106,8 @@ boot_area <- function(data, cell.size = NA, R = 1000, percent = 50, quantiles = 
         } else {
           comb_layer <- layers
         }
-        comb_area <- length(comb_layer[comb_layer > 0]) * cell.size^2
-        data.frame(N = j, Area = comb_area)
+        comb_area <- length(comb_layer[comb_layer > 0]) * cell
+        data.frame(iteration = i, N = j, Area = comb_area)
       })
       
       comb_df <- plyr::rbind.fill(Combinelayers)

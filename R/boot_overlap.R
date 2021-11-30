@@ -35,21 +35,21 @@
 #' @examples
 #' \dontrun{
 #' 
-#' #1 Utilisation uistributions of flatback turtles (n = 29).
+#' #1 Utilisation uistributions of flatback turtles (n = 15).
 #' data(ud_matrix)
 #' 
-#' #2 Calculate overlap probability from 6000 random permutation.
-#' overlap <- boot_overlap(ud_matrix, R = 6000, method = "PHR")
+#' #2 Calculate overlap probability from 3000 random permutation.
+#' overlap <- boot_overlap(ud_matrix, R = 3000, method = "PHR")
 #' 
 #' #3 Find the minimum sample size required to estimate the general distribution.
-#' a <- asymptote(overlap)
+#' a <- asymptote(overlap, upper.degree = 10, estimator = 'glm', family = binomial)
 #' 
 #' #4 Plot the mean probability and rational function fit relative to the sample sizes.
-#' ggplot(data = overlap$summary)+
-#'   geom_point(aes(x = N, y = mu), alpha = 0.5) + 
-#'   geom_path(data = a$results, aes(x = x, y = ys)) + 
-#'   geom_vline(xintercept = a$min.n, linetype = 2) +
-#'   labs(x = "N", y = "Overlap probability")
+#' ggplot(data = a$results, aes(x = x))+
+#'   geom_pointrange(aes(y = y, ymin = y_lwr, ymax = y_upr)) + 
+#'   geom_hline(yintercept = a$h.asymptote*0.95, linetype = 2) +
+#'   scale_x_continuous(breaks = seq(0, 15, 3), limits = c(2,15), name = "Animals tracked (n)") +
+#'   scale_y_continuous(limits = c(0.5,1), name = "Overlap probability")
 #' }
 
 

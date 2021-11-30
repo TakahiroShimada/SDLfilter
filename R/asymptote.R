@@ -19,15 +19,30 @@
 #' Once the y value reaches the threshold, it is considered that an asymptote is reached.
 #' @param proportional If TRUE (default), a threshold is calculated as \emph{estimated asymptote * threshold}. 
 #' If FALSE, the value specified in \emph{threshold} is used in the analysis.
+#' @param estimator Method used to estimate the mean or predicted \emph{y} relative to \emph{x} (e.g. sample size).
+#' Available options are 'mean' using arithmetic means and 'glm' using the \code{\link[stats]{glm}} function.
+#' @param ci.level Confidence level for the mean or predicted \emph{y}, which will be used to assess if/when an asymptote has been reached.
+#' If NULL, only the mean and predicted \emph{y} are used for the assessment (see details).   
+#' @param ... Optional arguments passed to \code{\link[stats]{glm}}.
 #' @importFrom pracma rationalfit
 #' @importFrom pracma polyval
+#' @importFrom emmeans emmeans
+#' @importFrom stats glm qnorm
 #' @export
 #' @details This function fits a rational function to the input data. 
 #' When an output object from \code{\link{boot_overlap}} or \code{\link{boot_area}} is supplied, 
-#' a rational function is fit to the means of the bootstrap results (e.g. mean overlap probability) as a function of \emph{x} (e.g. sample size).
+#' a rational function is fit to the means or predicted values of the bootstrap results (e.g. mean overlap probability) 
+#' as a function of \emph{x} (e.g. sample size).
 #' It then estimates horizontal asymptotes and identifies the sample size when an asymptote is considered.
-#' Please caution when estimated horizontal asymptote is very different from the expected asymptote. 
-#' For example, the estimated horizontal asymptote should be around 1 if overlaps between UDs are calculated using the "PHR" method.
+#' If ci.level = NULL and threshold = 0.95, 
+#' an asymptote is considered when the mean or predicted y value reaches above 95% of the estimated horizontal asymptote.
+#' If ci.level is specified (e.g. 0.95) and threshold = 0.95,
+#' an asymptote is considered when the mean or predicted y value AND the confidence interval are above 95% of the estimated horizontal asymptote.
+#' When the "PHR" method was used in \code{\link{boot_overlap}}, 
+#' binomial is generally a sensible \code{\link[stats]{family}} object for the GLM.
+#' gaussian and Gamma are often good options when the maximum \emph{y} value exceeds 1 (e.g. area size).
+#' Please caution if estimated horizontal asymptote is very different from the expected asymptote. 
+#' For example, the estimated horizontal asymptote should be around 1 when overlaps between UDs are calculated using the "PHR" method.
 #' see \code{\link{boot_overlap}}.
 #' @return A list containing a data frame (rational function fit associated with x values), an estimated horizontal asymptote, 
 #' the minimum sample size if an asymptote is reached, and the estimated optimal degree of numerator and denominator of the rational function.
@@ -42,13 +57,45 @@
 
 
 asymptote <- function(data = NULL, x = NULL, y = NULL, degree = 'optim', upper.degree = 10, 
-                      d1 = NA, d2 = NA, threshold = 0.95, proportional = TRUE, max.asymptote = 1){
+                      d1 = NA, d2 = NA, threshold = 0.95, proportional = TRUE, max.asymptote = 1,
+                      estimator = 'glm', ci.level = 0.95, ...){
     
     if(!is.null(data)){
         x <- data$summary$N
-        y <- data$summary$mu
+        
+        if(estimator == 'mean'){
+            y <- data$summary$mu
+            if(is.na(ci.level)){
+                y_lwr <- NA
+                y_upr <- NA
+             } else {
+                me <- stats::qnorm((1+ci.level)/2)
+                y_lwr <- y - data$summary$sem*me
+                y_upr <- y + data$summary$sem*me
+            }
+            
+        } else if(estimator == 'glm'){
+            glm_x <- factor(as.character(data$data$N), levels = as.character(x))
+            glm_y <- data$data[,3]
+            suppressWarnings(
+                m <- stats::glm(glm_y ~ glm_x, ...)
+            )
+            
+            # predict
+            nd <- data.frame(glm_x = factor(as.character(x), levels = as.character(x)))
+            if(is.na(ci.level)){
+                nd <- summary(emmeans::emmeans(emmeans::ref_grid(m, nd), ~glm_x), type = "response")
+                y_lwr <- NA
+                y_upr <- NA
+            } else {
+                nd <- summary(emmeans::emmeans(emmeans::ref_grid(m, nd), ~glm_x), type = "response", level = ci.level)
+                y_lwr <- nd[,5]
+                y_upr <- nd[,6]
+            }
+            y <- nd[,2]
+        }
     } 
-    
+
     
     ## d1, d2 to degree
     if(!any(is.na(d1), is.na(d2))){
@@ -78,7 +125,13 @@ asymptote <- function(data = NULL, x = NULL, y = NULL, degree = 'optim', upper.d
             if(any(diff(ys)<0)){
                 msq[i] <- NA
             }
+            
+            # exclude if asymp < 0
+            if(asymp[i] < 0){
+                msq[i] <- NA
+            }
         }
+        
         degrees <- data.frame(degree = 1:upper.degree, asymp, msq)
         if(!is.na(max.asymptote)){
             degrees <- with(degrees, degrees[asymp <= max.asymptote,])
@@ -95,7 +148,8 @@ asymptote <- function(data = NULL, x = NULL, y = NULL, degree = 'optim', upper.d
         overlap_values <- overlap_values[[degree]]
         
         if(all(is.na(degrees[,'asymp']))){
-            stop('Decrements were detected in the rational fit. Try a larger upper.degree. \nIf the issue persists, re-run boot_overlap/boot_area with a larger number of iterations (R).\nR = sample size x 100 is a good start.')
+            stop('Decrements were detected in the rational fit. Try a larger upper.degree. 
+                 \nIf the issue persists, re-run boot_overlap/boot_area with a larger number of iterations (R).\nR = sample size x 100 is a good start.')
         }
     } else {
         ## Fit rational function
@@ -115,14 +169,22 @@ asymptote <- function(data = NULL, x = NULL, y = NULL, degree = 'optim', upper.d
 
     #### Minimum sample size to achieve x% of asymptote as specified by the 'threshold' argument
     if(isTRUE(proportional)){
-        above.asymp <- overlap_values$ys > asymp * threshold
+        if(is.na(ci.level)){
+            above.asymp <- overlap_values$ys > asymp * threshold
+        } else {
+            above.asymp <- y_lwr > asymp * threshold
+        }
+        
     } else {
-        above.asymp <- overlap_values$ys > threshold
+        if(is.na(ci.level)){
+            above.asymp <- overlap_values$ys > threshold
+        } else {
+            above.asymp <- y_lwr > threshold
+        }
     }
     
     
     #### Report
-    cat("\n")
     if(any(above.asymp)){
         min.n <- min(overlap_values[above.asymp, "x"])
         cat('Asymptote reached at x =', min.n, fill = TRUE)
@@ -130,8 +192,23 @@ asymptote <- function(data = NULL, x = NULL, y = NULL, degree = 'optim', upper.d
         message('Asymptote not reached')
         min.n <- NA
     }
+    cat('Estimated horizontal asymptote ~', asymp, fill = TRUE, sep = '')
     
-    cat('Estimated horizontal asymptote ~', asymp, fill = TRUE)
+    cat("\n")
+    cat('Asymptote threshold used:', threshold, fill = TRUE)
+    cat('Confidence level used:', ci.level, fill = TRUE)
     
-    return(list(results = data.frame(x, ys), h.asymptote = asymp, min.n=min.n, optimal.degree = degree))
+    if(is.na(ci.level)){
+        if(estimator == 'mean'){
+            return(list(results = data.frame(x, y, ys), h.asymptote = asymp, min.n=min.n, optimal.degree = degree))
+        } else {
+            return(list(results = data.frame(x, y, ys), h.asymptote = asymp, min.n=min.n, optimal.degree = degree, glm.results = m))
+        }
+    } else {
+        if(estimator == 'mean'){
+            return(list(results = data.frame(x, y, y_lwr, y_upr, ys), h.asymptote = asymp, min.n=min.n, optimal.degree = degree))
+        } else {
+            return(list(results = data.frame(x, y, y_lwr, y_upr, ys), h.asymptote = asymp, min.n=min.n, optimal.degree = degree, glm.results = m))
+        }
+    }
 }
