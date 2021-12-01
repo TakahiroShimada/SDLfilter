@@ -166,13 +166,18 @@ asymptote <- function(data = NULL, x = NULL, y = NULL, degree = 'optim', upper.d
         } 
     }
     
+    cat('Estimated horizontal asymptote: ~', asymp, fill = TRUE, sep = '')
+    
 
     #### Minimum sample size to achieve x% of asymptote as specified by the 'threshold' argument
     if(isTRUE(proportional)){
+        
+        threshold <- asymp * threshold
+        
         if(is.na(ci.level)){
-            above.asymp <- overlap_values$ys > asymp * threshold
+            above.asymp <- overlap_values$ys > threshold
         } else {
-            above.asymp <- y_lwr > asymp * threshold
+            above.asymp <- y_lwr > threshold
         }
         
     } else {
@@ -185,6 +190,7 @@ asymptote <- function(data = NULL, x = NULL, y = NULL, degree = 'optim', upper.d
     
     
     #### Report
+    cat("\n")
     if(any(above.asymp)){
         min.n <- min(overlap_values[above.asymp, "x"])
         cat('Asymptote reached at x =', min.n, fill = TRUE)
@@ -192,10 +198,8 @@ asymptote <- function(data = NULL, x = NULL, y = NULL, degree = 'optim', upper.d
         message('Asymptote not reached')
         min.n <- NA
     }
-    cat('Estimated horizontal asymptote ~', asymp, fill = TRUE, sep = '')
     
-    cat("\n")
-    cat('Asymptote threshold used:', threshold, fill = TRUE)
+    cat('Asymptote threshold used: y =', threshold, fill = TRUE)
     cat('Confidence level used:', ci.level, fill = TRUE)
     
     if(is.na(ci.level)){

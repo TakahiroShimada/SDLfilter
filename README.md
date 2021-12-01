@@ -238,7 +238,8 @@ turtles return home after intentional displacement from coastal foraging
 areas. *Mar Biol* 163:1-14 doi:
 [10.1007/s00227-015-2771-0](http://dx.doi.org/10.1007/s00227-015-2771-0)
 
-If you use the functions *boot_overlap* or *boot_area*, please cite
+If you use the functions *asymptote*, *boot_overlap* or *boot_area*,
+please cite
 
 Shimada, T, Thums, M, Hamann, M, et al. (2021) Optimising sample sizes
 for animal distribution analysis using tracking data. *Methods Ecol
@@ -247,4 +248,4 @@ Evol* 12(2):288-297 doi:
 
 ## Current version
 
-2.2.0.9001 (30 November 2021)
+2.2.0.9002 (1 December 2021)
