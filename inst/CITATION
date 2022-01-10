@@ -1,5 +1,5 @@
 citHeader("To cite SDLfilter in publications, please use:
-2012 for ddfilter; 2016 for dupfilter or depthfilter; in press for boot_overlpa, boot_area, or asymptote")
+2012 for ddfilter; 2016 for dupfilter or depthfilter; 2021 for boot_overlpa, boot_area, or asymptote")
 
 citEntry(
   entry		  = "Article",
@@ -34,7 +34,7 @@ citEntry(
 
 citEntry(
   entry		  = "Article",
-  author	  = "Takahiro Shimada, Michele Thums, Mark Hamann, Colin J. Limpus, Graeme C. Hays, Nancy
+  author	  = "Takahiro Shimada, Michele Thums, Mark Hamann, Colin J. Limpus, Graeme C. Hays, Nancy N.
 FitzSimmons, Natalie E. Wildermann, Carlos M. Duarte. Mark G. Meekan",
   title		  = "Optimising sample sizes for animal distribution analysis using tracking data",
   journal	  = "Methods in Ecology and Evolution",
