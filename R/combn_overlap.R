@@ -17,7 +17,7 @@
 #' @param quantiles A vector or a number to specify the quantiles to be calculated in the summary of the results. 
 #' @importFrom raster values
 #' @importFrom stats aggregate sd
-#' @importFrom utils setTxtProgressBar txtProgressBar
+#' @importFrom utils setTxtProgressBar txtProgressBar combn
 #' @export
 #' @details This function calculates overlap between all possible combination of input UDs based on the areas ("HR"), 
 #' areas of collective UDs and the probability distribution of each individual ("PHR"), 
@@ -92,7 +92,7 @@ combn_overlap <- function(data, method = "PHR", percent = 100, quantiles = c(0.2
   ## empty vectors to save results
   n <- nrow(dens_all) - 1
   sub_combn <- lapply(1:n, function(k){
-    combn(n, k, simplify = FALSE)
+    utils::combn(n, k, simplify = FALSE)
   })
   n.row <- sum(sapply(sub_combn, length))*nrow(dens_all)
   
@@ -115,7 +115,7 @@ combn_overlap <- function(data, method = "PHR", percent = 100, quantiles = c(0.2
     
     # Generate all combination of the input layers taken k at a time.
     for(k in 1:length(n)){
-      sub_combn <- combn(n, k, simplify = FALSE)
+      sub_combn <- utils::combn(n, k, simplify = FALSE)
       
       
       for(h in 1:length(sub_combn)){

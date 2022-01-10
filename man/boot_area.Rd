@@ -23,7 +23,7 @@ that each RasterLayer has exactly the same geographical extent and resolution.}
 \item{cell.size}{A numeric value specifying the grid cell size of the input data in metres.}
 
 \item{R}{An integer specifying the number of iterations. A larger \emph{R} is required when the sample size is large. 
-R = sample size x 100 is often sufficient (e.g. R = 1000 for a sample size 10).}
+R > sample size x 100 is recommended (e.g. R > 1000 for a sample size 10).}
 
 \item{percent}{An integer specifying the percent volume of each UD to be considered in the analysis.}
 

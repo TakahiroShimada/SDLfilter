@@ -186,10 +186,10 @@ data(ud_matrix)
 data(ud_raster)
 ```
 
-#### 2-2. Calculate overlap probability from 1500 random permutation (sample size x 100)
-It will take some time to run this code depending on the number of iterations and the machine specs. The runtime was about 2.5 minutes for 1500 iterations on a linux machine (Intel i7-4702HQ CPU @ 2.20GHz, 16GB RAM).
+#### 2-2. Calculate overlap probability from 2000 random permutation (> sample size x 100)
+It will take some time to run this code depending on the number of iterations and the machine specs. The runtime was about 2.5 minutes for 2000 iterations on a linux machine (Intel i7-4702HQ CPU @ 2.20GHz, 16GB RAM).
 ```{r results=FALSE}
-overlap <- boot_overlap(ud_matrix, R = 1500, method = "PHR")
+overlap <- boot_overlap(ud_matrix, R = 2000, method = "PHR")
 ```
 
 #### 2-3. Find the minimum sample size required to estimate the general distribution
