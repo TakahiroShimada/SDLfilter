@@ -21,7 +21,7 @@ asymptote(
 )
 }
 \arguments{
-\item{data}{An output object from \code{\link{boot_overlap}} or \code{\link{boot_area}}.}
+\item{data}{An output object from \code{\link{boot_overlap}}, \code{\link{combn_overlap}}, or \code{\link{boot_area}}.}
 
 \item{x, y}{Numeric vectors of independent (x) and dependent (y) variables. 
 These parameters will be ignored if \emph{data} is supplied.}
@@ -64,7 +64,7 @@ Function to find horizontal asymptotes of a rational function.
 }
 \details{
 This function fits a rational function to the input data. 
-When an output object from \code{\link{boot_overlap}} or \code{\link{boot_area}} is supplied, 
+When an output object from \code{\link{boot_overlap}}, \code{\link{combn_overlap}} or \code{\link{boot_area}} is supplied, 
 a rational function is fit to the means or predicted values of the bootstrap results (e.g. mean overlap probability) 
 as a function of \emph{x} (e.g. sample size).
 It then estimates horizontal asymptotes and identifies the sample size when an asymptote is considered.
@@ -88,7 +88,7 @@ Press, W. H., S. A. Teukolsky, W. T. Vetterling, and B. P. Flannery (2007).
 \emph{Numerical Recipes: The Art of Numerical Computing}. Third Edition, Cambridge University Press, New York.
 }
 \seealso{
-\code{\link{boot_overlap}}, \code{\link{boot_area}}
+\code{\link{boot_overlap}}, \code{\link{combn_overlap}}, \code{\link{boot_area}}
 }
 \author{
 Takahiro Shimada

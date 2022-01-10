@@ -1,7 +1,7 @@
 #' @aliases asymptote
 #' @title Horizontal asymptotes of rational functions
 #' @description Function to find horizontal asymptotes of a rational function.
-#' @param data An output object from \code{\link{boot_overlap}} or \code{\link{boot_area}}.
+#' @param data An output object from \code{\link{boot_overlap}}, \code{\link{combn_overlap}}, or \code{\link{boot_area}}.
 #' @param max.asymptote The maximum limit of an expected asymptote. Default is 1 (i.e. maximum probability). 
 #' If it is unknown, set as NA (e.g. max.asymptote = NA).
 #' @param x,y Numeric vectors of independent (x) and dependent (y) variables. 
@@ -30,7 +30,7 @@
 #' @importFrom stats glm qnorm
 #' @export
 #' @details This function fits a rational function to the input data. 
-#' When an output object from \code{\link{boot_overlap}} or \code{\link{boot_area}} is supplied, 
+#' When an output object from \code{\link{boot_overlap}}, \code{\link{combn_overlap}} or \code{\link{boot_area}} is supplied, 
 #' a rational function is fit to the means or predicted values of the bootstrap results (e.g. mean overlap probability) 
 #' as a function of \emph{x} (e.g. sample size).
 #' It then estimates horizontal asymptotes and identifies the sample size when an asymptote is considered.
@@ -52,7 +52,7 @@
 #' \emph{Methods in Ecology and Evolution} 12(2):288-297 \doi{10.1111/2041-210X.13506}
 #' @references Press, W. H., S. A. Teukolsky, W. T. Vetterling, and B. P. Flannery (2007). 
 #' \emph{Numerical Recipes: The Art of Numerical Computing}. Third Edition, Cambridge University Press, New York.
-#' @seealso \code{\link{boot_overlap}}, \code{\link{boot_area}}
+#' @seealso \code{\link{boot_overlap}}, \code{\link{combn_overlap}}, \code{\link{boot_area}}
 
 
 
@@ -65,7 +65,7 @@ asymptote <- function(data = NULL, x = NULL, y = NULL, degree = 'optim', upper.d
         
         if(estimator == 'mean'){
             y <- data$summary$mu
-            if(is.na(ci.level)){
+            if(is.null(ci.level)){
                 y_lwr <- NA
                 y_upr <- NA
              } else {
@@ -83,7 +83,7 @@ asymptote <- function(data = NULL, x = NULL, y = NULL, degree = 'optim', upper.d
             
             # predict
             nd <- data.frame(glm_x = factor(as.character(x), levels = as.character(x)))
-            if(is.na(ci.level)){
+            if(is.null(ci.level)){
                 nd <- summary(emmeans::emmeans(emmeans::ref_grid(m, nd), ~glm_x), type = "response")
                 y_lwr <- NA
                 y_upr <- NA
@@ -174,14 +174,14 @@ asymptote <- function(data = NULL, x = NULL, y = NULL, degree = 'optim', upper.d
         
         threshold <- asymp * threshold
         
-        if(is.na(ci.level)){
+        if(is.null(ci.level)){
             above.asymp <- overlap_values$ys > threshold
         } else {
             above.asymp <- y_lwr > threshold
         }
         
     } else {
-        if(is.na(ci.level)){
+        if(is.null(ci.level)){
             above.asymp <- overlap_values$ys > threshold
         } else {
             above.asymp <- y_lwr > threshold
@@ -202,7 +202,7 @@ asymptote <- function(data = NULL, x = NULL, y = NULL, degree = 'optim', upper.d
     cat('Asymptote threshold used: y =', threshold, fill = TRUE)
     cat('Confidence level used:', ci.level, fill = TRUE)
     
-    if(is.na(ci.level)){
+    if(is.null(ci.level)){
         if(estimator == 'mean'){
             return(list(results = data.frame(x, y, ys), h.asymptote = asymp, min.n=min.n, optimal.degree = degree))
         } else {

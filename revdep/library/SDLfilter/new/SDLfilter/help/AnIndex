@@ -3,6 +3,7 @@ Australia	Australia
 bathymodel	bathymodel
 boot_area	boot_area
 boot_overlap	boot_overlap
+combn_overlap	combn_overlap
 ddfilter	ddfilter
 ddfilter_loop	ddfilter_loop
 ddfilter_speed	ddfilter_speed

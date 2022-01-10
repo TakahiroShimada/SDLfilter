@@ -3,6 +3,7 @@
 export(asymptote)
 export(boot_area)
 export(boot_overlap)
+export(combn_overlap)
 export(ddfilter)
 export(ddfilter_loop)
 export(ddfilter_speed)

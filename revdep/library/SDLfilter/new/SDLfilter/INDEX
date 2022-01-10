@@ -6,6 +6,8 @@ boot_area               Cumulative analysis of collective areas by
                         bootstrapping
 boot_overlap            Bootstrap overlaps between Utilisation
                         Distributions (UDs)
+combn_overlap           Quantifying overlaps between all possible
+                        combination of Utilisation Distributions (UDs)
 ddfilter                Filter locations using a data driven filter
 ddfilter_loop           Filter locations by quality index, inner angle,
                         and speed

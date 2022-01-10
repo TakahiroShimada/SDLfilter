@@ -8,9 +8,11 @@ output:
 News for Package 'SDLfilter'
 =========
 
-#### Version 2.2.0.9002 (2021-12-01)
+#### Version 2.2.0 (2022-01-10)
 
 * added an option in the asymptote function to estimate the confidence intervals for bootstrapped overlap estimates. The new default is to use the CIs when considering an asymptote.
+* added a new function 'combn_overlap' as an alternative to 'boot_overlap'. This new function calculates overlaps between all possible combination of UDs relative to sample size.
+* improved the processing speed of 'boot_overlap'.
 
 #### Version 2.1.2 (2021-10-31)
 

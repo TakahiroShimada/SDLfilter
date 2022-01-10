@@ -8,7 +8,13 @@ output:
 News for Package 'SDLfilter'
 =========
 
-#### Version 2.1.1 (2021-07-04)
+#### Version 2.2.0 (2022-01-10)
+
+* added an option in the asymptote function to estimate the confidence intervals for bootstrapped overlap estimates. The new default is to use the CIs when considering an asymptote.
+* added a new function 'combn_overlap' as an alternative to 'boot_overlap'. This new function calculates overlaps between all possible combination of UDs relative to sample size.
+* improved the processing speed of 'boot_overlap'.
+
+#### Version 2.1.2 (2021-10-31)
 
 * fixed a minor bug related with the max.asymptote argument within the asymptote function.
 
@@ -21,7 +27,7 @@ News for Package 'SDLfilter'
 * added a new citation for functions 'boot_overlap', 'boot_area' and 'asymptote'. Shimada T, Thums M, Hamann M, Limpus CJ, Hays GC, FitzSimmons NN, Wildermann NE, Duarte CD, Meekan MG (2021) Optimising sample sizes for animal distribution analysis using tracking data. Methods in Ecology and Evolution, 12(2):288-297. doi:10.1111/2041-210X.13506
 * updated the README file.
 * improved the R documentations of functions asymptote, boot_overlap, and boot_area.
-* remaned the example data "curtis" to "flatback".
+* renamed the example data "curtis" to "flatback".
 
 
 #### Version 2.0.1 (2020-07-04)
