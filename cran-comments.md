@@ -1,22 +1,11 @@
 ## Test environments
-* local debian 10 install: R 4.1.1
+* local debian 10 install: R 4.1.2
 * win-builder: R-devel
 
 
 ## R CMD check results
 
-There were no ERRORs or WARNINGs, or NOTEs when run on debian (local)
-There were no ERRORs nor WARNINGs and one NOTEs as below when run on windows (win-builder).
-Words and URLs identified as 'possibly misspelled' or 'possibly invalid' are verified to be correct. 
-  
-Maintainer: 'Takahiro Shimada <taka.shimada@gmail.com>'
-
-Found the following (possibly) invalid URLs:
-  URL: https://doi.org/10.2193/0022-541x(2005)69[1346:Qhotio]2.0.Co;2
-    From: man/boot_overlap.Rd
-          man/combn_overlap.Rd
-    Status: 500
-    Message: Internal Server Error
+There were no ERRORs or WARNINGs, or NOTEs when run on debian (local) and windows (win-builder).
 
 
 ## Reverse dependencies
