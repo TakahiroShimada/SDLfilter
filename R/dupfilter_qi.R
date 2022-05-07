@@ -54,19 +54,7 @@ dupfilter_qi <- function(sdata = sdata, step.time = 0, no.cores = 'detect'){
   
   
   ## lagged date and time
-  # sdata <- dplyr::bind_rows(lapply(IDs, function(j){
-  #   sdata.temp <- sdata[sdata$id %in% j,]
-  #   timeDiff <- diff(sdata.temp$DateTime)
-  #   units(timeDiff) <- "hours"
-  #   sdata.temp$pTime <- c(NA, as.numeric(timeDiff))
-  #   sdata.temp$sTime <- c(as.numeric(timeDiff), NA)
-  #   sdata.temp$pQI <- c(NA, sdata.temp$qi[-nrow(sdata.temp)])
-  #   sdata.temp$sQI <- c(sdata.temp$qi[-1], NA)
-  #   return(sdata.temp)
-  # })) 
-  
-  # function to plug in
-  lagged <- function(j){
+  sdata <- dplyr::bind_rows(lapply(IDs, function(j){
     sdata.temp <- sdata[sdata$id %in% j,]
     timeDiff <- diff(sdata.temp$DateTime)
     units(timeDiff) <- "hours"
@@ -75,22 +63,7 @@ dupfilter_qi <- function(sdata = sdata, step.time = 0, no.cores = 'detect'){
     sdata.temp$pQI <- c(NA, sdata.temp$qi[-nrow(sdata.temp)])
     sdata.temp$sQI <- c(sdata.temp$qi[-1], NA)
     return(sdata.temp)
-  }
-  
-  # Run the function using multiple CPU cores
-  if(!is.numeric(no.cores)){
-    no.cores <- parallel::detectCores() - 1
-  }
-  
-  if(.Platform$OS.type %in% 'windows'){
-    cl <- parallel::makeCluster(no.cores, type="PSOCK")
-  } else {
-    cl <- parallel::makeCluster(no.cores, type="FORK")
-  }
-
-  parallel::clusterExport(cl, list('sdata')) #, 'lagged', envir = globalenv()
-  d <- parallel::parLapply(cl, X = IDs, fun = lagged)
-  sdata <- dplyr::bind_rows(d)
+  }))
   
 
   #### Function to filter data by quality index
@@ -143,34 +116,28 @@ dupfilter_qi <- function(sdata = sdata, step.time = 0, no.cores = 'detect'){
     IDs <- levels(factor(sdata$id))
 
     ## lagged date and time
-    # sdata <- dplyr::bind_rows(lapply(IDs, function(j){
-    #   sdata.temp <- sdata[sdata$id %in% j,]
-    #   timeDiff <- diff(sdata.temp$DateTime)
-    #   units(timeDiff) <- "hours"
-    #   sdata.temp$pTime <- c(NA, as.numeric(timeDiff))
-    #   sdata.temp$sTime <- c(as.numeric(timeDiff), NA)
-    #   sdata.temp$pQI <- c(NA, sdata.temp$qi[-nrow(sdata.temp)])
-    #   sdata.temp$sQI <- c(sdata.temp$qi[-1], NA)
-    #   return(sdata.temp)
-    # }))
-
-    # Run the function using multiple CPU cores
-    parallel::clusterExport(cl, list('sdata')) #, 'lagged', envir = globalenv()
-    d <- parallel::parLapply(cl, X = IDs, fun = lagged)
-    sdata <- dplyr::bind_rows(d)
+    sdata <- dplyr::bind_rows(lapply(IDs, function(j){
+      sdata.temp <- sdata[sdata$id %in% j,]
+      timeDiff <- diff(sdata.temp$DateTime)
+      units(timeDiff) <- "hours"
+      sdata.temp$pTime <- c(NA, as.numeric(timeDiff))
+      sdata.temp$sTime <- c(as.numeric(timeDiff), NA)
+      sdata.temp$pQI <- c(NA, sdata.temp$qi[-nrow(sdata.temp)])
+      sdata.temp$sQI <- c(sdata.temp$qi[-1], NA)
+      return(sdata.temp)
+    }))
     return(sdata)
   }
 
 
   #### Repeat the function until no locations can be removed by this filter
   if(any((sdata$pTime <= step.time & sdata$qi != sdata$pQI) | (sdata$sTime <= step.time & sdata$qi != sdata$sQI), na.rm = TRUE)){
-    sdata <- dup.qi(sdata=sdata, step.time=step.time, no.cores = no.cores)    
+    sdata <- dup.qi(sdata=sdata, step.time=step.time)    
     while(any((sdata$pTime <= step.time & sdata$qi != sdata$pQI) | (sdata$sTime <= step.time & sdata$qi != sdata$sQI), na.rm = TRUE)){
-      sdata <- dup.qi(sdata=sdata, step.time=step.time, no.cores = no.cores)
+      sdata <- dup.qi(sdata=sdata, step.time=step.time)
     }
   }
-  parallel::stopCluster(cl)
-  
+
   #### Report the summary of filtering
   ## Filtered data
   FilteredSS<-nrow(sdata)
@@ -183,6 +150,5 @@ dupfilter_qi <- function(sdata = sdata, step.time = 0, no.cores = 'detect'){
   #### Delete working columns and return the output
   drop.vars <- c("pQI", "sQI", "pDist", "sDist", "pSpeed", "sSpeed", "inAng", "meanSpeed", "meanAngle")
   sdata <- sdata[,!(names(sdata) %in% drop.vars)] 
-  # sdata <- sdata[,headers]
   return(sdata)
 }

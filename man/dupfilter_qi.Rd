@@ -4,7 +4,7 @@
 \alias{dupfilter_qi}
 \title{Filter temporal duplicates by quality index}
 \usage{
-dupfilter_qi(sdata = sdata, step.time = 0)
+dupfilter_qi(sdata = sdata, step.time = 0, no.cores = "detect")
 }
 \arguments{
 \item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "qi". 
@@ -18,6 +18,9 @@ The greater number indicates a higher accuracy.}
 
 \item{step.time}{Consecutive locations less than or equal to \emph{step.time} apart are considered temporal duplicates.
 Default is 0 hours.}
+
+\item{no.cores}{An integer specifying the number of cores used for parallel computing. 
+Default ('detect') uses the maximum number of available cores minus one.}
 }
 \value{
 The input data frame is returned with temporal duplicates removed by the quality index.
