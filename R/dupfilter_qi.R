@@ -88,7 +88,7 @@ dupfilter_qi <- function(sdata = sdata, step.time = 0, no.cores = 'detect'){
     cl <- parallel::makeCluster(no.cores, type="FORK")
   }
 
-  parallel::clusterExport(cl, list('sdata', 'lagged'), envir = globalenv())
+  parallel::clusterExport(cl, list('sdata')) #, 'lagged', envir = globalenv()
   d <- parallel::parLapply(cl, X = IDs, fun = lagged)
   sdata <- dplyr::bind_rows(d)
   
@@ -153,20 +153,9 @@ dupfilter_qi <- function(sdata = sdata, step.time = 0, no.cores = 'detect'){
     #   sdata.temp$sQI <- c(sdata.temp$qi[-1], NA)
     #   return(sdata.temp)
     # }))
-    
-    # lagged <- function(j){
-    #   sdata.temp <- sdata[sdata$id %in% j,]
-    #   timeDiff <- diff(sdata.temp$DateTime)
-    #   units(timeDiff) <- "hours"
-    #   sdata.temp$pTime <- c(NA, as.numeric(timeDiff))
-    #   sdata.temp$sTime <- c(as.numeric(timeDiff), NA)
-    #   sdata.temp$pQI <- c(NA, sdata.temp$qi[-nrow(sdata.temp)])
-    #   sdata.temp$sQI <- c(sdata.temp$qi[-1], NA)
-    #   return(sdata.temp)
-    # }
- 
+
     # Run the function using multiple CPU cores
-    parallel::clusterExport(cl, list('sdata', 'lagged'), envir = globalenv())
+    parallel::clusterExport(cl, list('sdata')) #, 'lagged', envir = globalenv()
     d <- parallel::parLapply(cl, X = IDs, fun = lagged)
     sdata <- dplyr::bind_rows(d)
     return(sdata)
