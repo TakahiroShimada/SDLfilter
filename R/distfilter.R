@@ -10,8 +10,6 @@
 #' @param method An integer specifying how locations should be filtered with \emph{max.dist}. 
 #' A location is removed if the distance from a previous and(1)/or(2) to a subsequent location exceeds \emph{max.dist}. 
 #' Default is 1 (both way).
-#' @import sp
-#' @importFrom raster pointDistance
 #' @export
 #' @details This function removes locations if the distance from a previous and/or to a subsequent location exceeds \emph{max.dist}. 
 #' @return The input data is returned without locations identified by this filter. 
@@ -98,22 +96,7 @@ distfilter <- function (sdata, max.dist=100, method=1){
     ## Distance from a previous and to a subsequent location (pDist & sDist)
     sdata <- track_param(sdata, param = 'distance')
     
-    # # Function to calculate distances
-    # calcDist<-function(j){
-    #   turtle<-sdata[sdata$id %in% j,]  
-    #   LatLong<-data.frame(Y=turtle$lat, X=turtle$lon)
-    #   sp::coordinates(LatLong)<-~X+Y
-    #   sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
-    #   
-    #   #pDist
-    #   c(NA, raster::pointDistance(LatLong[-length(LatLong)], LatLong[-1], lonlat=T)/1000)
-    # }
-    # 
-    # sdata$pDist<-unlist(lapply(IDs, calcDist))
-    # sdata$sDist<-c(sdata$pDist[-1], NA)
-    
-    
-    
+
     # Select locations at which the distance from a previous and to a subsequent location exceeds maximum linear distance
     ## Function to identify location to remove: (0 = remove, 1 = keep)
     if(method==1){

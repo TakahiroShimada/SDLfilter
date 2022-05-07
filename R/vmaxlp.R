@@ -16,8 +16,6 @@
 #' Default is 4 (e.g. 4 GPS satellite or more).
 #' @param prob A numeric value to specify a sample quantile. Default is 0.99.
 #' @param ... Extra arguments passed to \code{\link{dupfilter}}.
-#' @import sp
-#' @importFrom raster pointDistance
 #' @importFrom stats quantile
 #' @export
 #' @details The function first detects a "loop trip". 
@@ -87,7 +85,7 @@ vmaxlp<-function(sdata, qi=4, prob=0.99, ...){
     }
   }
   
-  # Apply the above funtion to each data set seperately
+  # Apply the above function to each data set separately
   straight.group<-function(j){
     start<-as.numeric(rownames(sdata[sdata$id %in% j,][4,]))
     end<-as.numeric(rownames(sdata[sdata$id %in% j,][1,]))+(nrow(sdata[sdata$id %in% j,])-4)
@@ -111,7 +109,7 @@ vmaxlp<-function(sdata, qi=4, prob=0.99, ...){
   }
   
   
-  # Apply the above funtion to each data set seperately
+  # Apply the above function to each data set separately
   start.straight.group<-function(j){
     start<-as.numeric(rownames(sdata[sdata$id %in% j,][2,]))
     end<-as.numeric(rownames(sdata[sdata$id %in% j,][1,]))+(nrow(sdata[sdata$id %in% j,])-2)

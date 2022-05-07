@@ -15,8 +15,6 @@
 #' Default is 5 (e.g. 5 GPS satellite or more).
 #' @param prob A numeric value to specify a sample quantile. Default is 0.99.
 #' @param ... Extra arguments passed to \code{\link{dupfilter}}.
-#' @import sp
-#' @importFrom raster pointDistance
 #' @importFrom stats quantile
 #' @export
 #' @details The function first calculates the linear speed between each pair of two consecutive locations. 
@@ -47,7 +45,7 @@ vmax<-function(sdata, qi=5, prob=0.99, ...){
   
   
   ## Subset data by quality index
-  sdata<-sdata[sdata$qi>=qi,]
+  sdata<-sdata[sdata$qi >= qi,]
   
   
   ## Filter duplicate locations
@@ -59,12 +57,12 @@ vmax<-function(sdata, qi=5, prob=0.99, ...){
   
   
   #### Maximum speed given # percentile considered outliers
-  speed<-sdata$pSpeed[!(is.na(sdata$pSpeed))]
-  Vmax<-stats::quantile(speed, prob)
+  speed <- sdata$pSpeed[!(is.na(sdata$pSpeed))]
+  Vmax <- stats::quantile(speed, prob)
   
   
   #### Report the results
-  SampleSize<-round(nrow(sdata)*prob)
+  SampleSize <- round(nrow(sdata)*prob)
   cat("\n")
   cat("The maximum linear speed (Vmax) was estimated using", SampleSize, "locations.", fill = TRUE)
   cat("Vmax:", round(Vmax,1), "km/h", fill = TRUE)

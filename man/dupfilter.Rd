@@ -4,7 +4,13 @@
 \alias{dupfilter}
 \title{Filter temporal and/or spatial duplicates}
 \usage{
-dupfilter(sdata, step.time = 0, step.dist = 0, conditional = FALSE)
+dupfilter(
+  sdata,
+  step.time = 0,
+  step.dist = 0,
+  conditional = FALSE,
+  no.cores = "detect"
+)
 }
 \arguments{
 \item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon", "qi". 
@@ -25,6 +31,9 @@ Default is 0 kilometres.}
 
 \item{conditional}{If TRUE, spatial duplicates are filtered only if they are less than or equal to \emph{step.time} apart. 
 Default is FALSE.}
+
+\item{no.cores}{An integer specifying the number of cores used for parallel computing. 
+Default ('detect') uses the maximum number of available cores minus one.}
 }
 \value{
 The input data frame is returned containing only a single fix (latitude/longitude pair) per time and location.

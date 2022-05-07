@@ -1,6 +1,16 @@
+Version 2.2.0.9004 (2022-04-13)
+
+  o added a new function "to_kmz" that can save both track and locations in one kmz file. The kml_track is limitted to save either a track or location layer into a kml and will be removed in the future.
+  o updated to use the sf package instead of the sp package. The updated functions are depthfilter, kml_track, and track_param.
+  o updated to use the dplyr package instead of the plyr package. The updated functions are boot_area, ddfilter_loop, ddfilter_speed, dupfilter_qi, dupfilter_space, dupfilter_time, and track_param.
+  o updated to use the terra package instead of the raster package. The updated functions are boot_area, boot_overlap, combn_overlap, track_param, depthfilter, dupfilter_space, dupfilter_time, map_track, .
+  o updated the track_param function to use the dplyr and geosphere packages instead of the plyr and trip packages.
+  o The map_track function has been renamed to "to_map" and will be removed in the future.
+
+
 Version 2.2.0 (2022-01-10)
 
-  o added an option in the asymptote function to estimate the confidence intervals for bootstrapped overlap estimates. The new default is to use the CIs when   considering an asymptote.
+  o added an option in the asymptote function to estimate the confidence intervals for bootstrapped overlap estimates. The new default is to use the CIs when considering an asymptote.
   o added a new function 'combn_overlap' as an alternative to 'boot_overlap'. This new function calculates overlaps between all possible combination of UDs relative to sample size.
   o improved the processing speed of 'boot_overlap'.
 

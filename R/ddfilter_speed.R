@@ -17,9 +17,7 @@
 #' @param method An integer specifying how locations should be filtered with \emph{vmax}. 
 #' A location is removed if the speed from a previous and(1)/or(2) to a subsequent location exceeds \emph{vmax}. 
 #' Default is 1 (both way).
-#' @import sp
-#' @importFrom raster pointDistance
-#' @importFrom plyr rbind.fill
+#' @importFrom dplyr bind_rows
 #' @export
 #' @details This function removes locations if the speed from a previous and/or to a subsequent location exceeds a given threshold speed. 
 #' If \emph{vmax} is unknown, it can be estimated using the function \code{\link{vmax}}.
@@ -111,7 +109,7 @@ ddfilter_speed<-function (sdata, vmax=8.9, method=1){
       #### Bring back excluded data
       if(nrow(excluded.data)>0){
         # excluded.data[,c("pTime", "sTime", "pDist", "sDist", "pSpeed", "sSpeed", "overMax")]<-NA
-        sdata <- plyr::rbind.fill(sdata, excluded.data)
+        sdata <- dplyr::bind_rows(sdata, excluded.data)
       } else {
         sdata <- sdata
       }

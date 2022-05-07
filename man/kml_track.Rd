@@ -4,7 +4,7 @@
 \alias{kml_track}
 \title{Generate KML from locations}
 \usage{
-kml_track(sdata, sdata.CRS = "WGS", output = "open", type = "point", ...)
+kml_track(sdata, crs = 4326, output = "open", type = "point", ...)
 }
 \arguments{
 \item{sdata}{A data frame containing location data of \bold{one} individual, 
@@ -14,9 +14,7 @@ with the following column headers: "id", "DateTime", "lat", "lon".
 or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
 "lat" and "lon" are the latitude and longitude of each location in decimal degrees.}
 
-\item{sdata.CRS}{Coordinate reference system (CRS) for the input location data.
-If the input data is not in WGS, the specific CRS needs to be supplied as a PROJ.4 notation or EPSG code.
-(e.g. "+proj=utm +zone=37 +datum=WGS84 +units=m +no_defs" or "EPSG:32637")}
+\item{crs}{A number specifying the European Petroleum Survey Group (EPSG) code for the input location data.}
 
 \item{output}{A string specifying whether to 'open' or 'save' the output. 
 The output will be saved in the current working directory.}

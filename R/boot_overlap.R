@@ -1,12 +1,12 @@
 #' @aliases boot_overlap
 #' @title Bootstrap overlaps between Utilisation Distributions (UDs) 
 #' @description Function to calculate overlaps between UDs relative to sample size by bootstrapping.
-#' @param data A matrix or list of RasterLayer objects. 
-#' Each row of the matrix or each RasterLayer object contains a utilisation distribution 
+#' @param data A matrix or list of RasterLayer/SpatRaster objects. 
+#' Each row of the matrix or each RasterLayer/SpatRaster object contains a utilisation distribution 
 #' (or other statistics that sums to 1 - e.g. proportion of time spent).
-#' \bold{The grid size and geographical extent must be consistent across each row of the matrix or each RasterLayer object.}
+#' \bold{The grid size and geographical extent must be consistent across each row of the matrix or each RasterLayer/SpatRaster object.}
 #' The function assumes that each column of the matrix is associated with a unique geographical location or 
-#' that each RasterLayer has exactly the same geographical extent and resolution. 
+#' that each RasterLayer/SpatRaster has exactly the same geographical extent and resolution. 
 #' @param R An integer specifying the number of iterations. A larger \emph{R} is required when the sample size is large.
 #' R > sample size x 100 is recommended (e.g. R > 1000 for a sample size 10).
 #' @param method The overlap quantification method. 
@@ -17,7 +17,7 @@
 #' To generate a collective UD, each UD is overlaid and averaged at each grid cell so the probability density of the collective UD sums up to 1.
 #' @param percent An integer specifying the percent volume of each UD to be considered in the analysis. 
 #' @param quantiles A vector or a number to specify the quantiles to be calculated in the summary of the results. 
-#' @importFrom raster values
+#' @importFrom terra values
 #' @importFrom stats aggregate sd
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @export
@@ -61,10 +61,10 @@ boot_overlap <- function(data, R = 1000, method = "PHR", percent = 100, quantile
   start_time <- Sys.time()
   
   #### Input data
-  if(class(data[[1]]) == "RasterLayer"){
+  if(inherits(data[[1]], c("RasterLayer", "SpatRaster"))){
     #### Vecterise density values
     dens_all_list <- lapply(1:length(data), function(j){
-      raster::values(data[[j]])
+      terra::values(data[[j]])
     })
     
     if(is.null(names(data))){

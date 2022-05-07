@@ -1,5 +1,5 @@
-#' @aliases map_track
-#' @title Plot location data on a map
+#' @aliases to_map
+#' @title Plot locations and track on a map
 #' @description Function to plot tracking data on a map or a satellite image. 
 #' @param sdata A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon". 
 #' The function creates a map for each unique "id" (e.g. transmitter number, identifier for each animal). 
@@ -77,7 +77,7 @@
 
 
 #### Plot data removed or retained by ddfilter
-map_track<-function(sdata, xlim=NULL, ylim=NULL, margin=10, 
+to_map <- function(sdata, xlim=NULL, ylim=NULL, margin=10, 
                    bgmap=NULL, google.key=NULL, map.bg="grey", map.col="black", zoom=NULL, 
                    point.bg="yellow", point.col="black", point.symbol=21, point.size=1,
                    line.col="lightgrey", line.type=1, line.size=0.5,
@@ -181,13 +181,12 @@ map_track<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
     #### Add scale
     # Get parameters
     if(is.null(sb.distance)){
-      # sb.distance <- raster::pointDistance(c(xlim[1], ylim[1]), c(xlim[2], ylim[1]), lonlat = TRUE)/4
       sb_mat <- rbind(c(xlim[1], ylim[1]), c(xlim[2], ylim[1]))
       sb.distance <- terra::distance(sb_mat, lonlat = TRUE)
       sb.distance <- as.numeric(sb.distance)/4
       digi <- nchar(trunc(sb.distance))
       sb.distance <- round(sb.distance/10^(digi-1)) * 10^(digi-1)
-      sb.distance <- as.numeric(sb.distance)/1000
+      sb.distance <- sb.distance/1000
     }
     
     sb<-ggsn::scalebar(x.min=xlim[1]+extra2, x.max=xlim[2]-extra2, y.min=ylim[1]+extra2, y.max=ylim[2]-extra2,

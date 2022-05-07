@@ -11,11 +11,10 @@
 #' See \emph{details}.
 #' @param days A numeric value specifying the number of days to calculate mean speeds and angles.
 #' This argument is only used when 'mean speed' and/or 'mean angle' are selected in \emph{param}.  
-#' @import sp
-#' @importFrom raster pointDistance
+#' @importFrom terra distance
 #' @importFrom lubridate days
-#' @importFrom plyr rbind.fill
-#' @importFrom trip trackAngle trip
+#' @importFrom dplyr bind_rows
+#' @importFrom geosphere bearingRhumb
 #' @export
 #' @details This function calculates various parameters of tracks. 
 #' time (h), distance (km), speed (km/h) and inner angle (degrees) are calculated from each pair of successive locations.
@@ -50,7 +49,7 @@
 #' geom_point(aes(colour=meanSpeed))
 
 
-track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 'mean speed', 'mean angle'), days=2){
+track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 'mean speed', 'mean angle'), days = 2){
     
   #### Organize data
   ## Date & time
@@ -67,7 +66,7 @@ track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 
   
   #### Hours from a previous and to a subsequent location (pTime & sTime)
   if(any(param %in% c("time", "speed", "mean speed"))){
-    sdata <- plyr::rbind.fill(lapply(IDs, function(j){
+    sdata <- dplyr::bind_rows(lapply(IDs, function(j){
       sdata.temp <- sdata[sdata$id %in% j,]
       timeDiff <- diff(sdata.temp$DateTime)
       units(timeDiff) <- "hours"
@@ -80,12 +79,14 @@ track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 
   
   #### Distance from a previous and to a subsequent location (pDist & sDist)
   if(any(param %in% c('distance', 'speed', 'mean speed'))){
-    sdata <- plyr::rbind.fill(lapply(IDs, function(j){
+    sdata <- dplyr::bind_rows(lapply(IDs, function(j){
       sdata.temp <- sdata[sdata$id %in% j,]
-      LatLong <- data.frame(Y=sdata.temp$lat, X=sdata.temp$lon)
-      sp::coordinates(LatLong)<-~X+Y
-      sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
-      Dist <- raster::pointDistance(LatLong[-length(LatLong)], LatLong[-1], lonlat=T)/1000
+      # LatLong <- sf::st_as_sf(sdata.temp, coords = c("lon", "lat"))
+      # LatLong <- sf::st_set_crs(LatLong, 4326)
+      # Dist <- raster::pointDistance(LatLong[-nrow(LatLong),], LatLong[-1,], lonlat=T)/1000
+      pts <- data.matrix(sdata.temp[, c('lon', 'lat')])
+      Dist <- terra::distance(pts, lonlat = TRUE, sequential = TRUE)/1000
+      Dist <- Dist[-1]
       sdata.temp$pDist <- c(NA, Dist)
       sdata.temp$sDist <- c(Dist, NA)
       return(sdata.temp)
@@ -111,21 +112,30 @@ track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 
     sdata2 <- with(sdata, sdata[id %in% exclude,])
     
     ## inner angle
-    LatLong <- data.frame(Y=sdata1$lat, X=sdata1$lon, tms=sdata1$DateTime, id=sdata1$id)
-    sp::coordinates(LatLong)<-~X+Y
-    sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
-    tr<-trip::trip(LatLong, c("tms", "id"))
-    sdata1$inAng<-trip::trackAngle(tr)
+    # LatLong <- data.frame(Y=sdata1$lat, X=sdata1$lon, tms=sdata1$DateTime, id=sdata1$id)
+    # sp::coordinates(LatLong) <- ~X+Y
+    # sp::proj4string(LatLong) <- sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
+    # tr <- trip::trip(LatLong, c("tms", "id"))
+    # sdata1$inAng <- trip::trackAngle(tr)
+    m <- data.matrix(sdata1[,c("lon", "lat")])
+    b <- rep(0, nrow(m)-1)
+    for(i in 2:nrow(m)){
+      b[i-1] <- geosphere::bearingRhumb(p1 = m[i-1,], p2 = m[i,])
+    }
     
+    b1 <- b[-length(b)]; b2 <- b[-1]
+    inAng <- abs(180-(abs(b2-b1)))
+    sdata1$inAng <- c(NA, inAng, NA)
+
     ## Bring back excluded data
-    sdata <- plyr::rbind.fill(sdata1, sdata2)
+    sdata <- dplyr::bind_rows(sdata1, sdata2)
     sdata <- with(sdata, sdata[order(id, DateTime),])
     row.names(sdata) <- 1:nrow(sdata)
   }
   
   
   #### Mean speed and angle over n days
-  if(all(c('mean speed', 'mean angle') %in% param)){
+  if(any(c('mean speed', 'mean angle') %in% param)){
     mean_spd_ang <- lapply(IDs, function(j){
       sdata.temp <- with(sdata, sdata[id %in% j,])
       sdata.temp$cumDays <- with(sdata.temp, difftime(DateTime, DateTime[1], units = "days"))
@@ -137,85 +147,37 @@ track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 
         min.DT <- DT.temp - as.numeric(lubridate::days(days))/2
         max.DT <- DT.temp + as.numeric(lubridate::days(days))/2
         
-        sdata.temp3 <- with(sdata.temp, sdata.temp[DateTime>=min.DT & DateTime<=max.DT,])
+        sdata.temp3 <- with(sdata.temp, sdata.temp[DateTime >= min.DT & DateTime <= max.DT,])
         time.vec <- sum(sdata.temp3[-1, "pTime"])
         dist.vec <- sum(sdata.temp3[-1, "pDist"])
-        ang.vec <- sum(sdata.temp3[c(-1, -nrow(sdata.temp3)), "inAng"])
         spd <- dist.vec/time.vec
-        ang <- ang.vec/(nrow(sdata.temp3)-2)
+        ang <- mean(sdata.temp3[c(-1, -nrow(sdata.temp3)), "inAng"], na.rm = TRUE)
+        # ang.vec <- sum(sdata.temp3[c(-1, -nrow(sdata.temp3)), "inAng"])
+        # ang <- ang.vec/(nrow(sdata.temp3)-2)
+        # spd <- mean(sdata.temp3[-1, "pSpeed"], na.rm = TRUE)
+        # ang <- mean(sdata.temp3[c(-1, -nrow(sdata.temp3)), "inAng"], na.rm = TRUE)
         return(data.frame(spd, ang))
       })
       
-      spd.ang.df <- plyr::rbind.fill(spd.ang)
+      spd.ang.df <- dplyr::bind_rows(spd.ang)
       
       na1 <- nrow(sdata.temp[sdata.temp$cumDays < days/2,])
       na2 <- nrow(sdata.temp[sdata.temp$cumDaysBack < days/2,])
       
-      sdata.temp$meanSpeed <- c(rep(NA, na1), spd.ang.df$spd, rep(NA, na2))
-      sdata.temp$meanAngle <- c(rep(NA, na1), spd.ang.df$ang, rep(NA, na2))
-      return(sdata.temp)
-    })
-    
-    sdata <- plyr::rbind.fill(mean_spd_ang)
-  
-  } else if ('mean speed' %in% param) {
-    #### Mean speed over n days
-      mean_spd <- lapply(IDs, function(j){
-        sdata.temp <- with(sdata, sdata[id %in% j,])
-        sdata.temp$cumDays <- with(sdata.temp, difftime(DateTime, DateTime[1], units = "days"))
-        sdata.temp$cumDaysBack <- with(sdata.temp, difftime(DateTime[nrow(sdata.temp)], DateTime, units = "days"))
-        sdata.temp2 <- with(sdata.temp, sdata.temp[cumDays >= days/2 & cumDaysBack >= days/2, ])
-        
-        spd <- lapply(1:nrow(sdata.temp2), function(z){
-          DT.temp <- sdata.temp2[z, "DateTime"]
-          min.DT <- DT.temp - as.numeric(lubridate::days(days))/2
-          max.DT <- DT.temp + as.numeric(lubridate::days(days))/2
-          
-          sdata.temp3 <- with(sdata.temp, sdata.temp[DateTime>=min.DT & DateTime<=max.DT,])
-          time.vec <- sum(sdata.temp3[-1, "pTime"])
-          dist.vec <- sum(sdata.temp3[-1, "pDist"])
-          dist.vec/time.vec
-        })
-        
-        spd <- unlist(spd)
-        
-        na1 <- nrow(sdata.temp[sdata.temp$cumDays < days/2,])
-        na2 <- nrow(sdata.temp[sdata.temp$cumDaysBack < days/2,])
-        
-        sdata.temp$meanSpeed <- c(rep(NA, na1), spd, rep(NA, na2))
-        return(sdata.temp)
-      })
+      if('mean speed' %in% param){
+        sdata.temp$meanSpeed <- c(rep(NA, na1), spd.ang.df$spd, rep(NA, na2))
+      } 
       
-      sdata <- plyr::rbind.fill(mean_spd)
+      if('mean angle' %in% param){
+        sdata.temp$meanAngle <- c(rep(NA, na1), spd.ang.df$ang, rep(NA, na2))
+      }
 
-  } else if ('mean angle' %in% param){
-    mean_ang <- lapply(IDs, function(j){
-      sdata.temp <- with(sdata, sdata[id %in% j,])
-      sdata.temp$cumDays <- with(sdata.temp, difftime(DateTime, DateTime[1], units = "days"))
-      sdata.temp$cumDaysBack <- with(sdata.temp, difftime(DateTime[nrow(sdata.temp)], DateTime, units = "days"))
-      sdata.temp2 <- with(sdata.temp, sdata.temp[cumDays >= days/2 & cumDaysBack >= days/2, ])
-      
-      ang <- lapply(1:nrow(sdata.temp2), function(z){
-        DT.temp <- sdata.temp2[z, "DateTime"]
-        min.DT <- DT.temp - as.numeric(lubridate::days(days))/2
-        max.DT <- DT.temp + as.numeric(lubridate::days(days))/2
-        
-        sdata.temp3 <- with(sdata.temp, sdata.temp[DateTime>=min.DT & DateTime<=max.DT,])
-        ang.vec <- sum(sdata.temp3[c(-1, -nrow(sdata.temp3)), "inAng"])
-        ang.vec/(nrow(sdata.temp3)-2)
-      })
-      
-      ang <- unlist(ang)
-      
-      na1 <- nrow(sdata.temp[sdata.temp$cumDays < days/2,])
-      na2 <- nrow(sdata.temp[sdata.temp$cumDaysBack < days/2,])
-      
-      sdata.temp$meanAngle <- c(rep(NA, na1), ang, rep(NA, na2))
       return(sdata.temp)
     })
     
-    sdata <- plyr::rbind.fill(mean_ang)
-  }
+    sdata <- dplyr::bind_rows(mean_spd_ang)
+  
+  } 
 
 
   ## Delete working columns and return the output

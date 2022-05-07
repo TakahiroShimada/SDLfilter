@@ -1,20 +1,19 @@
 #' @aliases boot_area
 #' @title Cumulative analysis of collective areas by bootstrapping 
 #' @description Function to calculate collective areas (merged x\% Utilisation Distributions or UDs) of \emph{n} individuals by bootstrapping.
-#' @param data A matrix or list of RasterLayer objects. 
-#' Each row of the matrix or each RasterLayer object contains a utilisation distribution 
+#' @param data A matrix or list of RasterLayer/SpatRaster objects. 
+#' Each row of the matrix or each RasterLayer/SpatRaster object contains a utilisation distribution 
 #' (or other statistics that sums to 1 - e.g. proportion of time spent).
-#' \bold{The grid size and geographical extent must be consistent across each row of the matrix or each RasterLayer object.}
+#' \bold{The grid size and geographical extent must be consistent across each row of the matrix or each RasterLayer/SpatRaster object.}
 #' The function assumes that each column of the matrix is associated with a unique geographical location or 
-#' that each RasterLayer has exactly the same geographical extent and resolution. 
+#' that each RasterLayer/SpatRaster has exactly the same geographical extent and resolution. 
 #' @param cell.size A numeric value specifying the grid cell size of the input data in metres. 
 #' @param R An integer specifying the number of iterations. A larger \emph{R} is required when the sample size is large. 
 #' R > sample size x 100 is recommended (e.g. R > 1000 for a sample size 10).
 #' @param percent An integer specifying the percent volume of each UD to be considered in the analysis. 
 #' @param quantiles A vector or a number to specify the quantiles to be calculated in the summary of the results. 
-#' @importFrom raster values
-#' @importFrom raster res
-#' @importFrom plyr rbind.fill
+#' @importFrom terra values res
+#' @importFrom dplyr bind_rows
 #' @importFrom stats aggregate sd
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @export
@@ -54,10 +53,10 @@ boot_area <- function(data, cell.size = NA, R = 1000, percent = 50, quantiles = 
     start_time <- Sys.time()
     
     #### Input data
-    if(class(data[[1]]) == "RasterLayer"){
+    if(inherits(data[[1]], c("RasterLayer", "SpatRaster"))){
       ## density values to a matrix
       dens_all_list <- lapply(1:length(data), function(j){
-        raster::values(data[[j]])
+        terra::values(data[[j]])
       })
       
       if(is.null(names(data))){
@@ -65,10 +64,10 @@ boot_area <- function(data, cell.size = NA, R = 1000, percent = 50, quantiles = 
       } else {
         names(dens_all_list) <- names(data)
       }
-      dens_all <- do.call(rbind, dens_all_list)
+      dens_all2 <- do.call(rbind, dens_all_list)
       
       ## Cell size
-      cell.size <- raster::res(data[[1]])
+      cell.size <- terra::res(data[[1]])
       cell <- cell.size[1] * cell.size[2]
       
     } else {
@@ -111,7 +110,7 @@ boot_area <- function(data, cell.size = NA, R = 1000, percent = 50, quantiles = 
         data.frame(iteration = i, N = j, Area = comb_area)
       })
       
-      comb_df <- plyr::rbind.fill(Combinelayers)
+      comb_df <- dplyr::bind_rows(Combinelayers)
       
       ## progress bar
       Sys.sleep(0.1)
@@ -128,7 +127,7 @@ boot_area <- function(data, cell.size = NA, R = 1000, percent = 50, quantiles = 
     close(pb)
     
     ## Combined area in data frame
-    total.area <- plyr::rbind.fill(CombArea.list)
+    total.area <- dplyr::bind_rows(CombArea.list)
     
     
     #### Summary stats

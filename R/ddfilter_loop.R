@@ -18,9 +18,7 @@
 #' Default is 4.
 #' @param ia An integer specifying a threshold of inner angle, which is used to evaluate the locations of loop trips. 
 #' Default is 90 degrees.
-#' @import sp
-#' @importFrom raster pointDistance
-#' @importFrom plyr rbind.fill
+#' @importFrom dplyr bind_rows
 #' @export
 #' @details This function removes locations if all of the following criteria apply: 
 #' the number of source satellites are less than or equal to \emph{qi}, 
@@ -115,7 +113,7 @@ ddfilter_loop<-function(sdata, qi=4, ia=90, vmaxlp=1.8){
             
             #### Bring back excluded data
             if(nrow(excluded.data)>0){
-                 sdata <- plyr::rbind.fill(sdata, excluded.data)
+                 sdata <- dplyr::bind_rows(sdata, excluded.data)
             } else {
                 sdata<-sdata
             }

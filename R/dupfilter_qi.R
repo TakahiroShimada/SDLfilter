@@ -11,7 +11,10 @@
 #' The greater number indicates a higher accuracy. 
 #' @param step.time Consecutive locations less than or equal to \emph{step.time} apart are considered temporal duplicates.
 #' Default is 0 hours.
-#' @importFrom plyr rbind.fill
+#' @param no.cores An integer specifying the number of cores used for parallel computing. 
+#' Default ('detect') uses the maximum number of available cores minus one.
+#' @importFrom dplyr bind_rows
+#' @importFrom parallel makeCluster detectCores parLapply stopCluster
 #' @export
 #' @details This function is a partial component of \code{\link{dupfilter}}, although works as a stand-alone function. 
 #' It looks for temporal duplicates and retains a fix with the highest quality index.
@@ -26,10 +29,7 @@
 
 
 
-dupfilter_qi <- function(sdata = sdata, step.time = 0){
-  
-  ## Original columns
-  # headers <- names(sdata)
+dupfilter_qi <- function(sdata = sdata, step.time = 0, no.cores = 'detect'){
   
   ## Original sample size
   OriginalSS <- nrow(sdata)
@@ -51,9 +51,22 @@ dupfilter_qi <- function(sdata = sdata, step.time = 0){
   
   ## Sort data in alphabetical and chronological order
   sdata <- with(sdata, sdata[order(id, DateTime),])
-
+  
+  
   ## lagged date and time
-  sdata <- plyr::rbind.fill(lapply(IDs, function(j){
+  # sdata <- dplyr::bind_rows(lapply(IDs, function(j){
+  #   sdata.temp <- sdata[sdata$id %in% j,]
+  #   timeDiff <- diff(sdata.temp$DateTime)
+  #   units(timeDiff) <- "hours"
+  #   sdata.temp$pTime <- c(NA, as.numeric(timeDiff))
+  #   sdata.temp$sTime <- c(as.numeric(timeDiff), NA)
+  #   sdata.temp$pQI <- c(NA, sdata.temp$qi[-nrow(sdata.temp)])
+  #   sdata.temp$sQI <- c(sdata.temp$qi[-1], NA)
+  #   return(sdata.temp)
+  # })) 
+  
+  # function to plug in
+  lagged <- function(j){
     sdata.temp <- sdata[sdata$id %in% j,]
     timeDiff <- diff(sdata.temp$DateTime)
     units(timeDiff) <- "hours"
@@ -62,17 +75,32 @@ dupfilter_qi <- function(sdata = sdata, step.time = 0){
     sdata.temp$pQI <- c(NA, sdata.temp$qi[-nrow(sdata.temp)])
     sdata.temp$sQI <- c(sdata.temp$qi[-1], NA)
     return(sdata.temp)
-  })) 
+  }
+  
+  # Run the function using multiple CPU cores
+  if(!is.numeric(no.cores)){
+    no.cores <- parallel::detectCores() - 1
+  }
+  
+  if(.Platform$OS.type %in% 'windows'){
+    cl <- parallel::makeCluster(no.cores, type="PSOCK")
+  } else {
+    cl <- parallel::makeCluster(no.cores, type="FORK")
+  }
 
+  parallel::clusterExport(cl, list('sdata', 'lagged'), envir = globalenv())
+  d <- parallel::parLapply(cl, X = IDs, fun = lagged)
+  sdata <- dplyr::bind_rows(d)
+  
 
   #### Function to filter data by quality index
-  dup.qi <- function(sdata = sdata, step.time = step.time){
+  dup.qi <- function(sdata = sdata, step.time = step.time, no.cores = no.cores){
     ## Extract data within step.time AND different qi
     sdata1 <- with(sdata, sdata[which((pTime <= step.time & qi != pQI) | (sTime <= step.time & qi != sQI)),])
-
+    
     ## Other data
     if(nrow(sdata1)>0){
-       sdata2 <- dplyr::anti_join(sdata, sdata1, by = c('id', 'DateTime', 'lat', 'lon', 'qi'))
+      sdata2 <- dplyr::anti_join(sdata, sdata1, by = c('id', 'DateTime', 'lat', 'lon', 'qi'))
     } else {
       sdata2 <- sdata 
     }
@@ -80,15 +108,16 @@ dupfilter_qi <- function(sdata = sdata, step.time = 0){
     
     #### Group temporal duplicates
     sdata1 <- track_param(sdata1, param = 'time')
-    index <- 0
+    index <- 0; g <- rep(0, nrow(sdata1))
     for(i in 1:nrow(sdata1)){
       if(any(is.na(sdata1[i, 'pTime']) | (sdata1[i, 'sTime'] <= step.time), na.rm = TRUE)){
         index <- index + 1
-        sdata1[i, 'group'] <- index
-      } else {
-        sdata1[i, 'group'] <- index
-      }
+        g[i] <- index
+      } 
+      g[i] <- index
     }
+    sdata1$group <- g
+
     
     ## group with more than 1 locations
     nloc <- aggregate(lat ~ group, data = sdata1, FUN = length)
@@ -99,43 +128,59 @@ dupfilter_qi <- function(sdata = sdata, step.time = 0){
     ## Sort data by id, time and quality index
     sdata1 <- with(sdata1, sdata1[order(qi, decreasing = TRUE),])
     sdata1 <- with(sdata1, sdata1[order(group),])
-
+    
     
     #### Filter temporal duplicates by quality index
     sdata1 <- dplyr::distinct(sdata1, .data$group, .keep_all = TRUE)
     
-
+    
     #### Bring back the excluded data
-    sdata <- plyr::rbind.fill(sdata1, sdata2, sdata3)
+    sdata <- dplyr::bind_rows(sdata1, sdata2, sdata3)
     sdata$group <- NULL
     
     #### Reorganise
     sdata <- with(sdata, sdata[order(id, DateTime),])
+    IDs <- levels(factor(sdata$id))
 
     ## lagged date and time
-    sdata <- plyr::rbind.fill(lapply(IDs, function(j){
-      sdata.temp <- sdata[sdata$id %in% j,]
-      timeDiff <- diff(sdata.temp$DateTime)
-      units(timeDiff) <- "hours"
-      sdata.temp$pTime <- c(NA, as.numeric(timeDiff))
-      sdata.temp$sTime <- c(as.numeric(timeDiff), NA)
-      sdata.temp$pQI <- c(NA, sdata.temp$qi[-nrow(sdata.temp)])
-      sdata.temp$sQI <- c(sdata.temp$qi[-1], NA)
-      return(sdata.temp)
-    })) 
+    # sdata <- dplyr::bind_rows(lapply(IDs, function(j){
+    #   sdata.temp <- sdata[sdata$id %in% j,]
+    #   timeDiff <- diff(sdata.temp$DateTime)
+    #   units(timeDiff) <- "hours"
+    #   sdata.temp$pTime <- c(NA, as.numeric(timeDiff))
+    #   sdata.temp$sTime <- c(as.numeric(timeDiff), NA)
+    #   sdata.temp$pQI <- c(NA, sdata.temp$qi[-nrow(sdata.temp)])
+    #   sdata.temp$sQI <- c(sdata.temp$qi[-1], NA)
+    #   return(sdata.temp)
+    # }))
     
+    # lagged <- function(j){
+    #   sdata.temp <- sdata[sdata$id %in% j,]
+    #   timeDiff <- diff(sdata.temp$DateTime)
+    #   units(timeDiff) <- "hours"
+    #   sdata.temp$pTime <- c(NA, as.numeric(timeDiff))
+    #   sdata.temp$sTime <- c(as.numeric(timeDiff), NA)
+    #   sdata.temp$pQI <- c(NA, sdata.temp$qi[-nrow(sdata.temp)])
+    #   sdata.temp$sQI <- c(sdata.temp$qi[-1], NA)
+    #   return(sdata.temp)
+    # }
+ 
+    # Run the function using multiple CPU cores
+    parallel::clusterExport(cl, list('sdata', 'lagged'), envir = globalenv())
+    d <- parallel::parLapply(cl, X = IDs, fun = lagged)
+    sdata <- dplyr::bind_rows(d)
     return(sdata)
   }
 
 
   #### Repeat the function until no locations can be removed by this filter
   if(any((sdata$pTime <= step.time & sdata$qi != sdata$pQI) | (sdata$sTime <= step.time & sdata$qi != sdata$sQI), na.rm = TRUE)){
-    sdata <- dup.qi(sdata=sdata, step.time=step.time)    
+    sdata <- dup.qi(sdata=sdata, step.time=step.time, no.cores = no.cores)    
     while(any((sdata$pTime <= step.time & sdata$qi != sdata$pQI) | (sdata$sTime <= step.time & sdata$qi != sdata$sQI), na.rm = TRUE)){
-      sdata <- dup.qi(sdata=sdata, step.time=step.time)
+      sdata <- dup.qi(sdata=sdata, step.time=step.time, no.cores = no.cores)
     }
   }
-  
+  parallel::stopCluster(cl)
   
   #### Report the summary of filtering
   ## Filtered data

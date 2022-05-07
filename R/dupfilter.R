@@ -17,6 +17,8 @@
 #' Default is 0 kilometres.
 #' @param conditional If TRUE, spatial duplicates are filtered only if they are less than or equal to \emph{step.time} apart. 
 #' Default is FALSE.
+#' @param no.cores An integer specifying the number of cores used for parallel computing. 
+#' Default ('detect') uses the maximum number of available cores minus one.
 #' @export
 #' @details This function filters temporal and spatial duplicates in tracking data.
 #' It first filters temporally and spatially exact locations. 
@@ -42,28 +44,28 @@
 #' turtle.dup <- dupfilter(turtle)
 
 
-dupfilter <- function(sdata, step.time=0, step.dist=0, conditional=FALSE){
+dupfilter <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, no.cores = 'detect'){
   
   #### Sample size for unfiltered data
   OriginalSS <- nrow(sdata)
   
   #### Function to filter temporal and/or spatial duplicates
-  dupfilter_all <- function(sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional){
+  dupfilter_all <- function(sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional, no.cores = no.cores){
     ## a. same timing and location
     sdata <- dupfilter_exact(sdata)
     
     ## b. quality index
-    sdata <- dupfilter_qi(sdata=sdata, step.time=step.time)
+    sdata <- dupfilter_qi(sdata=sdata, step.time=step.time, no.cores = no.cores)
     
     ## c. same timing
-    sdata <- dupfilter_time(sdata=sdata, step.time=step.time)
+    sdata <- dupfilter_time(sdata=sdata, step.time=step.time, no.cores = no.cores)
     
     ## d. same location
-    sdata <- dupfilter_space(sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional)
+    sdata <- dupfilter_space(sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional, no.cores = no.cores)
   }
   
   cat("\n")
-  sdata3 <- dupfilter_all(sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional)
+  sdata3 <- dupfilter_all(sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional, no.cores = no.cores)
     
 
   #### Report the summary of filtering

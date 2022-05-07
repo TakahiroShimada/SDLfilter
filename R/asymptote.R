@@ -24,8 +24,7 @@
 #' @param ci.level Confidence level for the mean or predicted \emph{y}, which will be used to assess if/when an asymptote has been reached.
 #' If NULL, only the mean and predicted \emph{y} are used for the assessment (see details).   
 #' @param ... Optional arguments passed to \code{\link[stats]{glm}}.
-#' @importFrom pracma rationalfit
-#' @importFrom pracma polyval
+#' @importFrom pracma rationalfit polyval
 #' @importFrom emmeans emmeans
 #' @importFrom stats glm qnorm
 #' @export

@@ -9,14 +9,13 @@
 #' "DateTime" is the GMT date & time of each location in class \code{\link[base:DateTimeClasses]{POSIXct}} 
 #' or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
 #' "lat" and "lon" are the latitude and longitude of each location in decimal degrees. 
-#' @param sdata.CRS Coordinate reference system (CRS) for the input location data.
-#' If the input data is not in WGS, the specific CRS needs to be supplied as a PROJ.4 notation or EPSG code.
-#' (e.g. "+proj=utm +zone=37 +datum=WGS84 +units=m +no_defs" or "EPSG:32637")  
+#' @param crs A number specifying the European Petroleum Survey Group (EPSG) code for the input location data.  
 #' @param output A string specifying whether to 'open' or 'save' the output. 
 #' The output will be saved in the current working directory.
 #' @param type Type of the output. 'point' or 'line.
 #' @param ... Optional arguments passed to \code{\link[plotKML]{plotKML}} and \code{\link[plotKML]{kml}}.
-#' @import sp
+#' @importFrom dplyr summarise
+#' @importFrom sf st_as_sf st_set_crs st_cast
 #' @importFrom plotKML plotKML kml
 #' @importFrom stats complete.cases
 #' @export
@@ -44,7 +43,7 @@
 
 
 
-kml_track<-function(sdata, sdata.CRS = 'WGS', output = 'open', type = 'point', ...){
+kml_track <- function(sdata, crs = 4326, output = 'open', type = 'point', ...){
   
   sdata <- sdata[stats::complete.cases(sdata[,c("lon","lat")]),]
   sdata$DateTime <- with(sdata, as.POSIXct(DateTime, format = "%Y-%m-%d %H:%M:%S", tz = "GMT"))
@@ -53,32 +52,20 @@ kml_track<-function(sdata, sdata.CRS = 'WGS', output = 'open', type = 'point', .
   j <- levels(factor(sdata$id))
   
   
-  #### Coordinate reference system
-  if(sdata.CRS == 'WGS'){
-    sdata.CRS <- '+proj=longlat +ellps=WGS84 +datum=WGS84'
-  }
-  
-  
   #### output type
-  if(type == 'point'){
-    #### Points
-    sp::coordinates(sdata) <- ~ lon + lat
-    sp::proj4string(sdata) <- sp::CRS(sdata.CRS)
-    
-  } else {
-    #### Lines
-    lines <- sp::Line(cbind(sdata$lon, sdata$lat))
-    lineString <- sp::Lines(list(lines), ID=j)
-    spLines <- sp::SpatialLines(list(lineString), proj4string=sp::CRS(sdata.CRS))
-    df.lines <- data.frame(ID=j)
-    sdata <- sp::SpatialLinesDataFrame(spLines, data=df.lines, match.ID=F)
+  plt <- sf::st_as_sf(sdata, coords = c("lon", "lat"))
+  plt <- sf::st_set_crs(plt, crs)
+  
+  if(type == 'line'){
+    plt <- dplyr::summarise(plt, do_union = F)
+    plt <- sf::st_cast(plt, "LINESTRING")
   }
   
 
   #### kml
   if(output == 'open'){
-    plotKML::plotKML(obj=sdata, ...)
+    plotKML::plotKML(obj = plt, ...)
   } else {
-    plotKML::kml(obj=sdata, ...)
+    plotKML::kml(obj = plt, ...)
   }
 }
