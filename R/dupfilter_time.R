@@ -230,7 +230,9 @@ dupfilter_time <- function (sdata, step.time = 0, no.cores = 'detect') {
     
     
     ## Run the function using multiple CUP cores
-    parallel::clusterExport(cl, list('sdata1', 'sdata', 'step.time'))#, envir = globalenv()
+    # if(.Platform$OS.type %in% 'windows'){
+    #   parallel::clusterExport(cl, list('sdata'))#'sdata1', 'step.time', , envir = globalenv(), 'select_rows'
+    # }
     d <- parallel::parLapply(cl, X = nloc_gp, fun = select_rows)
     sdata1 <- dplyr::bind_rows(d)
 

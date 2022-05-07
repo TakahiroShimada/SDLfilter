@@ -215,7 +215,9 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
     
     
     ## Run the function using multiple CUP cores
-    parallel::clusterExport(cl, list('sdata1', 'sdata', 'step.time', 'step.dist', 'conditional'))#'select_rows', , envir = globalenv()
+    # if(.Platform$OS.type %in% 'windows'){
+    #   parallel::clusterExport(cl, list('sdata1', 'sdata', 'step.time', 'step.dist', 'conditional'))#'select_rows', , envir = globalenv()
+    # }
     d <- parallel::parLapply(cl, X = nloc_gp, fun = select_rows)
     sdata1 <- dplyr::bind_rows(d)
 
