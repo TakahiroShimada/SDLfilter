@@ -55,7 +55,7 @@ dupfilter <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, no.cor
     sdata <- dupfilter_exact(sdata)
     
     ## b. quality index
-    sdata <- dupfilter_qi(sdata=sdata, step.time=step.time, no.cores = no.cores)
+    sdata <- dupfilter_qi(sdata=sdata, step.time=step.time)
     
     ## c. same timing
     sdata <- dupfilter_time(sdata=sdata, step.time=step.time, no.cores = no.cores)

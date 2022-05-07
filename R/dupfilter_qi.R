@@ -11,10 +11,7 @@
 #' The greater number indicates a higher accuracy. 
 #' @param step.time Consecutive locations less than or equal to \emph{step.time} apart are considered temporal duplicates.
 #' Default is 0 hours.
-#' @param no.cores An integer specifying the number of cores used for parallel computing. 
-#' Default ('detect') uses the maximum number of available cores minus one.
 #' @importFrom dplyr bind_rows
-#' @importFrom parallel makeCluster detectCores parLapply stopCluster
 #' @export
 #' @details This function is a partial component of \code{\link{dupfilter}}, although works as a stand-alone function. 
 #' It looks for temporal duplicates and retains a fix with the highest quality index.
@@ -29,7 +26,7 @@
 
 
 
-dupfilter_qi <- function(sdata = sdata, step.time = 0, no.cores = 'detect'){
+dupfilter_qi <- function(sdata = sdata, step.time = 0){
   
   ## Original sample size
   OriginalSS <- nrow(sdata)
@@ -67,7 +64,7 @@ dupfilter_qi <- function(sdata = sdata, step.time = 0, no.cores = 'detect'){
   
 
   #### Function to filter data by quality index
-  dup.qi <- function(sdata = sdata, step.time = step.time, no.cores = no.cores){
+  dup.qi <- function(sdata = sdata, step.time = step.time){
     ## Extract data within step.time AND different qi
     sdata1 <- with(sdata, sdata[which((pTime <= step.time & qi != pQI) | (sTime <= step.time & qi != sQI)),])
     
