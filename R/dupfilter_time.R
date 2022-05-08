@@ -14,7 +14,7 @@
 #' @param step.time Consecutive locations less than or equal to \emph{step.time} apart are considered temporal duplicates.
 #' Default is 0 hours.
 #' @param no.cores An integer specifying the number of cores used for parallel computing. 
-#' Default ('detect') uses the maximum number of available cores minus one.
+#' Alternatively, type in 'detect' to use the maximum number of available cores minus one.
 #' @importFrom terra distance
 #' @importFrom dplyr anti_join bind_rows
 #' @importFrom parallel makeCluster detectCores parLapply stopCluster
@@ -34,7 +34,7 @@
 
 
 
-dupfilter_time <- function (sdata, step.time = 0, no.cores = 'detect') {
+dupfilter_time <- function (sdata, step.time = 0, no.cores = 1) {
   
   ## Original columns
   # headers <- names(sdata)
@@ -72,7 +72,6 @@ dupfilter_time <- function (sdata, step.time = 0, no.cores = 'detect') {
       for(i in 1:nrow(sdata1)){
         if(any(is.na(sdata1[i, 'pDist']) | sdata1[i, 'sDist'] == 0, na.rm = TRUE)){
           index <- index + 1
-          g[i] <- index
         } 
         g[i] <- index
       }
@@ -91,7 +90,7 @@ dupfilter_time <- function (sdata, step.time = 0, no.cores = 'detect') {
 
 
   #### Function to filter temporal duplicates with different coordinates
-  dup.timing <- function(sdata = sdata, step.time = step.time, no.cores = no.cores) {
+  dup.timing <- function(sdata = sdata, step.time = step.time) {
 
     #### Subset data 
     ## temporal duplicates
@@ -107,7 +106,6 @@ dupfilter_time <- function (sdata, step.time = 0, no.cores = 'detect') {
     for(i in 1:nrow(sdata1)){
       if(any(is.na(sdata1[i, 'pTime']) | (sdata1[i, 'sTime'] <= step.time), na.rm = TRUE)){
         index <- index + 1
-        g[i] <- index
       } 
       g[i] <- index
     }
@@ -229,13 +227,19 @@ dupfilter_time <- function (sdata, step.time = 0, no.cores = 'detect') {
     }
     
     
-    ## Run the function using multiple CUP cores
+    ## Run the function
     # if(.Platform$OS.type %in% 'windows'){
     #   parallel::clusterExport(cl, list('sdata'))#'sdata1', 'step.time', , envir = globalenv(), 'select_rows'
     # }
-    d <- parallel::parLapply(cl, X = nloc_gp, fun = select_rows)
+    if(no.cores > 1){
+      # using multiple CPU cores
+      d <- parallel::parLapply(cl, X = nloc_gp, fun = select_rows)
+    } else {
+      # using a single CPU
+      d <- lapply(nloc_gp, select_rows)
+    }
     sdata1 <- dplyr::bind_rows(d)
-
+    
     
     #### Combine
     sdata <- dplyr::bind_rows(sdata1, sdata2, sdata3)
@@ -252,27 +256,32 @@ dupfilter_time <- function (sdata, step.time = 0, no.cores = 'detect') {
   
   #### Run the function until no locations can be removed by this filter
   ## set parameters for parallel processing
-  if(!is.numeric(no.cores)){
-    no.cores <- parallel::detectCores() - 1
-  }
- 
-  if(.Platform$OS.type %in% 'windows'){
-    cl <- parallel::makeCluster(no.cores, type="PSOCK")
-  } else {
-    cl <- parallel::makeCluster(no.cores, type="FORK")
-  }
-  
-  
-  ## run the function
-  if(any(sdata$pTime <= step.time, na.rm = TRUE)){
-    sdata <- dup.timing(sdata=sdata, step.time=step.time, no.cores = no.cores)    
-    while(any(sdata$pTime <= step.time, na.rm = TRUE)){
-      sdata <- dup.timing(sdata=sdata, step.time=step.time, no.cores = no.cores)
+  if(no.cores > 1 | no.cores %in% 'detect'){
+    
+    if(no.cores %in% 'detect'){
+      no.cores <- parallel::detectCores() - 1
+    }
+    
+    if(.Platform$OS.type %in% 'windows'){
+      cl <- parallel::makeCluster(no.cores, type="PSOCK")
+    } else {
+      cl <- parallel::makeCluster(no.cores, type="FORK")
     }
   }
   
+  ## run the function
+  if(any(sdata$pTime <= step.time, na.rm = TRUE)){
+    sdata <- dup.timing(sdata=sdata, step.time=step.time)
+    while(any(sdata$pTime <= step.time, na.rm = TRUE)){
+      sdata <- dup.timing(sdata=sdata, step.time=step.time)
+    }
+  }
+  
+  
   ## stop parallel
-  parallel::stopCluster(cl)
+  if(no.cores > 1){
+    parallel::stopCluster(cl)
+  }
   
   
   ## Filtered data

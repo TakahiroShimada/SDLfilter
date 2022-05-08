@@ -17,7 +17,7 @@
 #' @param conditional If TRUE, spatial duplicates are filtered only if they are less than or equal to \emph{step.time} apart. 
 #' Default is FALSE.
 #' @param no.cores An integer specifying the number of cores used for parallel computing. 
-#' Default ('detect') uses the maximum number of available cores minus one.
+#' Alternatively, type in 'detect' to use the maximum number of available cores minus one.
 #' @importFrom terra distance
 #' @importFrom dplyr bind_rows
 #' @importFrom parallel makeCluster detectCores parLapply stopCluster
@@ -37,7 +37,7 @@
 #' @seealso \code{\link{dupfilter}}, \code{\link{dupfilter_exact}}, \code{\link{dupfilter_time}}, \code{\link{dupfilter_qi}}, \code{\link{track_param}}
 
 
-dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, no.cores = 'detect'){
+dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, no.cores = 1){
   
   ## Original columns
   # headers <- names(sdata)
@@ -76,7 +76,6 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
       for(i in 1:nrow(sdata1)){
         if(any(is.na(sdata1[i, 'pDist']) | sdata1[i, 'sDist'] == 0, na.rm = TRUE)){
           index <- index + 1
-          g[i] <- index
         } 
         g[i] <- index
       }
@@ -106,7 +105,6 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
       for(i in 1:nrow(sdata1)){
         if(any(is.na(sdata1[i, 'pDist']) | sdata1[i, 'sDist'] == 0, na.rm = TRUE)){
           index <- index + 1
-          g[i] <- index
         } 
         g[i] <- index
       }
@@ -146,7 +144,6 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
     for(i in 1:nrow(sdata1)){
       if(any(is.na(sdata1[i, 'pDist']) | (sdata1[i, 'sDist'] <= step.dist), na.rm = TRUE)){
         index <- index + 1
-        g[i] <- index
       } 
       g[i] <- index
     }
@@ -214,12 +211,16 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
     }
     
     
-    ## Run the function using multiple CUP cores
-    # if(.Platform$OS.type %in% 'windows'){
-    #   parallel::clusterExport(cl, list('sdata1', 'sdata', 'step.time', 'step.dist', 'conditional'))#'select_rows', , envir = globalenv()
-    # }
-    d <- parallel::parLapply(cl, X = nloc_gp, fun = select_rows)
+    ## Run the function
+    if(no.cores > 1){
+      # using multiple CPU cores
+      d <- parallel::parLapply(cl, X = nloc_gp, fun = select_rows)
+    } else {
+      # using a single CPU
+      d <- lapply(nloc_gp, select_rows)
+    }
     sdata1 <- dplyr::bind_rows(d)
+    
 
     
     #### Combine
@@ -236,14 +237,17 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
   
   #### Run the function until no locations can be removed by this filter
   ## set parameters for parallel processing
-  if(!is.numeric(no.cores)){
-    no.cores <- parallel::detectCores() - 1
-  }
-  
-  if(.Platform$OS.type %in% 'windows'){
-    cl <- parallel::makeCluster(no.cores, type="PSOCK")
-  } else {
-    cl <- parallel::makeCluster(no.cores, type="FORK")
+  if(no.cores > 1 | no.cores %in% 'detect'){
+    
+    if(no.cores %in% 'detect'){
+      no.cores <- parallel::detectCores() - 1
+    }
+    
+    if(.Platform$OS.type %in% 'windows'){
+      cl <- parallel::makeCluster(no.cores, type="PSOCK")
+    } else {
+      cl <- parallel::makeCluster(no.cores, type="FORK")
+    }
   }
   
   
@@ -257,7 +261,7 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
     }
   } else {
     if(any(sdata$pDist <= step.dist, na.rm = TRUE)){
-      sdata <- dup.location(sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional, no.cores = no.cores)    
+     sdata <- dup.location(sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional, no.cores = no.cores)    
       while(any(sdata$pDist <= step.dist, na.rm = TRUE)){
         sdata <- dup.location(sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional, no.cores = no.cores)
       }
@@ -265,7 +269,9 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
   }
   
   ## stop parallel
-  parallel::stopCluster(cl)
+  if(no.cores > 1){
+    parallel::stopCluster(cl)
+  }
   
  
   ## Filtered data

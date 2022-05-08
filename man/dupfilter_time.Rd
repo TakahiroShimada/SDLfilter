@@ -4,7 +4,7 @@
 \alias{dupfilter_time}
 \title{Filter temporal duplicates}
 \usage{
-dupfilter_time(sdata, step.time = 0, no.cores = "detect")
+dupfilter_time(sdata, step.time = 0, no.cores = 1)
 }
 \arguments{
 \item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon", "qi". 
@@ -22,7 +22,7 @@ The greater number indicates a higher accuracy.}
 Default is 0 hours.}
 
 \item{no.cores}{An integer specifying the number of cores used for parallel computing. 
-Default ('detect') uses the maximum number of available cores minus one.}
+Alternatively, type in 'detect' to use the maximum number of available cores minus one.}
 }
 \value{
 The input data frame is returned with temporal duplicates removed.

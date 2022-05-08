@@ -61,7 +61,7 @@ dupfilter_qi <- function(sdata = sdata, step.time = 0){
     sdata.temp$sQI <- c(sdata.temp$qi[-1], NA)
     return(sdata.temp)
   }))
-  
+
 
   #### Function to filter data by quality index
   dup.qi <- function(sdata = sdata, step.time = step.time){
@@ -82,7 +82,6 @@ dupfilter_qi <- function(sdata = sdata, step.time = 0){
     for(i in 1:nrow(sdata1)){
       if(any(is.na(sdata1[i, 'pTime']) | (sdata1[i, 'sTime'] <= step.time), na.rm = TRUE)){
         index <- index + 1
-        g[i] <- index
       } 
       g[i] <- index
     }

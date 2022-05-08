@@ -9,7 +9,7 @@ dupfilter_space(
   step.time = 0,
   step.dist = 0,
   conditional = FALSE,
-  no.cores = "detect"
+  no.cores = 1
 )
 }
 \arguments{
@@ -33,7 +33,7 @@ Default is 0 kilometres.}
 Default is FALSE.}
 
 \item{no.cores}{An integer specifying the number of cores used for parallel computing. 
-Default ('detect') uses the maximum number of available cores minus one.}
+Alternatively, type in 'detect' to use the maximum number of available cores minus one.}
 }
 \value{
 The input data frame is returned with spatial duplicates removed.
