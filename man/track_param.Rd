@@ -11,8 +11,9 @@ track_param(
 )
 }
 \arguments{
-\item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon". 
-The function calculates each movement parameter by a unique "id" (e.g. transmitter number, identifier for each animal). 
+\item{sdata}{A data.frame or a list of data.frames containing columns with the following headers: "id", "DateTime", "lat", "lon". 
+The function calculates each movement parameter by a unique "id" (e.g. transmitter number, identifier for each animal) 
+if the input is a data.frame, or by each element of the list if the input is a list.  
 "DateTime" is the GMT date & time of each location in class \code{\link[base:DateTimeClasses]{POSIXct}} 
 or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
 "lat" and "lon" are the latitude and longitude of each location in decimal degrees.}

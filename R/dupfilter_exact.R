@@ -28,15 +28,19 @@ dupfilter_exact <- function(sdata){
   OriginalSS <- nrow(sdata)
   
   ## qi format
-  sdata <- within(sdata, {
-    qi[qi %in% "A"] <- "-1"
-    qi[qi %in% "B"] <- "-2"
-    qi[qi %in% "Z"] <- "-3"
-    qi <- as.numeric(as.character(qi))
-  })
+  if(!is.numeric(sdata$qi)){
+    sdata <- within(sdata, {
+      qi[qi %in% "A"] <- "-1"
+      qi[qi %in% "B"] <- "-2"
+      qi[qi %in% "Z"] <- "-3"
+      qi <- as.numeric(as.character(qi))
+    })
+  }
   
   ## Date & time
-  sdata$DateTime <- with(sdata, as.POSIXct(DateTime, format = "%Y-%m-%d %H:%M:%S", tz = "GMT"))
+  if(!any(class(sdata$DateTime) %in% "POSIXct")){
+    sdata$DateTime <- with(sdata, as.POSIXct(DateTime, format = "%Y-%m-%d %H:%M:%S", tz = "GMT"))
+  }
   
   
   #### Filter temporally and spatially exact duplicates

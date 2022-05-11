@@ -1,8 +1,9 @@
 #' @aliases track_param
 #' @title Calculate parameters between locations 
 #' @description Calculate time, distance, speed, and inner angle between successive locations
-#' @param sdata A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon". 
-#' The function calculates each movement parameter by a unique "id" (e.g. transmitter number, identifier for each animal). 
+#' @param sdata A data.frame or a list of data.frames containing columns with the following headers: "id", "DateTime", "lat", "lon". 
+#' The function calculates each movement parameter by a unique "id" (e.g. transmitter number, identifier for each animal) 
+#' if the input is a data.frame, or by each element of the list if the input is a list.  
 #' "DateTime" is the GMT date & time of each location in class \code{\link[base:DateTimeClasses]{POSIXct}} 
 #' or \code{\link[base]{character}} with the following format "2012-06-03 01:33:46".
 #' "lat" and "lon" are the latitude and longitude of each location in decimal degrees. 
@@ -52,136 +53,148 @@
 track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 'mean speed', 'mean angle'), days = 2){
     
   #### Organize data
+  if(class(sdata) == 'data.frame'){
+    
+    ## Get the number of data groups
+    IDs <- levels(factor(sdata$id))
+    
+    ## convert to list
+    sdata_list <- lapply(IDs, function(j){
+      sdata[sdata$id %in% j,]
+    })
+  } else {
+    sdata_list <- sdata
+  }
+  
+  n <- length(sdata_list)
+  
   ## Date & time
-  sdata$DateTime <- with(sdata, as.POSIXct(DateTime, format = "%Y-%m-%d %H:%M:%S", tz = "GMT"))
-  
-  ## Sort data in alphabetical and chronological order
-  sdata <- with(sdata, sdata[order(id, DateTime),])
-  row.names(sdata) <- 1:nrow(sdata)
-  
-  
-  #### Get Id of each animal
-  IDs <- levels(factor(sdata$id))
-  
+  for(i in 1:n){
+      sdata_list[[i]]$DateTime <- as.POSIXct(sdata_list[[i]]$DateTime, format = "%Y-%m-%d %H:%M:%S", tz = "GMT")
+      
+      # Sort data in alphabetical and chronological order
+      sdata_list[[i]] <- with(sdata_list[[i]], sdata_list[[i]][order(DateTime),])
+  }
+
   
   #### Hours from a previous and to a subsequent location (pTime & sTime)
   if(any(param %in% c("time", "speed", "mean speed"))){
-    sdata <- dplyr::bind_rows(lapply(IDs, function(j){
-      sdata.temp <- sdata[sdata$id %in% j,]
-      timeDiff <- diff(sdata.temp$DateTime)
+    for(i in 1:n){
+      timeDiff <- diff(sdata_list[[i]]$DateTime)
       units(timeDiff) <- "hours"
-      sdata.temp$pTime <- c(NA, as.numeric(timeDiff))
-      sdata.temp$sTime <- c(as.numeric(timeDiff), NA)
-      return(sdata.temp)
-    })) 
+      sdata_list[[i]]$pTime <- c(NA, as.numeric(timeDiff))
+      sdata_list[[i]]$sTime <- c(as.numeric(timeDiff), NA)
+    }
   }
-  
   
   #### Distance from a previous and to a subsequent location (pDist & sDist)
+  # system.time(
+  #   {
+  #     if(any(param %in% c('distance', 'speed', 'mean speed'))){
+  #       sdata <- dplyr::bind_rows(lapply(IDs, function(j){
+  #         sdata.temp <- sdata[sdata$id %in% j,]
+  #         # LatLong <- sf::st_as_sf(sdata.temp, coords = c("lon", "lat"))
+  #         # LatLong <- sf::st_set_crs(LatLong, 4326)
+  #         # Dist <- raster::pointDistance(LatLong[-nrow(LatLong),], LatLong[-1,], lonlat=T)/1000
+  #         pts <- data.matrix(sdata.temp[, c('lon', 'lat')])
+  #         Dist <- terra::distance(pts, lonlat = TRUE, sequential = TRUE)/1000
+  #         Dist <- Dist[-1]
+  #         sdata.temp$pDist <- c(NA, Dist)
+  #         sdata.temp$sDist <- c(Dist, NA)
+  #         return(sdata.temp)
+  #       }))
+  #     }
+  #   }
+  # )
+  # 
   if(any(param %in% c('distance', 'speed', 'mean speed'))){
-    sdata <- dplyr::bind_rows(lapply(IDs, function(j){
-      sdata.temp <- sdata[sdata$id %in% j,]
-      # LatLong <- sf::st_as_sf(sdata.temp, coords = c("lon", "lat"))
-      # LatLong <- sf::st_set_crs(LatLong, 4326)
-      # Dist <- raster::pointDistance(LatLong[-nrow(LatLong),], LatLong[-1,], lonlat=T)/1000
-      pts <- data.matrix(sdata.temp[, c('lon', 'lat')])
+    for(i in 1:n){
+      pts <- data.matrix(sdata_list[[i]][, c('lon', 'lat')])
       Dist <- terra::distance(pts, lonlat = TRUE, sequential = TRUE)/1000
-      Dist <- Dist[-1]
-      sdata.temp$pDist <- c(NA, Dist)
-      sdata.temp$sDist <- c(Dist, NA)
-      return(sdata.temp)
-    }))
+      sdata_list[[i]]$pDist <- c(NA, Dist[-1])
+      sdata_list[[i]]$sDist <- c(Dist[-1], NA)
+    }
   }
-    
-  
+
+
   ## Speed from a previous and to a subsequent location in km/h
   if(any(param %in% c('speed', 'mean speed'))){
-    sdata$pSpeed <- sdata$pDist/sdata$pTime
-    sdata$sSpeed <- sdata$sDist/sdata$sTime
+    for(i in 1:n){
+      sdata_list[[i]]$pSpeed <- with(sdata_list[[i]], pDist/pTime)
+      sdata_list[[i]]$sSpeed <- with(sdata_list[[i]], sDist/sTime)
+    }
   }
   
-  
+
   #### Calculate inner angle in degree
   if(any(param %in% c('angle', 'mean angle'))){
-    ## Locations less than 3
-    nloc <- aggregate(lat ~ id, data = sdata, FUN = length)
-    exclude <- nloc[nloc$lat<3,'id']
-    sdata1 <- with(sdata, sdata[!id %in% exclude,])
-    
-    ## others
-    sdata2 <- with(sdata, sdata[id %in% exclude,])
-    
-    ## inner angle
-    # LatLong <- data.frame(Y=sdata1$lat, X=sdata1$lon, tms=sdata1$DateTime, id=sdata1$id)
-    # sp::coordinates(LatLong) <- ~X+Y
-    # sp::proj4string(LatLong) <- sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
-    # tr <- trip::trip(LatLong, c("tms", "id"))
-    # sdata1$inAng <- trip::trackAngle(tr)
-    m <- data.matrix(sdata1[,c("lon", "lat")])
-    b <- rep(0, nrow(m)-1)
-    for(i in 2:nrow(m)){
-      b[i-1] <- geosphere::bearingRhumb(p1 = m[i-1,], p2 = m[i,])
+    for(i in 1:n){
+      if(nrow(sdata_list[[i]]) < 3){
+        
+        ## Exclude data with less than 3 locations
+        sdata_list[[i]]$inAng <- NA
+        
+      } else {
+         
+        ## inner angle
+        # LatLong <- data.frame(Y=sdata1$lat, X=sdata1$lon, tms=sdata1$DateTime, id=sdata1$id)
+        # sp::coordinates(LatLong) <- ~X+Y
+        # sp::proj4string(LatLong) <- sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
+        # tr <- trip::trip(LatLong, c("tms", "id"))
+        # sdata1$inAng <- trip::trackAngle(tr)
+        m <- data.matrix(sdata_list[[i]][,c("lon", "lat")])
+        b <- rep(0, nrow(m)-1)
+        for(j in 2:nrow(m)){
+          b[j-1] <- geosphere::bearingRhumb(p1 = m[j-1,], p2 = m[j,])
+        }
+        
+        b1 <- b[-length(b)]; b2 <- b[-1]
+        sdata_list[[i]]$inAng <- c(NA, abs(180-(abs(b2-b1))), NA)
+      }
     }
-    
-    b1 <- b[-length(b)]; b2 <- b[-1]
-    inAng <- abs(180-(abs(b2-b1)))
-    sdata1$inAng <- c(NA, inAng, NA)
-
-    ## Bring back excluded data
-    sdata <- dplyr::bind_rows(sdata1, sdata2)
-    sdata <- with(sdata, sdata[order(id, DateTime),])
-    row.names(sdata) <- 1:nrow(sdata)
   }
-  
+
   
   #### Mean speed and angle over n days
-  if(any(c('mean speed', 'mean angle') %in% param)){
-    mean_spd_ang <- lapply(IDs, function(j){
-      sdata.temp <- with(sdata, sdata[id %in% j,])
-      sdata.temp$cumDays <- with(sdata.temp, difftime(DateTime, DateTime[1], units = "days"))
-      sdata.temp$cumDaysBack <- with(sdata.temp, difftime(DateTime[nrow(sdata.temp)], DateTime, units = "days"))
-      sdata.temp2 <- with(sdata.temp, sdata.temp[cumDays >= days/2 & cumDaysBack >= days/2, ])
-      
-      spd.ang <- lapply(1:nrow(sdata.temp2), function(z){
-        DT.temp <- sdata.temp2[z, "DateTime"]
-        min.DT <- DT.temp - as.numeric(lubridate::days(days))/2
-        max.DT <- DT.temp + as.numeric(lubridate::days(days))/2
+  system.time({
+    if(any(c('mean speed', 'mean angle') %in% param)){
+      for(i in 1:n){
+        sdata.temp <- sdata_list[[i]]
+        sdata.temp$cumDays <- with(sdata.temp, difftime(DateTime, DateTime[1], units = "days"))
+        sdata.temp$cumDaysBack <- with(sdata.temp, difftime(DateTime[nrow(sdata.temp)], DateTime, units = "days"))
+        sdata.temp2 <- with(sdata.temp, sdata.temp[cumDays >= days/2 & cumDaysBack >= days/2, ])
         
-        sdata.temp3 <- with(sdata.temp, sdata.temp[DateTime >= min.DT & DateTime <= max.DT,])
-        time.vec <- sum(sdata.temp3[-1, "pTime"])
-        dist.vec <- sum(sdata.temp3[-1, "pDist"])
-        spd <- dist.vec/time.vec
-        ang <- mean(sdata.temp3[c(-1, -nrow(sdata.temp3)), "inAng"], na.rm = TRUE)
-        # ang.vec <- sum(sdata.temp3[c(-1, -nrow(sdata.temp3)), "inAng"])
-        # ang <- ang.vec/(nrow(sdata.temp3)-2)
-        # spd <- mean(sdata.temp3[-1, "pSpeed"], na.rm = TRUE)
-        # ang <- mean(sdata.temp3[c(-1, -nrow(sdata.temp3)), "inAng"], na.rm = TRUE)
-        return(data.frame(spd, ang))
-      })
-      
-      spd.ang.df <- dplyr::bind_rows(spd.ang)
-      
-      na1 <- nrow(sdata.temp[sdata.temp$cumDays < days/2,])
-      na2 <- nrow(sdata.temp[sdata.temp$cumDaysBack < days/2,])
-      
-      if('mean speed' %in% param){
-        sdata.temp$meanSpeed <- c(rep(NA, na1), spd.ang.df$spd, rep(NA, na2))
-      } 
-      
-      if('mean angle' %in% param){
-        sdata.temp$meanAngle <- c(rep(NA, na1), spd.ang.df$ang, rep(NA, na2))
+        templist <- list()
+        templist$spd <- templist$ang <- rep(0, nrow(sdata.temp2))
+        
+        for(j in 1:nrow(sdata.temp2)){
+          DT.temp <- sdata.temp2[j, "DateTime"]
+          min.DT <- DT.temp - as.numeric(lubridate::days(days))/2
+          max.DT <- DT.temp + as.numeric(lubridate::days(days))/2
+          
+          sdata.temp3 <- with(sdata.temp, sdata.temp[DateTime >= min.DT & DateTime <= max.DT,])
+          time.vec <- sum(sdata.temp3[-1, "pTime"])
+          dist.vec <- sum(sdata.temp3[-1, "pDist"])
+          templist$spd[j] <- dist.vec/time.vec
+          templist$ang[j] <- mean(sdata.temp3[c(-1, -nrow(sdata.temp3)), "inAng"], na.rm = TRUE)
+        }
+        
+        na1 <- length(which(sdata.temp$cumDays < days/2))
+        na2 <- length(which(sdata.temp$cumDaysBack < days/2))
+        
+        if('mean speed' %in% param){
+          sdata_list[[i]]$meanSpeed <- c(rep(NA, na1), templist$spd, rep(NA, na2))
+        } 
+        
+        if('mean angle' %in% param){
+          sdata_list[[i]]$meanAngle <- c(rep(NA, na1), templist$ang, rep(NA, na2))
+        }
       }
-
-      return(sdata.temp)
-    })
-    
-    sdata <- dplyr::bind_rows(mean_spd_ang)
+    }
+  })
   
-  } 
-
-
-  ## Delete working columns and return the output
-  drops <- c('cumDays', 'cumDaysBack')
-  sdata <- sdata[,!(names(sdata) %in% drops)] 
+ 
+  ## Return the output
+  sdata <- bind_rows(sdata_list)
   return(sdata)
 }

@@ -59,21 +59,21 @@ ddfilter_loop<-function(sdata, qi=4, ia=90, vmaxlp=1.8){
 
   for(k in 1:qi) {
 
-      LP.filter<-function (sdata = sdata, qi = qi, ia = ia, vmaxlp = vmaxlp){
+      LP.filter <- function(sdata = sdata, qi = qi, ia = ia, vmaxlp = vmaxlp){
   
           #### Loop filter
-          rm.maxLPSPD<-function(sdata = sdata, qi = qi, ia = ia, vmaxlp = vmaxlp) {
+          rm.maxLPSPD <- function(sdata = sdata, qi = qi, ia = ia, vmaxlp = vmaxlp) {
             
             #### Exclude data with less than 4 locations
-            ndata<-table(sdata$id)
-            id.exclude<-names(ndata[as.numeric(ndata)<4])
-            excluded.data<-sdata[sdata$id %in% id.exclude,]
-            sdata<-sdata[!(sdata$id %in% id.exclude),]
+            ndata <- table(sdata$id)
+            id.exclude <- names(ndata[as.numeric(ndata) < 4])
+            excluded.data <- sdata[sdata$id %in% id.exclude,]
+            sdata <- sdata[!(sdata$id %in% id.exclude),]
               
               
             #### Organize data
             ## Sort data in alphabetical and chronological order
-            sdata<-with(sdata, sdata[order(id, DateTime),])
+            sdata <- with(sdata, sdata[order(id, DateTime),])
             row.names(sdata)<-1:nrow(sdata)
             
             
@@ -120,7 +120,7 @@ ddfilter_loop<-function(sdata, qi=4, ia=90, vmaxlp=1.8){
           }
 
 
-    #### Repeat the function until no locations can be removed by this filter
+        #### Repeat the function until no locations can be removed by this filter
         sdata2<-rm.maxLPSPD(sdata = sdata, qi = qi, ia = ia, vmaxlp = vmaxlp)
         sdata3<-rm.maxLPSPD(sdata = sdata2, qi = qi, ia = ia, vmaxlp = vmaxlp)
         

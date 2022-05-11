@@ -36,23 +36,24 @@
 
 dupfilter_time <- function (sdata, step.time = 0, no.cores = 1) {
   
-  ## Original columns
-  # headers <- names(sdata)
-  
   ## Original sample size
   OriginalSS <- nrow(sdata)
   
   ## qi format
-  sdata <- within(sdata, {
-    qi[qi %in% "A"] <- "-1"
-    qi[qi %in% "B"] <- "-2"
-    qi[qi %in% "Z"] <- "-3"
-    qi <- as.numeric(as.character(qi))
-  })
+  if(!is.numeric(sdata$qi)){
+    sdata <- within(sdata, {
+      qi[qi %in% "A"] <- "-1"
+      qi[qi %in% "B"] <- "-2"
+      qi[qi %in% "Z"] <- "-3"
+      qi <- as.numeric(as.character(qi))
+    })
+  }
   
   ## Date & time
-  sdata$DateTime <- with(sdata, as.POSIXct(DateTime, format = "%Y-%m-%d %H:%M:%S", tz = "GMT"))
-  
+  if(!any(class(sdata$DateTime) %in% "POSIXct")){
+    sdata$DateTime <- with(sdata, as.POSIXct(DateTime, format = "%Y-%m-%d %H:%M:%S", tz = "GMT"))
+  }
+
   
   #### Get step time
   sdata <- track_param(sdata, param = c('time', 'distance'))
@@ -119,59 +120,6 @@ dupfilter_time <- function (sdata, step.time = 0, no.cores = 1) {
     sdata1 <- with(sdata1, sdata1[group %in% nloc_gp,])
     
    
-    #### Find the location which is the closest to the previous and/or successive locations
-    # system.time({
-    #   
-    # sdata_list <- dplyr::bind_rows(lapply(nloc_gp, function(i){
-    #   dup_temp <- with(sdata1, sdata1[group == i,])
-    #   dup_id <- unique(dup_temp$id)
-    # 
-    #   minDT <- min(dup_temp$DateTime)
-    #   maxDT <- max(dup_temp$DateTime)
-    #   dup_xy <- data.matrix(dup_temp[,c('lon', 'lat')])
-    # 
-    #   ## locations immediately before
-    #   loc.before <- with(sdata, sdata[id %in% dup_id & DateTime < minDT,])
-    #   if(nrow(loc.before) > 0){
-    #     maxDT_before <- max(loc.before$DateTime) - step.time*3600
-    #     loc.before <- loc.before[loc.before$DateTime >= maxDT_before,]
-    #     loc.before_xy <- data.matrix(loc.before[,c('lon', 'lat')])
-    #   }
-    #   
-    #   ## locations immediately after
-    #   loc.after <- with(sdata, sdata[id %in% dup_id & DateTime > maxDT,])
-    #   if(nrow(loc.after) > 0){
-    #     minDT_after <- min(loc.after$DateTime) + step.time*3600
-    #     loc.after <- loc.after[loc.after$DateTime <= minDT_after,]
-    #     loc.after_xy <- data.matrix(loc.after[,c('lon', 'lat')])
-    #   }
-    # 
-    #   #### Calculate distances
-    #   if(nrow(loc.before) > 0 & nrow(loc.after) > 0){
-    #     dist.before <- terra::distance(dup_xy, loc.before_xy, lonlat = TRUE)
-    #     dist.after <- terra::distance(dup_xy, loc.after_xy, lonlat = TRUE)
-    #     dist.all <- cbind(dist.before, dist.after)
-    #     dist.sum <- rowSums(dist.all)
-    #     dist.min <- which.min(dist.sum)[1]
-    #   } else if(nrow(loc.before) > 0){
-    #     # dist.before <- raster::pointDistance(dup_temp[,c('lon', 'lat')], loc.before[,c('lon', 'lat')], lonlat = TRUE, allpairs = TRUE)
-    #     dist.before <- terra::distance(dup_xy, loc.before_xy, lonlat = TRUE)
-    #     dist.sum <- rowSums(as.matrix(dist.before))
-    #     dist.min <- which.min(dist.sum)[1]
-    #   } else if(nrow(loc.after) > 0){
-    #     # dist.after <- raster::pointDistance(dup_temp[,c('lon', 'lat')], loc.after[,c('lon', 'lat')], lonlat = TRUE, allpairs = TRUE)
-    #     dist.after <- terra::distance(dup_xy, loc.after_xy, lonlat = TRUE)
-    #     dist.sum <- rowSums(as.matrix(dist.after))
-    #     dist.min <- which.min(dist.sum)[1]
-    #   } else {
-    #     dist.min <- 1
-    #   }
-    #   
-    #   #### Return the location which is the closest to the previous and successive locations
-    #   dup_temp[dist.min,]
-    # }))
-    # })
-    
     ## function to plug in
     select_rows <- function(i){
       dup_temp <- with(sdata1, sdata1[group == i,])
