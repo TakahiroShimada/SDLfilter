@@ -53,7 +53,7 @@
 track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 'mean speed', 'mean angle'), days = 2){
     
   #### Organize data
-  if(class(sdata) == 'data.frame'){
+  if(any(class(sdata) == 'data.frame')){
     
     ## Get the number of data groups
     IDs <- levels(factor(sdata$id))
