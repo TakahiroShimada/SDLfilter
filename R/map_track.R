@@ -43,12 +43,12 @@
 #' @import ggmap ggplot2
 #' @importFrom ggsn scalebar
 #' @importFrom gridExtra marrangeGrob
-#' @importFrom terra distance
+#' @importFrom sf st_as_sf st_distance
 #' @importFrom maps map
 #' @export
 #' @return An arrangelist is returned when \emph{multiplot} is TRUE. Otherwise a list is returned. 
 #' @author Takahiro Shimada
-#' @seealso \code{\link{kml_track}}, \code{\link{dupfilter}}, \code{\link{ddfilter}}, \code{\link{vmax}}, \code{\link{vmaxlp}}
+#' @seealso \code{\link{dupfilter}}, \code{\link{ddfilter}}, \code{\link{vmax}}, \code{\link{vmaxlp}}
 #' @examples
 #' #### Load data sets
 #' ## Fastloc GPS data obtained from two green turtles
@@ -86,7 +86,7 @@ map_track<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
                    multiplot=TRUE, nrow=1, ncol=1){
   
   #### Get data to plot
-  ID<-as.character(unique(sdata$id))
+  ID <- as.character(unique(sdata$id))
   ID <- ID[!is.na(ID)]
   
   ## Date & time
@@ -182,8 +182,11 @@ map_track<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
     # Get parameters
     if(is.null(sb.distance)){
       # sb.distance <- raster::pointDistance(c(xlim[1], ylim[1]), c(xlim[2], ylim[1]), lonlat = TRUE)/4
-      sb_mat <- rbind(c(xlim[1], ylim[1]), c(xlim[2], ylim[1]))
-      sb.distance <- terra::distance(sb_mat, lonlat = TRUE)
+      # sb_mat <- rbind(c(xlim[1], ylim[1]), c(xlim[2], ylim[1]))
+      # sb.distance <- terra::distance(sb_mat, lonlat = TRUE)
+      sb_df <- data.frame(lon = c(xlim[1], xlim[2]), lat = c(ylim[1], ylim[1]))
+      sb_sf <- sf::st_as_sf(sb_df, coords = c('lon', 'lat'), crs = 4326)
+      sb.distance <- sf::st_distance(sb_sf)[1,2]
       sb.distance <- as.numeric(sb.distance)/4
       digi <- nchar(trunc(sb.distance))
       sb.distance <- round(sb.distance/10^(digi-1)) * 10^(digi-1)

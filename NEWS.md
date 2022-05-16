@@ -8,6 +8,17 @@ output:
 News for Package 'SDLfilter'
 =========
 
+#### Version 2.2.1 (2022-05-15)
+
+* added a parallel computing option to the dupfilter_time, dupfilter_space, and dupfilter functions.
+* removed the kml_track function as the dependent package (plotKML) has been removed from the CRAN repository.
+* updated to use the sf package instead of the sp package. The updated functions are depthfilter and track_param.
+* updated to use the dplyr package instead of the plyr package. The updated functions are boot_area, ddfilter_loop, ddfilter_speed, dupfilter_qi, dupfilter_space, dupfilter_time, and track_param.
+* updated to use the stars package instead of the raster package. The updated functions are boot_area, boot_overlap, combn_overlap, track_param, depthfilter, dupfilter_space, dupfilter_time, map_track.
+* updated the track_param function to use the geosphere package instead of the trip package.
+* The map_track function has been replaced with the "to_map" function.
+
+
 #### Version 2.2.0 (2022-01-10)
 
 * added an option in the asymptote function to estimate the confidence intervals for bootstrapped overlap estimates. The new default is to use the CIs when considering an asymptote.

@@ -137,7 +137,7 @@ map_track(turtle.dd, bgmap = "satellite", google.key = "key", ncol=2)
 }
 }
 \seealso{
-\code{\link{kml_track}}, \code{\link{dupfilter}}, \code{\link{ddfilter}}, \code{\link{vmax}}, \code{\link{vmaxlp}}
+\code{\link{dupfilter}}, \code{\link{ddfilter}}, \code{\link{vmax}}, \code{\link{vmaxlp}}
 }
 \author{
 Takahiro Shimada

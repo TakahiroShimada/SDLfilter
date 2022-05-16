@@ -1,11 +1,12 @@
-Version 2.2.0.9004 (2022-04-13)
+Version 2.2.1 (2022-05-15)
 
-  o added a new function "to_kmz" that can save both track and locations in one kmz file. The kml_track is limitted to save either a track or location layer into a kml and will be removed in the future.
-  o updated to use the sf package instead of the sp package. The updated functions are depthfilter, kml_track, and track_param.
+  o added a parallel computing option to the dupfilter_time, dupfilter_space, and dupfilter functions.
+  o removed the kml_track function as the dependent package (plotKML) has been removed from the CRAN repository.
+  o updated to use the sf package instead of the sp package. The updated functions are depthfilter and track_param.
   o updated to use the dplyr package instead of the plyr package. The updated functions are boot_area, ddfilter_loop, ddfilter_speed, dupfilter_qi, dupfilter_space, dupfilter_time, and track_param.
-  o updated to use the terra package instead of the raster package. The updated functions are boot_area, boot_overlap, combn_overlap, track_param, depthfilter, dupfilter_space, dupfilter_time, map_track, .
-  o updated the track_param function to use the dplyr and geosphere packages instead of the plyr and trip packages.
-  o The map_track function has been renamed to "to_map" and will be removed in the future.
+  o updated to use the stars package instead of the raster package. The updated functions are boot_area, boot_overlap, combn_overlap, track_param, depthfilter, dupfilter_space, dupfilter_time, map_track.
+  o updated the track_param function to use the geosphere package instead of the trip package.
+  o The map_track function has been replaced with the "to_map" function.
 
 
 Version 2.2.0 (2022-01-10)

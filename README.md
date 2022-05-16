@@ -72,7 +72,7 @@ Click to show code
 
 ``` r
  # Entire area
- p1 <- map_track(turtle.dup, bgmap=Australia, point.size = 2, line.size = 0.5, axes.lab.size = 0, 
+ p1 <- to_map(turtle.dup, bgmap=Australia, point.size = 2, line.size = 0.5, axes.lab.size = 0, 
              sb.distance=200, multiplot = FALSE, point.bg = "red",
              title.size=15, title="Entire area")[[1]] + 
    geom_point(aes(x=lon, y=lat), data=turtle.dd, size=2, fill="yellow", shape=21)+
@@ -82,7 +82,7 @@ Click to show code
             colour="black", size=4, hjust = 0)
 
  # Zoomed in
- p2 <- map_track(turtle.dup, bgmap=SandyStrait, xlim=c(152.7, 153.2), ylim=(c(-25.75, -25.24)), 
+ p2 <- to_map(turtle.dup, bgmap=SandyStrait, xlim=c(152.7, 153.2), ylim=(c(-25.75, -25.24)), 
              axes.lab.size = 0, sb.distance=10, point.size = 2, point.bg = "red", line.size = 0.5, 
              multiplot = FALSE, title.size=15, title="Zoomed in")[[1]] + 
  geom_path(aes(x=lon, y=lat), data=turtle.dd, size=0.5, colour="black", linetype=1) + 
@@ -172,7 +172,7 @@ for(i in 1:length(flatback_id)){
 # A matrix
 data(ud_matrix)
 
-# Or a list of RasterLayer
+# Or a list of RasterLayer/SpatRaster
 data(ud_raster)
 ```
 
@@ -238,8 +238,8 @@ turtles return home after intentional displacement from coastal foraging
 areas. *Mar Biol* 163:1-14 doi:
 [10.1007/s00227-015-2771-0](http://dx.doi.org/10.1007/s00227-015-2771-0)
 
-If you use the functions *asymptote*, *boot_overlap* or *boot_area*,
-please cite
+If you use the functions *asymptote*, *boot_overlap*, *combn_overlap* or
+*boot_area*, please cite
 
 Shimada, T, Thums, M, Hamann, M, et al. (2021) Optimising sample sizes
 for animal distribution analysis using tracking data. *Methods Ecol
@@ -248,4 +248,4 @@ Evol* 12(2):288-297 doi:
 
 ## Current version
 
-2.2.0 (10 January 2022)
+2.2.1 (2022-05-15)

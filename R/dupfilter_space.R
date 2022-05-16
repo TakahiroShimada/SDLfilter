@@ -18,7 +18,7 @@
 #' Default is FALSE.
 #' @param no.cores An integer specifying the number of cores used for parallel computing. 
 #' Alternatively, type in 'detect' to use the maximum number of available cores minus one.
-#' @importFrom terra distance
+#' @importFrom sf st_as_sf st_distance
 #' @importFrom dplyr bind_rows
 #' @importFrom parallel makeCluster detectCores parLapply stopCluster
 #' @export
@@ -165,14 +165,16 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
       minDT <- min(dup_temp$DateTime)
       maxDT <- max(dup_temp$DateTime)
       dup_id <- unique(dup_temp$id)
-      dup_xy <- data.matrix(dup_temp[,c('lon', 'lat')])
+      # dup_xy <- data.matrix(dup_temp[,c('lon', 'lat')])
+      dup_xy <- st_as_sf(dup_temp, coords = c('lon', 'lat'), crs = 4326)
       
       ## locations immediately before
       loc.before <- with(sdata, sdata[id %in% dup_id & DateTime < minDT,])
       if(nrow(loc.before) > 0){
         maxDT_before <- max(loc.before$DateTime)
         loc.before <- loc.before[loc.before$DateTime >= maxDT_before,]
-        loc.before_xy <- data.matrix(loc.before[,c('lon', 'lat')])
+        # loc.before_xy <- data.matrix(loc.before[,c('lon', 'lat')])
+        loc.before_xy <- st_as_sf(loc.before, coords = c('lon', 'lat'), crs = 4326)
       }
       
       ## locations immediately after
@@ -180,7 +182,8 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
       if(nrow(loc.after) > 0){
         minDT_after <- min(loc.after$DateTime)
         loc.after <- loc.after[loc.after$DateTime <= minDT_after,]
-        loc.after_xy <- data.matrix(loc.after[,c('lon', 'lat')])
+        # loc.after_xy <- data.matrix(loc.after[,c('lon', 'lat')])
+        loc.after_xy <-st_as_sf(loc.after, coords = c('lon', 'lat'), crs = 4326)
       }
       
       
@@ -188,19 +191,23 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
       if(nrow(loc.before) > 0 & nrow(loc.after) > 0){
         # dist.before <- raster::pointDistance(dup_temp[,c('lon', 'lat')], loc.before[,c('lon', 'lat')], lonlat = TRUE, allpairs = TRUE)
         # dist.after <- raster::pointDistance(dup_temp[,c('lon', 'lat')], loc.after[,c('lon', 'lat')], lonlat = TRUE, allpairs = TRUE)
-        dist.before <- terra::distance(dup_xy, loc.before_xy, lonlat = TRUE)
-        dist.after <- terra::distance(dup_xy, loc.after_xy, lonlat = TRUE)
+        dist.before <- sf::st_distance(dup_xy, loc.before_xy)
+        dist.after <- sf::st_distance(dup_xy, loc.after_xy)
+        # dist.before <- terra::distance(dup_xy, loc.before_xy, lonlat = TRUE)
+        # dist.after <- terra::distance(dup_xy, loc.after_xy, lonlat = TRUE)
         dist.all <- cbind(dist.before, dist.after)
         dist.sum <- rowSums(dist.all)
         dist.min <- which.min(dist.sum)[1]
       } else if(nrow(loc.before) > 0){
         # dist.before <- raster::pointDistance(dup_temp[,c('lon', 'lat')], loc.before[,c('lon', 'lat')], lonlat = TRUE, allpairs = TRUE)
-        dist.before <- terra::distance(dup_xy, loc.before_xy, lonlat = TRUE)
+        # dist.before <- terra::distance(dup_xy, loc.before_xy, lonlat = TRUE)
+        dist.before <- sf::st_distance(dup_xy, loc.before_xy)
         dist.sum <- rowSums(as.matrix(dist.before))
         dist.min <- which.min(dist.sum)[1]
       } else if(nrow(loc.after) > 0){
         # dist.after <- raster::pointDistance(dup_temp[,c('lon', 'lat')], loc.after[,c('lon', 'lat')], lonlat = TRUE, allpairs = TRUE)
-        dist.after <- terra::distance(dup_xy, loc.after_xy, lonlat = TRUE)
+        # dist.after <- terra::distance(dup_xy, loc.after_xy, lonlat = TRUE)
+        dist.after <- sf::st_distance(dup_xy, loc.after_xy)
         dist.sum <- rowSums(as.matrix(dist.after))
         dist.min <- which.min(dist.sum)[1]
       } else {

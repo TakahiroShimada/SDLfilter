@@ -10,11 +10,11 @@
 #' The input values can be either the number of GPS satellites or Argos Location Classes. 
 #' Argos Location Classes will be converted to numerical values, where "A", "B", "Z" will be replaced with "-1", "-2", "-3" respectively.
 #' The greater number indicates a higher accuracy. 
-#' @param bathymetry A RasterLayer/SpatRaster object containing bathymetric data in metres. 
+#' @param bathymetry A stars object containing bathymetric data in metres. 
 #' Negative and positive values indicate below and above the water respectively. 
 #' Geographic coordinate system is WGS84.
-#' @param extract Method to extract cell values from the RasterLayer/SpatRaster as inherited from the \code{\link[terra]{extract}} function of the terra package. 
-#' Default is bilinear.
+#' @param bilinear Logical. This defines a method for how to extract cell values from the \emph{bathymetry} layer.  
+#' Options are bilinear (TRUE) or nearest neighbour (False) as inherited from \code{\link[stars]{st_extract}}.
 #' @param tide A data frame containing columns with the following headers: "tideDT", "reading", "standard.port". 
 #' "tideDT" is date & time in class \code{\link[base:DateTimeClasses]{POSIXct}} at each observation. "reading" is the observed tidal height in metres. 
 #' "standard.port" is the identifier of each tidal station.
@@ -45,7 +45,8 @@
 #' @param filter Default is TRUE. 
 #' If FALSE, the function does not filter locations but it still returns estimates of the water depth experienced by the animal at each location.
 #' @importFrom data.table data.table
-#' @importFrom terra distance extract
+#' @importFrom stars st_extract
+#' @importFrom sf st_as_sf st_distance
 #' @export
 #' @details The function examines each location according to the water depth experienced by the animal or the water depth at the nearest high tide. 
 #' The function looks for the closest match between each fix and tidal observations or predictions in temporal and spatial scales. 
@@ -106,7 +107,7 @@
 #'          colour = "black", size = 4, hjust = 0)
 
 
-depthfilter <- function(sdata, bathymetry, extract = "bilinear", qi = 4, tide, tidal.plane, type = "HT", height = 0, filter = TRUE) {
+depthfilter <- function(sdata, bathymetry, bilinear = TRUE, qi = 4, tide, tidal.plane, type = "HT", height = 0, filter = TRUE) {
   
   ## Original sample size
   OriginalSS <- nrow(sdata)
@@ -138,27 +139,30 @@ depthfilter <- function(sdata, bathymetry, extract = "bilinear", qi = 4, tide, t
   row.names(tidal.plane) <- 1:nrow(tidal.plane) 
   
   
-  ### Set lat and lon as "SpatialPoints"
+  ### Set lat and lon as a "sf" object
   # Animal data
+  LatLong <- sf::st_as_sf(sdata, coords = c('lon', 'lat'), crs = 4326)
   # LatLong <- data.frame(Y=sdata$lat, X=sdata$lon)
   # sp::coordinates(LatLong)<-~X+Y
   # sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
-  
-  # tidal datat
+
+  # tidal data
+  LatLong.tide <- sf::st_as_sf(tidal.plane, coords = c('lon', 'lat'), crs = 4326)
   # LatLong.tide<-data.frame(Y=tidal.plane$lat, X=tidal.plane$lon)
   # sp::coordinates(LatLong.tide)<-~X+Y
   # sp::proj4string(LatLong.tide)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
   
   
   ### extract bathymetry at each animal location
-  LatLong <- data.matrix(sdata[, c('lon', 'lat')])  ## Animal data
-  sdata$bathy <- terra::extract(bathymetry, LatLong, method = extract)
-  
-  
+  # LatLong <- data.matrix(sdata[, c('lon', 'lat')])  ## Animal data
+  sdata$bathy <- stars::st_extract(bathymetry, LatLong, bilinear = bilinear)[[1]]
+  # sdata$bathy <- terra::extract(bathymodel, LatLong, extract = 'simple')
+
   ### Find the nearest tidal station for each animal location  
   # Get nearest tidal ports
-  LatLong.tide <- data.matrix(tidal.plane[, c('lon', 'lat')])  # Tide
-  distance.to.ports <- terra::distance(LatLong, LatLong.tide, lonlat = TRUE)
+  # LatLong.tide <- data.matrix(tidal.plane[, c('lon', 'lat')])  # Tide
+  distance.to.ports <- sf::st_distance(LatLong, LatLong.tide)
+  # distance.to.ports2 <- terra::distance(LatLong, LatLong.tide, lonlat = TRUE)
   # distance.to.ports <- raster::pointDistance(LatLong, LatLong.tide, lonlat = T)
   if(nrow(tidal.plane) == 1){
     np.index <- 1 

@@ -12,7 +12,7 @@
 #' See \emph{details}.
 #' @param days A numeric value specifying the number of days to calculate mean speeds and angles.
 #' This argument is only used when 'mean speed' and/or 'mean angle' are selected in \emph{param}.  
-#' @importFrom terra distance
+#' @importFrom sf st_as_sf st_distance
 #' @importFrom lubridate days
 #' @importFrom dplyr bind_rows
 #' @importFrom geosphere bearingRhumb
@@ -53,7 +53,9 @@
 track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 'mean speed', 'mean angle'), days = 2){
     
   #### Organize data
-  if(any(class(sdata) == 'data.frame')){
+  # if(class(sdata) %in% 'data.frame'){
+  if(inherits(sdata, 'data.frame')){
+    # input_class <- 'data.frame'
     
     ## Get the number of data groups
     IDs <- levels(factor(sdata$id))
@@ -109,10 +111,16 @@ track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 
   # 
   if(any(param %in% c('distance', 'speed', 'mean speed'))){
     for(i in 1:n){
-      pts <- data.matrix(sdata_list[[i]][, c('lon', 'lat')])
-      Dist <- terra::distance(pts, lonlat = TRUE, sequential = TRUE)/1000
-      sdata_list[[i]]$pDist <- c(NA, Dist[-1])
-      sdata_list[[i]]$sDist <- c(Dist[-1], NA)
+      # pts <- data.matrix(sdata_list[[i]][, c('lon', 'lat')])
+      # Dist <- terra::distance(pts, lonlat = TRUE, sequential = TRUE)/1000
+      pts1 <- st_as_sf(sdata_list[[i]][-nrow(sdata_list[[i]]),], coords = c('lon', 'lat'), crs = 4326)
+      pts2 <- st_as_sf(sdata_list[[i]][-1,], coords = c('lon', 'lat'), crs = 4326)
+      Dist <- sf::st_distance(pts1, pts2, by_element = TRUE)
+      Dist <- as.numeric(Dist)/1000
+      # sdata_list[[i]]$pDist1 <- c(NA, Dist[-1])
+      # sdata_list[[i]]$sDist1 <- c(Dist[-1], NA)
+      sdata_list[[i]]$pDist <- c(NA, as.numeric(Dist))
+      sdata_list[[i]]$sDist <- c(as.numeric(Dist), NA)
     }
   }
 
@@ -156,45 +164,46 @@ track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 
 
   
   #### Mean speed and angle over n days
-  system.time({
-    if(any(c('mean speed', 'mean angle') %in% param)){
-      for(i in 1:n){
-        sdata.temp <- sdata_list[[i]]
-        sdata.temp$cumDays <- with(sdata.temp, difftime(DateTime, DateTime[1], units = "days"))
-        sdata.temp$cumDaysBack <- with(sdata.temp, difftime(DateTime[nrow(sdata.temp)], DateTime, units = "days"))
-        sdata.temp2 <- with(sdata.temp, sdata.temp[cumDays >= days/2 & cumDaysBack >= days/2, ])
+  if(any(c('mean speed', 'mean angle') %in% param)){
+    for(i in 1:n){
+      sdata.temp <- sdata_list[[i]]
+      sdata.temp$cumDays <- with(sdata.temp, difftime(DateTime, DateTime[1], units = "days"))
+      sdata.temp$cumDaysBack <- with(sdata.temp, difftime(DateTime[nrow(sdata.temp)], DateTime, units = "days"))
+      sdata.temp2 <- with(sdata.temp, sdata.temp[cumDays >= days/2 & cumDaysBack >= days/2, ])
+      
+      templist <- list()
+      templist$spd <- templist$ang <- rep(0, nrow(sdata.temp2))
+      
+      for(j in 1:nrow(sdata.temp2)){
+        DT.temp <- sdata.temp2[j, "DateTime"]
+        min.DT <- DT.temp - as.numeric(lubridate::days(days))/2
+        max.DT <- DT.temp + as.numeric(lubridate::days(days))/2
         
-        templist <- list()
-        templist$spd <- templist$ang <- rep(0, nrow(sdata.temp2))
-        
-        for(j in 1:nrow(sdata.temp2)){
-          DT.temp <- sdata.temp2[j, "DateTime"]
-          min.DT <- DT.temp - as.numeric(lubridate::days(days))/2
-          max.DT <- DT.temp + as.numeric(lubridate::days(days))/2
-          
-          sdata.temp3 <- with(sdata.temp, sdata.temp[DateTime >= min.DT & DateTime <= max.DT,])
-          time.vec <- sum(sdata.temp3[-1, "pTime"])
-          dist.vec <- sum(sdata.temp3[-1, "pDist"])
-          templist$spd[j] <- dist.vec/time.vec
-          templist$ang[j] <- mean(sdata.temp3[c(-1, -nrow(sdata.temp3)), "inAng"], na.rm = TRUE)
-        }
-        
-        na1 <- length(which(sdata.temp$cumDays < days/2))
-        na2 <- length(which(sdata.temp$cumDaysBack < days/2))
-        
-        if('mean speed' %in% param){
-          sdata_list[[i]]$meanSpeed <- c(rep(NA, na1), templist$spd, rep(NA, na2))
-        } 
-        
-        if('mean angle' %in% param){
-          sdata_list[[i]]$meanAngle <- c(rep(NA, na1), templist$ang, rep(NA, na2))
-        }
+        sdata.temp3 <- with(sdata.temp, sdata.temp[DateTime >= min.DT & DateTime <= max.DT,])
+        time.vec <- sum(sdata.temp3[-1, "pTime"])
+        dist.vec <- sum(sdata.temp3[-1, "pDist"])
+        templist$spd[j] <- dist.vec/time.vec
+        templist$ang[j] <- mean(sdata.temp3[c(-1, -nrow(sdata.temp3)), "inAng"], na.rm = TRUE)
+      }
+      
+      na1 <- length(which(sdata.temp$cumDays < days/2))
+      na2 <- length(which(sdata.temp$cumDaysBack < days/2))
+      
+      if('mean speed' %in% param){
+        sdata_list[[i]]$meanSpeed <- c(rep(NA, na1), templist$spd, rep(NA, na2))
+      } 
+      
+      if('mean angle' %in% param){
+        sdata_list[[i]]$meanAngle <- c(rep(NA, na1), templist$ang, rep(NA, na2))
       }
     }
-  })
-  
+  }
+
  
   ## Return the output
-  sdata <- bind_rows(sdata_list)
+  # if(input_class == 'data.frame'){
+  if(inherits(sdata, 'data.frame')){
+    sdata <- bind_rows(sdata_list)
+  }
   return(sdata)
 }

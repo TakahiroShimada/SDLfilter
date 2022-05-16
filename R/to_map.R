@@ -1,5 +1,5 @@
 #' @aliases to_map
-#' @title Plot locations and track on a map
+#' @title Plot location data on a map
 #' @description Function to plot tracking data on a map or a satellite image. 
 #' @param sdata A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon". 
 #' The function creates a map for each unique "id" (e.g. transmitter number, identifier for each animal). 
@@ -43,12 +43,12 @@
 #' @import ggmap ggplot2
 #' @importFrom ggsn scalebar
 #' @importFrom gridExtra marrangeGrob
-#' @importFrom terra distance
+#' @importFrom sf st_as_sf st_distance
 #' @importFrom maps map
 #' @export
 #' @return An arrangelist is returned when \emph{multiplot} is TRUE. Otherwise a list is returned. 
 #' @author Takahiro Shimada
-#' @seealso \code{\link{kml_track}}, \code{\link{dupfilter}}, \code{\link{ddfilter}}, \code{\link{vmax}}, \code{\link{vmaxlp}}
+#' @seealso \code{\link{dupfilter}}, \code{\link{ddfilter}}, \code{\link{vmax}}, \code{\link{vmaxlp}}
 #' @examples
 #' #### Load data sets
 #' ## Fastloc GPS data obtained from two green turtles
@@ -68,25 +68,25 @@
 #' 
 #' #### Plot filtered data for each animal
 #' ## using the low-resolution world map
-#' map_track(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1)
+#' to_map(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1)
 #'
 #'\dontrun{
 #' ## using the high-resolution google satellite images
-#' map_track(turtle.dd, bgmap = "satellite", google.key = "key", ncol=2)
+#' to_map(turtle.dd, bgmap = "satellite", google.key = "key", ncol=2)
 #'}
 
 
 #### Plot data removed or retained by ddfilter
 to_map <- function(sdata, xlim=NULL, ylim=NULL, margin=10, 
-                   bgmap=NULL, google.key=NULL, map.bg="grey", map.col="black", zoom=NULL, 
-                   point.bg="yellow", point.col="black", point.symbol=21, point.size=1,
-                   line.col="lightgrey", line.type=1, line.size=0.5,
-                   sb.distance=NULL, sb.lwd=1, sb.line.col="black", sb.text.size=4, sb.text.col="black", sb.space=3,
-                   title="id", title.size=11, axes.text.size=11, axes.lab.size=11,
-                   multiplot=TRUE, nrow=1, ncol=1){
+                    bgmap=NULL, google.key=NULL, map.bg="grey", map.col="black", zoom=NULL, 
+                    point.bg="yellow", point.col="black", point.symbol=21, point.size=1,
+                    line.col="lightgrey", line.type=1, line.size=0.5,
+                    sb.distance=NULL, sb.lwd=1, sb.line.col="black", sb.text.size=4, sb.text.col="black", sb.space=3,
+                    title="id", title.size=11, axes.text.size=11, axes.lab.size=11,
+                    multiplot=TRUE, nrow=1, ncol=1){
   
   #### Get data to plot
-  ID<-as.character(unique(sdata$id))
+  ID <- as.character(unique(sdata$id))
   ID <- ID[!is.na(ID)]
   
   ## Date & time
@@ -142,14 +142,14 @@ to_map <- function(sdata, xlim=NULL, ylim=NULL, margin=10,
         map.data<-ggmap::get_map(location = c(lon = mean(xlim), lat = mean(ylim)), 
                                  color = "color", source = "google", maptype = bgmap, 
                                  zoom = zm)
-
+        
       } else {
         map.data<-ggmap::get_map(location = c(lon = mean(xlim), lat = mean(ylim)), 
                                  color = "color", source = "google", maptype = bgmap, zoom=zoom)
       }
       
       p <- ggmap::ggmap(map.data)  
-
+      
     } else {
       map.data<-bgmap
       p <-ggplot(data=sdata.temp)+
@@ -181,17 +181,21 @@ to_map <- function(sdata, xlim=NULL, ylim=NULL, margin=10,
     #### Add scale
     # Get parameters
     if(is.null(sb.distance)){
-      sb_mat <- rbind(c(xlim[1], ylim[1]), c(xlim[2], ylim[1]))
-      sb.distance <- terra::distance(sb_mat, lonlat = TRUE)
+      # sb.distance <- raster::pointDistance(c(xlim[1], ylim[1]), c(xlim[2], ylim[1]), lonlat = TRUE)/4
+      # sb_mat <- rbind(c(xlim[1], ylim[1]), c(xlim[2], ylim[1]))
+      # sb.distance <- terra::distance(sb_mat, lonlat = TRUE)
+      sb_df <- data.frame(lon = c(xlim[1], xlim[2]), lat = c(ylim[1], ylim[1]))
+      sb_sf <- sf::st_as_sf(sb_df, coords = c('lon', 'lat'), crs = 4326)
+      sb.distance <- sf::st_distance(sb_sf)[1,2]
       sb.distance <- as.numeric(sb.distance)/4
       digi <- nchar(trunc(sb.distance))
       sb.distance <- round(sb.distance/10^(digi-1)) * 10^(digi-1)
-      sb.distance <- sb.distance/1000
+      sb.distance <- as.numeric(sb.distance)/1000
     }
     
     sb<-ggsn::scalebar(x.min=xlim[1]+extra2, x.max=xlim[2]-extra2, y.min=ylim[1]+extra2, y.max=ylim[2]-extra2,
                        dist = sb.distance, dist_unit = "km", transform = TRUE, model = 'WGS84', location="bottomleft", st.dist=.03)
-      
+    
     sb.xmin<-min(sb[[1]]$data$x); sb.xmax<-max(sb[[1]]$data$x)
     sb.ymin<-min(sb[[1]]$data$y); sb.ymax<-max(sb[[1]]$data$y)
     
@@ -209,4 +213,4 @@ to_map <- function(sdata, xlim=NULL, ylim=NULL, margin=10,
     p.all
   }
 }
- 
+

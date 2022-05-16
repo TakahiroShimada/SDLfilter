@@ -12,7 +12,7 @@
 #' R > sample size x 100 is recommended (e.g. R > 1000 for a sample size 10).
 #' @param percent An integer specifying the percent volume of each UD to be considered in the analysis. 
 #' @param quantiles A vector or a number to specify the quantiles to be calculated in the summary of the results. 
-#' @importFrom terra values res
+#' @importFrom stars st_as_stars st_dimensions
 #' @importFrom dplyr bind_rows
 #' @importFrom stats aggregate sd
 #' @importFrom utils setTxtProgressBar txtProgressBar
@@ -53,10 +53,10 @@ boot_area <- function(data, cell.size = NA, R = 1000, percent = 50, quantiles = 
     start_time <- Sys.time()
     
     #### Input data
-    if(inherits(data[[1]], c("RasterLayer", "SpatRaster"))){
-      ## density values to a matrix
-      dens_all_list <- lapply(1:length(data), function(j){
-        terra::values(data[[j]])
+    if(inherits(data[[1]], 'stars')){
+      
+      dens_all_list <- lapply(data, function(x){
+        c(x[[1]])
       })
       
       if(is.null(names(data))){
@@ -64,16 +64,37 @@ boot_area <- function(data, cell.size = NA, R = 1000, percent = 50, quantiles = 
       } else {
         names(dens_all_list) <- names(data)
       }
-      dens_all2 <- do.call(rbind, dens_all_list)
+      dens_all <- do.call(rbind, dens_all_list)
       
       ## Cell size
-      cell.size <- terra::res(data[[1]])
-      cell <- cell.size[1] * cell.size[2]
+      d <- stars::st_dimensions(data[[1]])
+      l <- lapply(d, function(y) abs(y$delta))
+      cell <- l[[1]] * l[[2]]
+
+    } else if (inherits(data[[1]], c("RasterLayer", "SpatRaster"))){
+      
+      dens_all_list <- lapply(data, function(x){
+        c(stars::st_as_stars(x)[[1]])
+      })
+      
+      if(is.null(names(data))){
+        names(dens_all_list) <- 1:length(data)
+      } else {
+        names(dens_all_list) <- names(data)
+      }
+      dens_all <- do.call(rbind, dens_all_list)
+      
+      ## Cell size
+      d <- stars::st_dimensions(data[[1]])
+      l <- lapply(d, function(y) abs(y$delta))
+      cell <- l[[1]] * l[[2]]
       
     } else {
       dens_all <- data
       cell <- cell.size^2
     }
+    
+
     
     #### Names
     nam <- rownames(dens_all)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/to_map.R
 \name{to_map}
 \alias{to_map}
-\title{Plot locations and track on a map}
+\title{Plot location data on a map}
 \usage{
 to_map(
   sdata,
@@ -129,15 +129,15 @@ turtle.dd <- ddfilter(turtle.dup, vmax=V, vmaxlp=VLP)
 
 #### Plot filtered data for each animal
 ## using the low-resolution world map
-map_track(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1)
+to_map(turtle.dd, point.size = 2, line.size = 0.5, axes.lab.size = 0, ncol=2, nrow=1)
 
 \dontrun{
 ## using the high-resolution google satellite images
-map_track(turtle.dd, bgmap = "satellite", google.key = "key", ncol=2)
+to_map(turtle.dd, bgmap = "satellite", google.key = "key", ncol=2)
 }
 }
 \seealso{
-\code{\link{kml_track}}, \code{\link{dupfilter}}, \code{\link{ddfilter}}, \code{\link{vmax}}, \code{\link{vmaxlp}}
+\code{\link{dupfilter}}, \code{\link{ddfilter}}, \code{\link{vmax}}, \code{\link{vmaxlp}}
 }
 \author{
 Takahiro Shimada

@@ -15,7 +15,7 @@
 #' To generate a collective UD, each UD is overlaid and averaged at each grid cell so the probability density of the collective UD sums up to 1.
 #' @param percent An integer specifying the percent volume of each UD to be considered in the analysis. 
 #' @param quantiles A vector or a number to specify the quantiles to be calculated in the summary of the results. 
-#' @importFrom terra values
+#' @importFrom stars st_as_stars
 #' @importFrom stats aggregate sd
 #' @importFrom utils setTxtProgressBar txtProgressBar combn
 #' @export
@@ -59,10 +59,23 @@ combn_overlap <- function(data, method = "PHR", percent = 100, quantiles = c(0.2
   start_time <- Sys.time()
   
   #### Input data
-  if(inherits(data[[1]], c("RasterLayer", "SpatRaster"))){
-    #### Vecterise density values
-    dens_all_list <- lapply(1:length(data), function(j){
-      terra::values(data[[j]])
+  if(inherits(data[[1]], 'stars')){
+    
+    dens_all_list <- lapply(data, function(x){
+      c(x[[1]])
+    })
+    
+    if(is.null(names(data))){
+      names(dens_all_list) <- 1:length(data)
+    } else {
+      names(dens_all_list) <- names(data)
+    }
+    dens_all <- do.call(rbind, dens_all_list)
+    
+  } else if (inherits(data[[1]], c("RasterLayer", "SpatRaster"))){
+    
+    dens_all_list <- lapply(data, function(x){
+      c(stars::st_as_stars(x)[[1]])
     })
     
     if(is.null(names(data))){

@@ -7,7 +7,7 @@
 depthfilter(
   sdata,
   bathymetry,
-  extract = "bilinear",
+  bilinear = TRUE,
   qi = 4,
   tide,
   tidal.plane,
@@ -27,12 +27,12 @@ The input values can be either the number of GPS satellites or Argos Location Cl
 Argos Location Classes will be converted to numerical values, where "A", "B", "Z" will be replaced with "-1", "-2", "-3" respectively.
 The greater number indicates a higher accuracy.}
 
-\item{bathymetry}{A RasterLayer/SpatRaster object containing bathymetric data in metres. 
+\item{bathymetry}{A stars object containing bathymetric data in metres. 
 Negative and positive values indicate below and above the water respectively. 
 Geographic coordinate system is WGS84.}
 
-\item{extract}{Method to extract cell values from the RasterLayer/SpatRaster as inherited from the \code{\link[terra]{extract}} function of the terra package. 
-Default is bilinear.}
+\item{bilinear}{Logical. This defines a method for how to extract cell values from the \emph{bathymetry} layer.
+Options are bilinear (TRUE) or nearest neighbour (False) as inherited from \code{\link[stars]{st_extract}}.}
 
 \item{qi}{An integer specifying a threshold of quality index. 
 \emph{depthfilter} does not filter a location that is associated with a quality index higher than this threshold. 
