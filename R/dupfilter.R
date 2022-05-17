@@ -65,11 +65,11 @@ dupfilter <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, no.cor
   }
   
   cat("\n")
-  sdata3 <- dupfilter_all(sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional, no.cores = no.cores)
+  sdata <- dupfilter_all(sdata=sdata, step.time=step.time, step.dist=step.dist, conditional=conditional, no.cores = no.cores)
     
 
   #### Report the summary of filtering
-  FilteredSS <- nrow(sdata3)
+  FilteredSS <- nrow(sdata)
   RemovedSamplesN <- OriginalSS-FilteredSS
   RemovedSamplesP <- round((1-(FilteredSS/OriginalSS))*100,2)
   
@@ -80,5 +80,5 @@ dupfilter <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, no.cor
   cat("\n")
   
   #### Return the filtered data set
-  return(sdata3)
+  return(sdata)
 }

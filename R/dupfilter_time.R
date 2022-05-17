@@ -77,13 +77,14 @@ dupfilter_time <- function (sdata, step.time = 0, no.cores = 1) {
         g[i] <- index
       }
       sdata1$group <- g
-      
+      rm(g, index)
 
       #### Filter successive locations with exactly same coordinates
       sdata1 <- dplyr::distinct(sdata1, .data$id, .data$lat, .data$lon, .data$group, .keep_all = TRUE)
 
       #### Combine
       sdata <- dplyr::bind_rows(sdata1, sdata2)
+      rm(sdata1, sdata2)
 
       #### Recalculate movement parameters
       sdata <- track_param(sdata, param = c('time', 'distance'))
@@ -111,6 +112,7 @@ dupfilter_time <- function (sdata, step.time = 0, no.cores = 1) {
       g[i] <- index
     }
     sdata1$group <- g
+    rm(g, index)
 
     
     ## group with more than 1 locations
@@ -119,6 +121,7 @@ dupfilter_time <- function (sdata, step.time = 0, no.cores = 1) {
     sdata3 <- with(sdata1, sdata1[!group %in% nloc_gp,])
     sdata1 <- with(sdata1, sdata1[group %in% nloc_gp,])
     nloc_gp1 <- unique(sdata1$group)
+    rm(nloc, nloc_gp)
     
    
     ## function to plug in
@@ -192,12 +195,12 @@ dupfilter_time <- function (sdata, step.time = 0, no.cores = 1) {
       d <- lapply(nloc_gp1, select_rows)
     }
     sdata1 <- dplyr::bind_rows(d)
-    
+    rm(d)
     
     #### Combine
     sdata <- dplyr::bind_rows(sdata1, sdata2, sdata3)
     sdata$group <- NULL
-    
+    rm(sdata1, sdata2, sdata3)
     
     ## Re-calculate
     sdata <- track_param(sdata, param = 'time')

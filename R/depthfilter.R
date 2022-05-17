@@ -47,6 +47,7 @@
 #' @importFrom data.table data.table
 #' @importFrom stars st_extract
 #' @importFrom sf st_as_sf st_distance
+#' @importFrom dplyr bind_rows
 #' @export
 #' @details The function examines each location according to the water depth experienced by the animal or the water depth at the nearest high tide. 
 #' The function looks for the closest match between each fix and tidal observations or predictions in temporal and spatial scales. 
@@ -82,16 +83,12 @@
 #' data(SandyStrait)
 #' 
 #' 
-#' #### Remove temporal and/or spatial duplicates
-#' turtle.dup <- dupfilter(turtle)
+#' #### Remove temporal and/or spatial duplicates and biologically unrealistic fixes 
+#' turtle.dd <- ddfilter(dupfilter(turtle))
 #' 
 #' 
-#' #### Remove biologically unrealistic fixes 
-#' turtle.dd <- ddfilter(turtle.dup, vmax = 9.9, qi = 4, ia = 90, vmaxlp = 2.0)
-#'
-#'
 #' #### Apply depthfilter
-#' turtle.dep <- depthfilter(sdata = turtle.dd, 
+#' turtle <- depthfilter(sdata = turtle.dd, 
 #'                           bathymetry = bathymodel, 
 #'                           tide = tidedata, 
 #'                           tidal.plane = tidalplane)
@@ -100,7 +97,7 @@
 #' #### Plot data removed or retained by depthfilter
 #' to_map(turtle.dd, bgmap = SandyStrait, point.bg = "red", point.size = 2, line.size = 0.5, 
 #'         axes.lab.size = 0, title.size = 0, sb.distance = 10, multiplot = FALSE)[[1]] + 
-#' geom_point(aes(x = lon, y = lat), data = turtle.dep, size = 2, fill = "yellow", shape = 21)+
+#' geom_point(aes(x = lon, y = lat), data = turtle, size = 2, fill = "yellow", shape = 21)+
 #' geom_point(aes(x = x, y = y), data = data.frame(x = c(152.68, 152.68), y = c(-25.3, -25.34)), 
 #'            size = 3, fill = c("yellow", "red"), shape = 21) + 
 #' annotate("text", x = c(152.7, 152.7), y = c(-25.3, -25.34), label = c("Retained", "Removed"), 
@@ -142,28 +139,18 @@ depthfilter <- function(sdata, bathymetry, bilinear = TRUE, qi = 4, tide, tidal.
   ### Set lat and lon as a "sf" object
   # Animal data
   LatLong <- sf::st_as_sf(sdata, coords = c('lon', 'lat'), crs = 4326)
-  # LatLong <- data.frame(Y=sdata$lat, X=sdata$lon)
-  # sp::coordinates(LatLong)<-~X+Y
-  # sp::proj4string(LatLong)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
 
   # tidal data
   LatLong.tide <- sf::st_as_sf(tidal.plane, coords = c('lon', 'lat'), crs = 4326)
-  # LatLong.tide<-data.frame(Y=tidal.plane$lat, X=tidal.plane$lon)
-  # sp::coordinates(LatLong.tide)<-~X+Y
-  # sp::proj4string(LatLong.tide)<-sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
-  
+
   
   ### extract bathymetry at each animal location
-  # LatLong <- data.matrix(sdata[, c('lon', 'lat')])  ## Animal data
   sdata$bathy <- stars::st_extract(bathymetry, LatLong, bilinear = bilinear)[[1]]
-  # sdata$bathy <- terra::extract(bathymodel, LatLong, extract = 'simple')
 
   ### Find the nearest tidal station for each animal location  
   # Get nearest tidal ports
-  # LatLong.tide <- data.matrix(tidal.plane[, c('lon', 'lat')])  # Tide
   distance.to.ports <- sf::st_distance(LatLong, LatLong.tide)
-  # distance.to.ports2 <- terra::distance(LatLong, LatLong.tide, lonlat = TRUE)
-  # distance.to.ports <- raster::pointDistance(LatLong, LatLong.tide, lonlat = T)
+  rm(LatLong, LatLong.tide)
   if(nrow(tidal.plane) == 1){
     np.index <- 1 
   } else {
@@ -171,12 +158,14 @@ depthfilter <- function(sdata, bathymetry, bilinear = TRUE, qi = 4, tide, tidal.
   }
   
   sdata$nearest.port <- tidal.plane[np.index, "secondary.port"]
+  rm(np.index, distance.to.ports)
   np.list <- levels(factor(sdata$nearest.port))
   
   
   # Get the names of standard ports associated to the nearest ports
   s.index <- match(sdata$nearest.port, tidal.plane$secondary.port)
   sdata$standard.port <- tidal.plane[s.index, "standard.port"]
+  rm(s.index)
   
   
   ### Subset tidal data according to the range of animal data
@@ -192,7 +181,8 @@ depthfilter <- function(sdata, bathymetry, bilinear = TRUE, qi = 4, tide, tidal.
   }
   
   tide.list <- lapply(sp.list, trimTide)
-  tide <- do.call(rbind, lapply(tide.list, data.frame, stringsAsFactors = FALSE))
+  tide <- dplyr::bind_rows(tide.list)
+  rm(sp.list, trimTide, tide.list)
   
   
   ### Organize tidal data
@@ -203,7 +193,7 @@ depthfilter <- function(sdata, bathymetry, bilinear = TRUE, qi = 4, tide, tidal.
   # Calculate tidal height increment per minute
   Interval <- unlist(tapply(tide$tideDT, tide$standard.port, function(x) c(as.numeric(diff(x)),NA)))
   tide$increment <- tide$range/Interval
-  
+  rm(Interval)
   
   
   ## Estimate tide at secondary ports
@@ -219,8 +209,8 @@ depthfilter <- function(sdata, bathymetry, bilinear = TRUE, qi = 4, tide, tidal.
   }
       
   tideS.list <- lapply(np.list, GetTideSP)
-  tide.s <- do.call(rbind, lapply(tideS.list, data.frame, stringsAsFactors = FALSE))
-  
+  tide.s <- dplyr::bind_rows(tideS.list)
+  rm(GetTideSP, tideS.list)
   
   
   #### Estimate water depth with the tide accounted for
@@ -248,7 +238,8 @@ depthfilter <- function(sdata, bathymetry, bilinear = TRUE, qi = 4, tide, tidal.
   
       
   sdataDT.list <- lapply(np.list, tidalHeight)
-  sdata <- do.call(rbind, lapply(sdataDT.list, data.frame, stringsAsFactors = FALSE))
+  sdata <- dplyr::bind_rows(sdataDT.list)
+  rm(tidalHeight, sdataDT.list)
   
   
   # Estimate actual depth of each location with tide effect
@@ -265,6 +256,7 @@ depthfilter <- function(sdata, bathymetry, bilinear = TRUE, qi = 4, tide, tidal.
           tide.temp <- tide.s[tide.s$secondary.port %in% j,]
           Interval <- as.numeric(with(tide.temp, difftime(tide.temp[2, "tideDT"], tide.temp[1, "tideDT"], units = "mins")))
           ncell.lookup <- 120/Interval
+          rm(Interval)
           
           find.peakHL <- function(i) {
               if(tide.temp$reading[i] >= max(tide.temp$reading[(i+1):(i+ncell.lookup)]) & tide.temp$reading[i] >= max(tide.temp$reading[(i-1):(i-ncell.lookup)])){
@@ -283,8 +275,9 @@ depthfilter <- function(sdata, bathymetry, bilinear = TRUE, qi = 4, tide, tidal.
       row.names(tide.s) <- 1:nrow(tide.s)
       
       peakTide.list <- lapply(np.list, peakTide)
-      Htide <- do.call(rbind, lapply(peakTide.list, data.frame, stringsAsFactors = FALSE))
+      Htide <- dplyr::bind_rows(peakTide.list)
       Htide <- Htide[!(is.na(Htide$reading)),]
+      rm(peakTide, tide.s, peakTide.list)
       
       
       ## Estimate height of high tide at each turtle location
@@ -299,14 +292,15 @@ depthfilter <- function(sdata, bathymetry, bilinear = TRUE, qi = 4, tide, tidal.
       }
       
       sdataHTH.list <- lapply(np.list, HtideHeight)
-      sdata <- do.call(rbind, lapply(sdataHTH.list, data.frame, stringsAsFactors = FALSE))
+      sdata <- dplyr::bind_rows(sdataHTH.list)
+      rm(sdataHTH.list, HtideHeight, Htide)
       
       
       ## Estimate actual depth of a location at the nearest high tide
       d.index <- match(sdata$nearest.port, tidal.plane$secondary.port)
       adj.datum <- tidal.plane[d.index, "datumDiff"]
       sdata$depth.HT <- with(sdata, bathy+adj.datum-adj.reading.HT)
-      
+      rm(d.index, adj.datum)
       
       ### Remove locations according to water depth at high tide
       sdata <- with(sdata, sdata[!(qi <= qi & depth.HT>height),])

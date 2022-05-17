@@ -81,6 +81,7 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
         g[i] <- index
       }
       sdata1$group <- g
+      rm(g, index)
       
       
       #### Filter successive locations with exactly same coordinates
@@ -88,6 +89,7 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
       
       #### Combine
       sdata <- dplyr::bind_rows(sdata1, sdata2)
+      rm(sdata1, sdata2)
       
       #### Recalculate movement parameters
       sdata <- track_param(sdata, param = c('time', 'distance'))
@@ -110,6 +112,7 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
         g[i] <- index
       }
       sdata1$group <- g
+      rm(g, index)
       
       
       #### Filter successive locations with exactly same coordinates
@@ -117,6 +120,7 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
       
       #### Combine
       sdata <- dplyr::bind_rows(sdata1, sdata2)
+      rm(sdata1, sdata2)
       
       #### Recalculate movement parameters
       sdata <- track_param(sdata, param = c('time', 'distance'))
@@ -149,7 +153,8 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
       g[i] <- index
     }
     sdata1$group <- g
-
+    rm(g, index)
+    
     
     ## group with more than 1 locations
     nloc <- aggregate(lat ~ group, data = sdata1, FUN = length)
@@ -157,6 +162,7 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
     sdata3 <- with(sdata1, sdata1[!group %in% nloc_gp,])
     sdata1 <- with(sdata1, sdata1[group %in% nloc_gp,])
     nloc_gp1 <- unique(sdata1$group)
+    rm(nloc, nloc_gp)
    
     #### Find the location which is the closest to the previous and/or successive locations
     ## function to plug in
@@ -233,12 +239,13 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
       d <- lapply(nloc_gp1, select_rows)
     }
     sdata1 <- dplyr::bind_rows(d)
-    
+    rm(d)
 
     
     #### Combine
     sdata <- dplyr::bind_rows(sdata1, sdata2, sdata3)
     sdata$group <- NULL
+    rm(sdata1, sdata2, sdata3)
     
     ## Re-calculate
     sdata <- track_param(sdata, param = c('time', 'distance'))
