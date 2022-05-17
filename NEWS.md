@@ -12,9 +12,8 @@ News for Package 'SDLfilter'
 
 * added a parallel computing option to the dupfilter_time, dupfilter_space, and dupfilter functions.
 * removed the kml_track function as the dependent package (plotKML) has been removed from the CRAN repository.
-* updated to use the sf package instead of the sp package. The updated functions are depthfilter and track_param.
+* updated to use the sf and stars packages instead of the sp and raster packages. The updated functions are boot_area, boot_overlap, combn_overlap, depthfilter, dupfilter_space, track_param, dupfilter_time, and map_track
 * updated to use the dplyr package instead of the plyr package. The updated functions are boot_area, ddfilter_loop, ddfilter_speed, dupfilter_qi, dupfilter_space, dupfilter_time, and track_param.
-* updated to use the stars package instead of the raster package. The updated functions are boot_area, boot_overlap, combn_overlap, track_param, depthfilter, dupfilter_space, dupfilter_time, map_track.
 * updated the track_param function to use the geosphere package instead of the trip package.
 * The map_track function has been replaced with the "to_map" function.
 
