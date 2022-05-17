@@ -118,6 +118,7 @@ dupfilter_time <- function (sdata, step.time = 0, no.cores = 1) {
     nloc_gp <- unique(nloc[nloc$lat>1, 'group'])
     sdata3 <- with(sdata1, sdata1[!group %in% nloc_gp,])
     sdata1 <- with(sdata1, sdata1[group %in% nloc_gp,])
+    nloc_gp1 <- unique(sdata1$group)
     
    
     ## function to plug in
@@ -127,24 +128,28 @@ dupfilter_time <- function (sdata, step.time = 0, no.cores = 1) {
       minDT <- min(dup_temp$DateTime)
       maxDT <- max(dup_temp$DateTime)
       # dup_xy <- data.matrix(dup_temp[,c('lon', 'lat')])
-      dup_xy <- st_as_sf(dup_temp, coords = c('lon', 'lat'), crs = 4326)
+      # dup_xy <- sf::st_as_sf(dup_temp, coords = c('lon', 'lat'), crs = 4326)
+      dup_xy <- dup_temp[, c('lon', 'lat')]
+      dup_xy <- sf::st_as_sf(dup_xy, coords = 1:2, crs = 4326)
       
       ## locations immediately before
       loc.before <- with(sdata, sdata[id %in% dup_id & DateTime < minDT,])
       if(nrow(loc.before) > 0){
         maxDT_before <- max(loc.before$DateTime) - step.time*3600
-        loc.before <- loc.before[loc.before$DateTime >= maxDT_before,]
+        # loc.before <- loc.before[loc.before$DateTime >= maxDT_before,]
         # loc.before_xy <- data.matrix(loc.before[,c('lon', 'lat')])
-        loc.before_xy <- st_as_sf(loc.before, coords = c('lon', 'lat'), crs = 4326)
+        loc.before <- loc.before[loc.before$DateTime >= maxDT_before, c('lon', 'lat')]
+        loc.before_xy <- sf::st_as_sf(loc.before, coords = 1:2, crs = 4326)
       }
       
       ## locations immediately after
       loc.after <- with(sdata, sdata[id %in% dup_id & DateTime > maxDT,])
       if(nrow(loc.after) > 0){
         minDT_after <- min(loc.after$DateTime) + step.time*3600
-        loc.after <- loc.after[loc.after$DateTime <= minDT_after,]
+        # loc.after <- loc.after[loc.after$DateTime <= minDT_after,]
         # loc.after_xy <- data.matrix(loc.after[,c('lon', 'lat')])
-        loc.after_xy <-st_as_sf(loc.after, coords = c('lon', 'lat'), crs = 4326)
+        loc.after <- loc.after[loc.after$DateTime <= minDT_after, c('lon', 'lat')]
+        loc.after_xy <- sf::st_as_sf(loc.after, coords = 1:2, crs = 4326)
       }
       
       #### Calculate distances
@@ -181,10 +186,10 @@ dupfilter_time <- function (sdata, step.time = 0, no.cores = 1) {
     # }
     if(no.cores > 1){
       # using multiple CPU cores
-      d <- parallel::parLapply(cl, X = nloc_gp, fun = select_rows)
+      d <- parallel::parLapply(cl, X = nloc_gp1, fun = select_rows)
     } else {
       # using a single CPU
-      d <- lapply(nloc_gp, select_rows)
+      d <- lapply(nloc_gp1, select_rows)
     }
     sdata1 <- dplyr::bind_rows(d)
     

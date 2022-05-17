@@ -113,8 +113,8 @@ track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 
     for(i in 1:n){
       # pts <- data.matrix(sdata_list[[i]][, c('lon', 'lat')])
       # Dist <- terra::distance(pts, lonlat = TRUE, sequential = TRUE)/1000
-      pts1 <- st_as_sf(sdata_list[[i]][-nrow(sdata_list[[i]]),], coords = c('lon', 'lat'), crs = 4326)
-      pts2 <- st_as_sf(sdata_list[[i]][-1,], coords = c('lon', 'lat'), crs = 4326)
+      pts1 <- sf::st_as_sf(sdata_list[[i]][-nrow(sdata_list[[i]]),], coords = c('lon', 'lat'), crs = 4326)
+      pts2 <- sf::st_as_sf(sdata_list[[i]][-1,], coords = c('lon', 'lat'), crs = 4326)
       Dist <- sf::st_distance(pts1, pts2, by_element = TRUE)
       Dist <- as.numeric(Dist)/1000
       # sdata_list[[i]]$pDist1 <- c(NA, Dist[-1])
@@ -123,7 +123,8 @@ track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 
       sdata_list[[i]]$sDist <- c(as.numeric(Dist), NA)
     }
   }
-
+  
+  
 
   ## Speed from a previous and to a subsequent location in km/h
   if(any(param %in% c('speed', 'mean speed'))){
@@ -203,7 +204,7 @@ track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 
   ## Return the output
   # if(input_class == 'data.frame'){
   if(inherits(sdata, 'data.frame')){
-    sdata <- bind_rows(sdata_list)
+    sdata <- dplyr::bind_rows(sdata_list)
   }
   return(sdata)
 }

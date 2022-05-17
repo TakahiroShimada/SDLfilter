@@ -7,9 +7,7 @@
 
 There were no ERRORs or WARNINGs, or NOTEs when run on debian (local).
 There were no ERRORs or WARNINGs, and 1 NOTE as below when run on windows (win-builder).
-
-Please note this package was on CRAN but has been archived because the dependent package (plotKML) has been archived.
-I verified that other points within the note are all correct.
+Please note each of the points within the note is verified and all information is correct.
 
 
 * checking CRAN incoming feasibility ... NOTE
@@ -45,5 +43,3 @@ Found the following (possibly) invalid DOIs:
           inst/CITATION
     Status: Service Unavailable
     Message: 503
-
-
