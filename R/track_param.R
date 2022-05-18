@@ -53,10 +53,8 @@
 track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 'mean speed', 'mean angle'), days = 2){
     
   #### Organize data
-  # if(class(sdata) %in% 'data.frame'){
   if(inherits(sdata, 'data.frame')){
-    # input_class <- 'data.frame'
-    
+ 
     ## Get the number of data groups
     IDs <- levels(factor(sdata$id))
     
@@ -68,7 +66,17 @@ track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 
     sdata_list <- sdata
   }
   
+  # exclude data with insufficient locations
+  nloc <- lapply(sdata_list, nrow)
+  if(any(param %in% c('time', 'distance', 'speed', 'mean speed')) & any(nloc < 2)){
+    exclude <- sdata_list[which(nloc < 2)]
+    exclude.id <- sapply(exclude, function(x) x$id)
+    warning('ignored ', paste(unique(exclude.id), collapse=", "), ': Not enought data for calculation.')
+    sdata_list <- sdata_list[-which(nloc < 2)]
+  } 
+  rm(nloc)
   n <- length(sdata_list)
+  
   
   ## Date & time
   for(i in 1:n){
@@ -90,25 +98,6 @@ track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 
   }
   
   #### Distance from a previous and to a subsequent location (pDist & sDist)
-  # system.time(
-  #   {
-  #     if(any(param %in% c('distance', 'speed', 'mean speed'))){
-  #       sdata <- dplyr::bind_rows(lapply(IDs, function(j){
-  #         sdata.temp <- sdata[sdata$id %in% j,]
-  #         # LatLong <- sf::st_as_sf(sdata.temp, coords = c("lon", "lat"))
-  #         # LatLong <- sf::st_set_crs(LatLong, 4326)
-  #         # Dist <- raster::pointDistance(LatLong[-nrow(LatLong),], LatLong[-1,], lonlat=T)/1000
-  #         pts <- data.matrix(sdata.temp[, c('lon', 'lat')])
-  #         Dist <- terra::distance(pts, lonlat = TRUE, sequential = TRUE)/1000
-  #         Dist <- Dist[-1]
-  #         sdata.temp$pDist <- c(NA, Dist)
-  #         sdata.temp$sDist <- c(Dist, NA)
-  #         return(sdata.temp)
-  #       }))
-  #     }
-  #   }
-  # )
-  # 
   if(any(param %in% c('distance', 'speed', 'mean speed'))){
     for(i in 1:n){
       # pts <- data.matrix(sdata_list[[i]][, c('lon', 'lat')])
@@ -142,6 +131,7 @@ track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 
         
         ## Exclude data with less than 3 locations
         sdata_list[[i]]$inAng <- NA
+        cat('\n', unique(sdata_list[[i]]$id), 'is ignored. Not enought data for calculation.')
         
       } else {
          
@@ -201,10 +191,14 @@ track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 
   }
 
  
-  ## Return the output
-  # if(input_class == 'data.frame'){
-  if(inherits(sdata, 'data.frame')){
-    sdata <- dplyr::bind_rows(sdata_list)
+  ## bring back excluded data
+  if(exists('exclude') && length(exclude) > 0){
+    sdata_list <- c(exclude, sdata_list)
   }
-  return(sdata)
+  
+  ## Return the output
+  if(inherits(sdata, 'data.frame')){
+    sdata_list <- dplyr::bind_rows(sdata_list)
+  }
+  return(sdata_list)
 }
