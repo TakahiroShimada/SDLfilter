@@ -65,7 +65,7 @@
 #' \emph{Marine and Tropical Sciences Research Facility (MTSRF) Project 2.5i.1a Final Report}, MTSRF, Cairns, Australia, pp. 13 plus Appendix 1.
 #' @seealso \code{\link{dupfilter}}, \code{\link{ddfilter}}
 #' @examples
-#' 
+#' \dontrun{
 #' #### Load data sets
 #' ## Fastloc GPS data obtained from a green turtle
 #' data(turtle)
@@ -102,6 +102,7 @@
 #'            size = 3, fill = c("yellow", "red"), shape = 21) + 
 #' annotate("text", x = c(152.7, 152.7), y = c(-25.3, -25.34), label = c("Retained", "Removed"), 
 #'          colour = "black", size = 4, hjust = 0)
+#'}          
 
 
 depthfilter <- function(sdata, bathymetry, bilinear = TRUE, qi = 4, tide, tidal.plane, type = "HT", height = 0, filter = TRUE) {
