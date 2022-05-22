@@ -66,6 +66,7 @@
 #' @seealso \code{\link{dupfilter}}, \code{\link{ddfilter}}
 #' @examples
 #' \dontrun{
+#' 
 #' #### Load data sets
 #' ## Fastloc GPS data obtained from a green turtle
 #' data(turtle)
@@ -88,10 +89,8 @@
 #' 
 #' 
 #' #### Apply depthfilter
-#' turtle <- depthfilter(sdata = turtle.dd, 
-#'                           bathymetry = bathymodel, 
-#'                           tide = tidedata, 
-#'                           tidal.plane = tidalplane)
+#' turtle <- depthfilter(sdata = turtle.dd, bathymetry = bathymodel, 
+#' tide = tidedata, tidal.plane = tidalplane)
 #' 
 #' 
 #' #### Plot data removed or retained by depthfilter

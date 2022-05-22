@@ -87,6 +87,7 @@ the tide effect considered (bathymetry + tide).
 The input data must not contain temporal or spatial duplicates.
 }
 \examples{
+\dontrun{
 
 #### Load data sets
 ## Fastloc GPS data obtained from a green turtle
@@ -110,10 +111,8 @@ turtle.dd <- ddfilter(dupfilter(turtle))
 
 
 #### Apply depthfilter
-turtle <- depthfilter(sdata = turtle.dd, 
-                          bathymetry = bathymodel, 
-                          tide = tidedata, 
-                          tidal.plane = tidalplane)
+turtle <- depthfilter(sdata = turtle.dd, bathymetry = bathymodel, 
+tide = tidedata, tidal.plane = tidalplane)
 
 
 #### Plot data removed or retained by depthfilter
@@ -124,6 +123,7 @@ geom_point(aes(x = x, y = y), data = data.frame(x = c(152.68, 152.68), y = c(-25
            size = 3, fill = c("yellow", "red"), shape = 21) + 
 annotate("text", x = c(152.7, 152.7), y = c(-25.3, -25.34), label = c("Retained", "Removed"), 
          colour = "black", size = 4, hjust = 0)
+}          
 }
 \references{
 Shimada T, Limpus C, Jones R, Hazel J, Groom R, Hamann M (2016) 
