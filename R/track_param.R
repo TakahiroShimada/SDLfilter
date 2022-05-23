@@ -71,7 +71,7 @@ track_param <- function (sdata, param = c('time', 'distance', 'speed', 'angle', 
   if(any(param %in% c('time', 'distance', 'speed', 'mean speed')) & any(nloc < 2)){
     exclude <- sdata_list[which(nloc < 2)]
     exclude.id <- sapply(exclude, function(x) x$id)
-    warning('ignored ', paste(unique(exclude.id), collapse=", "), ': Not enought data for calculation.')
+    warning('ignored ', paste(unique(exclude.id), collapse=", "), '\nNot enough data for calculation.')
     sdata_list <- sdata_list[-which(nloc < 2)]
   } 
   rm(nloc)

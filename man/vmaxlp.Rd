@@ -30,12 +30,12 @@ Maximum one-way linear speed of a loop trip (vmaxlp) estimated from the input da
 }
 \description{
 Function to estimate the maximum one-way linear speed of a loop trip as described in 
-\href{http://www.int-res.com/abstracts/meps/v457/p171-180/}{Shimada et al. (2012)}.
+\href{https://www.int-res.com/abstracts/meps/v457/p171-180/}{Shimada et al. (2012)}.
 }
 \details{
 The function first detects a "loop trip". 
 Loop trip behaviour is represented by spatial departure and return involving more than 3 consecutive locations 
-\href{http://www.int-res.com/abstracts/meps/v457/p171-180/}{(Shimada et al. 2012)}. 
+\href{https://www.int-res.com/abstracts/meps/v457/p171-180/}{(Shimada et al. 2012)}. 
 The function calculates the net (i.e. straight-line) distance between the departure and turning point as well as 
 the turning point and return location of a loop trip. 
 It then calculates the one-way travelling speed to or from each turning point for each loop trip. 
