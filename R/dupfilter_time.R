@@ -203,7 +203,9 @@ dupfilter_time <- function (sdata, step.time = 0, no.cores = 1) {
     rm(sdata1, sdata2, sdata3)
     
     ## Re-calculate
-    sdata <- track_param(sdata, param = 'time')
+    if(nrow(sdata) > 1){
+      sdata <- track_param(sdata, param = 'time')
+    }
 
     #### Return
     return(sdata)
