@@ -33,7 +33,7 @@ Sea turtles return home after intentional displacement from coastal foraging are
 \emph{Marine Biology} 163:1-14 \doi{10.1007/s00227-015-2771-0}
 }
 \seealso{
-\code{\link{dupfilter}}, \code{\link{dupfilter_qi}}, \code{\link{dupfilter_time}}, \code{\link{dupfilter_space}}, \code{\link{track_param}}
+\code{\link{dupfilter}}, \code{\link{dupfilter_qi}}, \code{\link{dupfilter_time}}, \code{\link{dupfilter_space}}
 }
 \author{
 Takahiro Shimada

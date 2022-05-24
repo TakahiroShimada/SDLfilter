@@ -59,7 +59,9 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
   
   
   ## Get movement parameters
-  sdata <- track_param(sdata, param = c('time', 'distance'))
+  if(nrow(sdata) > 1){
+    sdata <- track_param(sdata, param = c('time', 'distance'))
+  }
   
   
   #### Filter successive locations with the exactly same coordinates
@@ -72,7 +74,9 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
       sdata2 <- dplyr::anti_join(sdata, sdata1, by = c('id', 'DateTime', 'lat', 'lon', 'qi'))
 
       #### Group temporal duplicates
-      sdata1 <- track_param(sdata1, param = 'distance')
+      if(nrow(sdata1) > 1){
+        sdata1 <- track_param(sdata1, param = 'distance')
+      }
       index <- 0; g <- rep(0, nrow(sdata1))
       for(i in 1:nrow(sdata1)){
         if(any(is.na(sdata1[i, 'pDist']) | sdata1[i, 'sDist'] == 0, na.rm = TRUE)){
@@ -92,7 +96,9 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
       rm(sdata1, sdata2)
       
       #### Recalculate movement parameters
-      sdata <- track_param(sdata, param = c('time', 'distance'))
+      if(nrow(sdata) > 1){
+        sdata <- track_param(sdata, param = c('time', 'distance'))
+      }
     }
   } else {
     while(any(sdata$pDist == 0, na.rm = TRUE)){
@@ -103,7 +109,9 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
       sdata2 <- dplyr::anti_join(sdata, sdata1, by = c('id', 'DateTime', 'lat', 'lon', 'qi'))
       
       #### Group temporal duplicates
-      sdata1 <- track_param(sdata1, param = 'distance')
+      if(nrow(sdata1) > 1){
+        sdata1 <- track_param(sdata1, param = 'distance')
+      }
       index <- 0; g <- rep(0, nrow(sdata1))
       for(i in 1:nrow(sdata1)){
         if(any(is.na(sdata1[i, 'pDist']) | sdata1[i, 'sDist'] == 0, na.rm = TRUE)){
@@ -123,7 +131,9 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
       rm(sdata1, sdata2)
       
       #### Recalculate movement parameters
-      sdata <- track_param(sdata, param = c('time', 'distance'))
+      if(nrow(sdata) > 1){
+        sdata <- track_param(sdata, param = c('time', 'distance'))
+      }
     }
   }
   
@@ -144,7 +154,9 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
     
     
     #### Group temporal duplicates
-    sdata1 <- track_param(sdata1, param = 'distance')
+    if(nrow(sdata1) > 1){
+      sdata1 <- track_param(sdata1, param = 'distance')
+    }
     index <- 0; g <- rep(0, nrow(sdata1))
     for(i in 1:nrow(sdata1)){
       if(any(is.na(sdata1[i, 'pDist']) | (sdata1[i, 'sDist'] <= step.dist), na.rm = TRUE)){
@@ -248,7 +260,9 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
     rm(sdata1, sdata2, sdata3)
     
     ## Re-calculate
-    sdata <- track_param(sdata, param = c('time', 'distance'))
+    if(nrow(sdata) > 1){
+      sdata <- track_param(sdata, param = c('time', 'distance'))
+    }
     
     #### Return
     return(sdata)

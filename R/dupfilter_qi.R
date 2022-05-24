@@ -81,7 +81,10 @@ dupfilter_qi <- function(sdata = sdata, step.time = 0){
     
     
     #### Group temporal duplicates
-    sdata1 <- track_param(sdata1, param = 'time')
+    if(nrow(sdata1) > 1){
+      sdata1 <- track_param(sdata1, param = 'time')
+    }
+    
     index <- 0; g <- rep(0, nrow(sdata1))
     for(i in 1:nrow(sdata1)){
       if(any(is.na(sdata1[i, 'pTime']) | (sdata1[i, 'sTime'] <= step.time), na.rm = TRUE)){
