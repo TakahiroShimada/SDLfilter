@@ -69,54 +69,57 @@ ddfilter_loop<-function(sdata, qi=4, ia=90, vmaxlp=1.8){
             id.exclude <- names(ndata[as.numeric(ndata) < 4])
             excluded.data <- sdata[sdata$id %in% id.exclude,]
             sdata <- sdata[!(sdata$id %in% id.exclude),]
+            
+            if(nrow(sdata) > 0){
+              #### Organize data
+              ## Sort data in alphabetical and chronological order
+              sdata <- with(sdata, sdata[order(id, DateTime),])
+              row.names(sdata)<-1:nrow(sdata)
               
               
-            #### Organize data
-            ## Sort data in alphabetical and chronological order
-            sdata <- with(sdata, sdata[order(id, DateTime),])
-            row.names(sdata)<-1:nrow(sdata)
-            
-            
-            ## Get Id of each animal
-            IDs<-levels(factor(sdata$id))
-            
-            ## Get movement parameters
-            sdata <- track_param(sdata, param = c('time', 'distance', 'speed', 'angle'))
-            
-            
-            ### Remove location according to qi, inner angle and max LP speed
-            ##function to identify location to remove: (0 = remove, 1 = keep)
-            pick.rm<-function(i){
-              if(sdata$qi[i]<=qi && sdata$inAng[i]<ia && sdata$pSpeed[i]>vmaxlp &&
-                 (!is.na(sdata$qi[i])) && (!is.na(sdata$inAng[i])) && (!is.na(sdata$pSpeed[i]))){
-                0
-              } else if(sdata$qi[i]<=qi && sdata$inAng[i]<ia && sdata$sSpeed[i]>vmaxlp &&
-                        (!is.na(sdata$qi[i])) && (!is.na(sdata$inAng[i])) && (!is.na(sdata$sSpeed[i]))){
-                0
-              } else {
-                1  
+              ## Get Id of each animal
+              IDs<-levels(factor(sdata$id))
+              
+              ## Get movement parameters
+              sdata <- track_param(sdata, param = c('time', 'distance', 'speed', 'angle'))
+              
+              
+              ### Remove location according to qi, inner angle and max LP speed
+              ##function to identify location to remove: (0 = remove, 1 = keep)
+              pick.rm<-function(i){
+                if(sdata$qi[i]<=qi && sdata$inAng[i]<ia && sdata$pSpeed[i]>vmaxlp &&
+                   (!is.na(sdata$qi[i])) && (!is.na(sdata$inAng[i])) && (!is.na(sdata$pSpeed[i]))){
+                  0
+                } else if(sdata$qi[i]<=qi && sdata$inAng[i]<ia && sdata$sSpeed[i]>vmaxlp &&
+                          (!is.na(sdata$qi[i])) && (!is.na(sdata$inAng[i])) && (!is.na(sdata$sSpeed[i]))){
+                  0
+                } else {
+                  1  
+                }
               }
+              
+              ## Apply the above function to each data set separately
+              set.rm<-function(j){
+                start<-as.numeric(rownames(sdata[sdata$id %in% j,][2,]))
+                end<-as.numeric(rownames(sdata[sdata$id %in% j,][1,]))+(nrow(sdata[sdata$id %in% j,])-2)
+                rm<-unlist(lapply(start:end, pick.rm))
+                c(1, rm, 1)
+              }
+              
+              sdata$overLpMax<-unlist(lapply(IDs, set.rm))
+              
+              sdata<-sdata[sdata$overLpMax==1,]
+              
             }
-            
-            ## Apply the above funtion to each data set seperately
-            set.rm<-function(j){
-              start<-as.numeric(rownames(sdata[sdata$id %in% j,][2,]))
-              end<-as.numeric(rownames(sdata[sdata$id %in% j,][1,]))+(nrow(sdata[sdata$id %in% j,])-2)
-              rm<-unlist(lapply(start:end, pick.rm))
-              c(1, rm, 1)
-            }
-            
-            sdata$overLpMax<-unlist(lapply(IDs, set.rm))
-            
-            sdata<-sdata[sdata$overLpMax==1,]
-            
-            
+
             #### Bring back excluded data
             if(nrow(excluded.data)>0){
-                 sdata <- dplyr::bind_rows(sdata, excluded.data)
+              sdata <- dplyr::bind_rows(sdata, excluded.data)
             } else {
-                sdata<-sdata
+              sdata<-sdata
             }
+            
+            return(sdata)
           }
 
 

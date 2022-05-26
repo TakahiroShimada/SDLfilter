@@ -8,6 +8,11 @@ output:
 News for Package 'SDLfilter'
 =========
 
+#### Version 2.2.1.9001 (2022-05-26)
+
+* fixed minor bugs in the ddfilter, dupfilter and track_param functions.
+
+
 #### Version 2.2.1 (2022-05-15)
 
 * added a parallel computing option to the dupfilter_time, dupfilter_space, and dupfilter functions.
