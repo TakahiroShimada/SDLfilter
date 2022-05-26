@@ -256,7 +256,6 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
     
     #### Combine
     sdata <- dplyr::bind_rows(sdata1, sdata2, sdata3)
-    sdata$group <- NULL
     rm(sdata1, sdata2, sdata3)
     
     ## Re-calculate
@@ -318,7 +317,7 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
   
   
   #### Delete working columns and return the output
-  drop.vars <- c("pSpeed", "sSpeed", "inAng", "meanSpeed", "meanAngle")
+  drop.vars <- c("pSpeed", "sSpeed", "inAng", "meanSpeed", "meanAngle", 'group')
   sdata <- sdata[,!(names(sdata) %in% drop.vars)] 
   return(sdata)
 }
