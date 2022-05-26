@@ -55,55 +55,57 @@ ddfilter_speed<-function (sdata, vmax=8.9, method=1){
   
   
     max.speed<-function(sdata=sdata, vmax=vmax, method=method){
+      
       #### Exclude data with less than 4 locations
       ndata<-table(sdata$id)
       id.exclude<-names(ndata[as.numeric(ndata)<4])
       excluded.data<-sdata[sdata$id %in% id.exclude,]
       sdata<-sdata[!(sdata$id %in% id.exclude),]
       
-      
-      #### Organize data
-      ## Sort data in alphabetical and chronological order
-      sdata<-with(sdata, sdata[order(id, DateTime),])
-      row.names(sdata)<-1:nrow(sdata)
-      
-      
-      ## Get Id of each animal
-      IDs<-levels(factor(sdata$id))
-      
-      ## Get movement parameters
-      sdata <- track_param(sdata, param = c('time', 'distance', 'speed'))
-    
-    
-      # Select locations at which the speed from a previous and to a subsequent location exceeds maximum linear traveling speed (Vmax)
-      ## Function to identify location to remove: (0 = remove, 1 = keep)
-      if(method==1){
-        overMax<-function(i)
-        if(sdata$pSpeed[i]>vmax && sdata$sSpeed[i]>vmax && (!is.na(sdata$pSpeed[i])) && (!is.na(sdata$sSpeed[i]))){
-          0
-        } else {
-          1
-        }
-      } else if (method==2) {
-        overMax<-function(i)
-        if((sdata$pSpeed[i]>vmax | sdata$sSpeed[i]>vmax) && (!is.na(sdata$pSpeed[i])) && (!is.na(sdata$sSpeed[i]))){
-          0
-        } else {
-          1
-        }
-      }
-      
-      ## Apply the above function to each data set separately
-      set.rm<-function(j){
-        start<-as.numeric(rownames(sdata[sdata$id %in% j,][2,]))
-        end<-as.numeric(rownames(sdata[sdata$id %in% j,][1,]))+(nrow(sdata[sdata$id %in% j,])-2)
-        rm<-unlist(lapply(start:end, overMax))
-        c(1, rm, 1)
-      }
-      
-      sdata$overMax<-unlist(lapply(IDs, set.rm))
+      if(nrow(sdata) > 0){
+        #### Organize data
+        ## Sort data in alphabetical and chronological order
+        sdata<-with(sdata, sdata[order(id, DateTime),])
+        row.names(sdata)<-1:nrow(sdata)
         
-      sdata<-sdata[sdata$overMax==1,]
+        
+        ## Get Id of each animal
+        IDs<-levels(factor(sdata$id))
+        
+        ## Get movement parameters
+        sdata <- track_param(sdata, param = c('time', 'distance', 'speed'))
+        
+        
+        # Select locations at which the speed from a previous and to a subsequent location exceeds maximum linear traveling speed (Vmax)
+        ## Function to identify location to remove: (0 = remove, 1 = keep)
+        if(method==1){
+          overMax<-function(i)
+            if(sdata$pSpeed[i]>vmax && sdata$sSpeed[i]>vmax && (!is.na(sdata$pSpeed[i])) && (!is.na(sdata$sSpeed[i]))){
+              0
+            } else {
+              1
+            }
+        } else if (method==2) {
+          overMax<-function(i)
+            if((sdata$pSpeed[i]>vmax | sdata$sSpeed[i]>vmax) && (!is.na(sdata$pSpeed[i])) && (!is.na(sdata$sSpeed[i]))){
+              0
+            } else {
+              1
+            }
+        }
+        
+        ## Apply the above function to each data set separately
+        set.rm<-function(j){
+          start<-as.numeric(rownames(sdata[sdata$id %in% j,][2,]))
+          end<-as.numeric(rownames(sdata[sdata$id %in% j,][1,]))+(nrow(sdata[sdata$id %in% j,])-2)
+          rm<-unlist(lapply(start:end, overMax))
+          c(1, rm, 1)
+        }
+        
+        sdata$overMax<-unlist(lapply(IDs, set.rm))
+        
+        sdata<-sdata[sdata$overMax==1,]
+      }
       
       
       #### Bring back excluded data
@@ -113,8 +115,9 @@ ddfilter_speed<-function (sdata, vmax=8.9, method=1){
       } else {
         sdata <- sdata
       }
-    }
       
+      return(sdata)
+    }
 
   
   # Repeat the above function until no locations can be removed by this filter.
