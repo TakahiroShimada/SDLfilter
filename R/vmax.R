@@ -16,14 +16,13 @@
 #' @param prob A quantile value (0 to 1) specifying the range of a probability distribution to be considered when estimating the maximum linear speed. 
 #' See details. Default is 0.95.
 #' @param ... Extra arguments passed to \code{\link{dupfilter}}.
-#' @importFrom stats4 mle
+#' @importFrom stats pgamma optim
 #' @export
 #' @details The function first calculates the linear speed between each pair of two consecutive locations. 
 #' Some of the calculated linear speed can be inaccurate When the input data includes inaccurate locations (e.g. outliers).
-#' This issue is handled by estimating the probability distribution of the speed and discard values beyond a given probability range (e.g. 0.95 - default).
-#' More specifically, it assumes that linear speed follows a Gaussian distribution when log-transformed. 
-#' Maximum likelihood approach is to to estimate the mean and standard deviation of the distribution.
-#' The maximum value in a given probability range (e.g. 0.95) represents the maximum linear speed at which 
+#' This issue is handled by estimating a probability distribution of the speed and discard values beyond a given probability range (e.g. 0.95 - default).
+#' A Gamma distribution is assumed and the shape and scale parameters are estimated via maximum likelihood estimation using the \code{\link[stats:optim]{optim}} function.
+#' The maximum value within a given probability range (e.g. 0.95) represents the maximum linear speed at which 
 #' an animal would travel between two consecutive locations.   
 #' @return Maximum linear speed (vmax) estimated from the input data. The unit is km/h. 
 #' @author Takahiro Shimada
@@ -95,12 +94,12 @@ vmax<-function(sdata, qi=5, prob=0.99, ...){
   # para <- nlm(mlogl, theta.start, x = v, hessian = TRUE,
   #            fscale = length(v))
   
-  if(inherits(try(optim(par = theta.start, fn = mlogl, x = v), silent = TRUE), "try-error")){
+  if(inherits(try(stats::optim(par = theta.start, fn = mlogl, x = v), silent = TRUE), "try-error")){
     message('There is not enough data to estimate Vmax')
     return(NA)
   } else {
     suppressWarnings({
-      para <- optim(par = theta.start, fn = mlogl, x = v)
+      para <- stats::optim(par = theta.start, fn = mlogl, x = v)
     })
     
     p <- prob + (1 - prob)/2

@@ -35,10 +35,9 @@ Function to estimate the maximum linear speed between two consecutive locations 
 \details{
 The function first calculates the linear speed between each pair of two consecutive locations. 
 Some of the calculated linear speed can be inaccurate When the input data includes inaccurate locations (e.g. outliers).
-This issue is handled by estimating the probability distribution of the speed and discard values beyond a given probability range (e.g. 0.95 - default).
-More specifically, it assumes that linear speed follows a Gaussian distribution when log-transformed. 
-Maximum likelihood approach is to to estimate the mean and standard deviation of the distribution.
-The maximum value in a given probability range (e.g. 0.95) represents the maximum linear speed at which 
+This issue is handled by estimating a probability distribution of the speed and discard values beyond a given probability range (e.g. 0.95 - default).
+A Gamma distribution is assumed and the shape and scale parameters are estimated via maximum likelihood estimation using the \code{\link[stats:optim]{optim}} function.
+The maximum value within a given probability range (e.g. 0.95) represents the maximum linear speed at which 
 an animal would travel between two consecutive locations.
 }
 \references{

@@ -16,7 +16,7 @@
 #' @param prob A quantile value (0 to 1) specifying the range of a probability distribution to be considered when estimating the maximum linear speed. 
 #' See details. Default is 0.95.
 #' @param ... Extra arguments passed to \code{\link{dupfilter}}.
-#' @importFrom stats4 mle
+#' @importFrom stats pgamma optim
 #' @export
 #' @details The function first detects a "loop trip". 
 #' Loop trip behaviour is represented by spatial departure and return involving more than 3 consecutive locations 
@@ -25,8 +25,7 @@
 #' the turning point and return location of a loop trip. 
 #' It then calculates the one-way travelling speed to or from each turning point for each loop trip. 
 #' To exclude potential outliers, the function discards extreme values based on an estimated probability distribution for the loop trip speed.
-#' It assumes that loop trip speed follows a Gaussian distribution when log-transformed. 
-#' Maximum likelihood approach is used to estimate the mean and standard deviation of the distribution.
+#' A Gamma distribution is assumed and the shape and scale parameters are estimated via maximum likelihood estimation using the \code{\link[stats:optim]{optim}} function.
 #' The maximum value in a given probability range (e.g. 0.95) represents the maximum one-way linear speed at which 
 #' an animal would travel during a loop trip.
 #' @return Maximum one-way linear speed of a loop trip (vmaxlp) estimated from the input data. The unit km/h.
@@ -244,12 +243,12 @@ vmaxlp<-function(sdata, qi=4, prob=0.9, ...){
   # para <- nlm(mlogl, theta.start, x = Vlp, hessian = TRUE,
   #             fscale = length(Vlp))
   
-  if(inherits(try(optim(par = theta.start, fn = mlogl, x = Vlp), silent = TRUE), "try-error")){
+  if(inherits(try(stats::optim(par = theta.start, fn = mlogl, x = Vlp), silent = TRUE), "try-error")){
     message('There is not enough data to estimate vmaxlp')
     return(NA)
   } else {
     suppressWarnings({
-      para <- optim(par = theta.start, fn = mlogl, x = Vlp)
+      para <- stats::optim(par = theta.start, fn = mlogl, x = Vlp)
     })
     
     p <- prob + (1 - prob)/2
