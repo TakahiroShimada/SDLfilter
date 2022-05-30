@@ -4,7 +4,7 @@
 \alias{vmaxlp}
 \title{Estimate maximum one-way linear speed of a loop trip}
 \usage{
-vmaxlp(sdata, qi = 4, prob = 0.99, ...)
+vmaxlp(sdata, qi = 4, prob = 0.9, ...)
 }
 \arguments{
 \item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon", "qi". 
@@ -21,7 +21,8 @@ The greater number indicates a higher accuracy.}
 \item{qi}{An integer specifying the minimum quality index associated with a location used for the estimation. 
 Default is 4 (e.g. 4 GPS satellite or more).}
 
-\item{prob}{A numeric value to specify a sample quantile. Default is 0.99.}
+\item{prob}{A quantile value (0 to 1) specifying the range of a probability distribution to be considered when estimating the maximum linear speed. 
+See details. Default is 0.95.}
 
 \item{...}{Extra arguments passed to \code{\link{dupfilter}}.}
 }
@@ -29,8 +30,7 @@ Default is 4 (e.g. 4 GPS satellite or more).}
 Maximum one-way linear speed of a loop trip (vmaxlp) estimated from the input data. The unit km/h.
 }
 \description{
-Function to estimate the maximum one-way linear speed of a loop trip as described in 
-\href{https://www.int-res.com/abstracts/meps/v457/p171-180/}{Shimada et al. (2012)}.
+Function to estimate the maximum one-way linear speed of a loop trip using maximum likelihood estimation.
 }
 \details{
 The function first detects a "loop trip". 
@@ -39,8 +39,10 @@ Loop trip behaviour is represented by spatial departure and return involving mor
 The function calculates the net (i.e. straight-line) distance between the departure and turning point as well as 
 the turning point and return location of a loop trip. 
 It then calculates the one-way travelling speed to or from each turning point for each loop trip. 
-The function discards extreme values, based on the specified quantile, to exclude potential outliers from the estimation process.
-The maximum value in the retained dataset (i.e. without outliers) represents the maximum one-way linear speed at which 
+To exclude potential outliers, the function discards extreme values based on an estimated probability distribution for the loop trip speed.
+It assumes that loop trip speed follows a Gaussian distribution when log-transformed. 
+Maximum likelihood approach is used to estimate the mean and standard deviation of the distribution.
+The maximum value in a given probability range (e.g. 0.95) represents the maximum one-way linear speed at which 
 an animal would travel during a loop trip.
 }
 \note{

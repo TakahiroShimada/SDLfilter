@@ -1,7 +1,6 @@
 #' @aliases vmaxlp
 #' @title Estimate maximum one-way linear speed of a loop trip
-#' @description Function to estimate the maximum one-way linear speed of a loop trip as described in 
-#' \href{https://www.int-res.com/abstracts/meps/v457/p171-180/}{Shimada et al. (2012)}.
+#' @description Function to estimate the maximum one-way linear speed of a loop trip using maximum likelihood estimation.
 #' @param sdata A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon", "qi". 
 #' See the data \code{\link{turtle}} for an example.
 #' The function filters the input data by a unique "id" (e.g. transmitter number, identifier for each animal). 
@@ -14,9 +13,10 @@
 #' The greater number indicates a higher accuracy. 
 #' @param qi An integer specifying the minimum quality index associated with a location used for the estimation. 
 #' Default is 4 (e.g. 4 GPS satellite or more).
-#' @param prob A numeric value to specify a sample quantile. Default is 0.99.
+#' @param prob A quantile value (0 to 1) specifying the range of a probability distribution to be considered when estimating the maximum linear speed. 
+#' See details. Default is 0.95.
 #' @param ... Extra arguments passed to \code{\link{dupfilter}}.
-#' @importFrom stats quantile
+#' @importFrom stats4 mle
 #' @export
 #' @details The function first detects a "loop trip". 
 #' Loop trip behaviour is represented by spatial departure and return involving more than 3 consecutive locations 
@@ -24,8 +24,10 @@
 #' The function calculates the net (i.e. straight-line) distance between the departure and turning point as well as 
 #' the turning point and return location of a loop trip. 
 #' It then calculates the one-way travelling speed to or from each turning point for each loop trip. 
-#' The function discards extreme values, based on the specified quantile, to exclude potential outliers from the estimation process.
-#' The maximum value in the retained dataset (i.e. without outliers) represents the maximum one-way linear speed at which 
+#' To exclude potential outliers, the function discards extreme values based on an estimated probability distribution for the loop trip speed.
+#' It assumes that loop trip speed follows a Gaussian distribution when log-transformed. 
+#' Maximum likelihood approach is used to estimate the mean and standard deviation of the distribution.
+#' The maximum value in a given probability range (e.g. 0.95) represents the maximum one-way linear speed at which 
 #' an animal would travel during a loop trip.
 #' @return Maximum one-way linear speed of a loop trip (vmaxlp) estimated from the input data. The unit km/h.
 #' @author Takahiro Shimada
@@ -36,7 +38,7 @@
 #' @seealso \code{\link{ddfilter}}, \code{\link{ddfilter_loop}}, \code{\link{track_param}}, \code{\link{dupfilter}}
 
 
-vmaxlp<-function(sdata, qi=4, prob=0.99, ...){
+vmaxlp<-function(sdata, qi=4, prob=0.9, ...){
   #### Organize data
   ## qi format
   sdata <- within(sdata, {
@@ -204,27 +206,75 @@ vmaxlp<-function(sdata, qi=4, prob=0.99, ...){
   
   #### Retain locations with more than two consecutive points 
   sdata$npoints<-unlist(with(sdata, tapply(rownames, id, function(x) c(diff(x),NA))))
-  Vlp<-with(sdata, sdata[startEnd3==1 & npoints>2, "sSpeed"])
+  Vlp<-with(sdata, sdata[startEnd3==1 & npoints>2 & sSpeed > 0, "sSpeed"])
   
   
   #### Maximum Vlp given # percentile considered outliers
-  MaxVlp<-stats::quantile(Vlp, prob)
+  # MaxVlp<-stats::quantile(Vlp, prob)
+  ## or through maximum likelihood estimation
+  # likelihood function for normal distribution with two unknowns
+  # v <- log(Vlp)
+  # neg_log_lik_gaussian <- function(mu,sigma) {
+  #   -sum(dnorm(v, mean=mu, sd=sigma, log=TRUE))
+  # }
+  # 
+  # gaussian_fit <- stats4::mle(neg_log_lik_gaussian, 
+  #                             start=list(mu=1, sigma=1), method="L-BFGS-B") #  method="L-BFGS-B"
+  # mle_mean <- gaussian_fit@coef['mu']
+  # ml_sd <- gaussian_fit@coef['sigma']
+  # v_vec <- seq(min(v), max(v), by = 0.001)
+  # p.norm <- pnorm(v_vec, m=mle_mean, sd=ml_sd)
+  # p <- prob + (1 - prob)/2
+  # MaxVlp <- max(p.norm[p.norm < p])
+  # MaxVlp <- v_vec[max(which(p.norm < p))]
   
+  ## use Gamma distribution
+  # maximum likelihood estimation of gamma distribution parameters (shape, scale)
   
-  #### Report the results
-  SampleSize<-round(length(Vlp)*prob)
-  LoopTrips<-round(SampleSize/2)
-  cat("\n")
-  cat("The maximum one-way linear speed of a loop trip (vmaxlp) was estimated using", SampleSize, "Vlp from", LoopTrips, "loop trips.", fill = TRUE)
-  cat("vmaxlp:", round(MaxVlp,1), "km/h", fill = TRUE)
-  if(length(id.exclude)>0){
-    message('Warning: insufficient data to estimate vlp from:')
-    message(paste(id.exclude, collapse = ', '))
+  alpha.start <- mean(Vlp)^2 / var(Vlp)
+  lambda.start <- mean(Vlp) / var(Vlp)
+  theta.start <- c(alpha.start, lambda.start)
+  
+  mlogl <- function(theta, x) {
+    alpha <- theta[1]
+    lambda <- theta[2]
+    return(- sum(dgamma(x, shape = alpha, rate = lambda, log = TRUE)))
   }
-
   
-  #### Maximum Vlp given # percentile considered outliers
-  return(MaxVlp)
+  # para <- nlm(mlogl, theta.start, x = Vlp, hessian = TRUE,
+  #             fscale = length(Vlp))
+  
+  if(inherits(try(optim(par = theta.start, fn = mlogl, x = Vlp), silent = TRUE), "try-error")){
+    message('There is not enough data to estimate vmaxlp')
+    return(NA)
+  } else {
+    suppressWarnings({
+      para <- optim(par = theta.start, fn = mlogl, x = Vlp)
+    })
+    
+    p <- prob + (1 - prob)/2
+    v_vec <- seq(min(Vlp), max(Vlp), by = 0.001)
+    p.gamma <- stats::pgamma(v_vec, shape=para$par[1], scale=para$par[2])
+    p <- prob + (1 - prob)/2
+    MaxVlp <- v_vec[max(which(p.gamma < p))]
+    
+    
+    
+    #### Report the results
+    SampleSize<-round(length(Vlp)*prob)
+    LoopTrips<-round(SampleSize/2)
+    cat("\n")
+    cat("The maximum one-way linear speed of a loop trip (vmaxlp) was estimated using", SampleSize, "Vlp from", LoopTrips, "loop trips.", fill = TRUE)
+    cat("vmaxlp:", round(MaxVlp,3), "km/h", fill = TRUE)
+    if(length(id.exclude)>0){
+      message('Warning: insufficient data to estimate vlp from:')
+      message(paste(id.exclude, collapse = ', '))
+    }
+    
+    
+    #### Maximum Vlp given # percentile considered outliers
+    return(MaxVlp)
+  }
 }
   
 

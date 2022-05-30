@@ -124,7 +124,12 @@ to_map <- function(sdata, xlim=NULL, ylim=NULL, margin=10,
     
     #### Background map
     if(is.null(bgmap)){
-      map.data<-ggplot2::map_data('world', xlim=xlim, ylim=ylim)
+      if(inherits(try(ggplot2::map_data('world', xlim=xlim, ylim=ylim)), "try-error")){
+        map.data <- ggplot2::map_data('world', xlim=c(-180, 180), ylim=c(-90, 90))
+      } else {
+        map.data<-try(ggplot2::map_data('world', xlim=xlim, ylim=ylim))
+      }
+
       p <-ggplot(data=sdata.temp)+
         geom_polygon(aes_string(x="long", y="lat", group="group"), data=map.data, bg=map.bg, colour=map.col)
       

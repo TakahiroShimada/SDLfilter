@@ -21,7 +21,8 @@ The greater number indicates a higher accuracy.}
 \item{qi}{An integer specifying the lowest quality index of a location that is qualified to be used in the estimation. 
 Default is 5 (e.g. 5 GPS satellite or more).}
 
-\item{prob}{A numeric value to specify a sample quantile. Default is 0.99.}
+\item{prob}{A quantile value (0 to 1) specifying the range of a probability distribution to be considered when estimating the maximum linear speed. 
+See details. Default is 0.95.}
 
 \item{...}{Extra arguments passed to \code{\link{dupfilter}}.}
 }
@@ -29,12 +30,15 @@ Default is 5 (e.g. 5 GPS satellite or more).}
 Maximum linear speed (vmax) estimated from the input data. The unit is km/h.
 }
 \description{
-Function to estimate the maximum linear speed between two consecutive locations.
+Function to estimate the maximum linear speed between two consecutive locations using maximum likelihood estimation.
 }
 \details{
 The function first calculates the linear speed between each pair of two consecutive locations. 
-It then discards extreme values, based on the specified quantile, to exclude potential outliers from the estimation process. 
-The maximum value in the retained dataset (i.e. without outliers) represents the maximum linear speed at which 
+Some of the calculated linear speed can be inaccurate When the input data includes inaccurate locations (e.g. outliers).
+This issue is handled by estimating the probability distribution of the speed and discard values beyond a given probability range (e.g. 0.95 - default).
+More specifically, it assumes that linear speed follows a Gaussian distribution when log-transformed. 
+Maximum likelihood approach is to to estimate the mean and standard deviation of the distribution.
+The maximum value in a given probability range (e.g. 0.95) represents the maximum linear speed at which 
 an animal would travel between two consecutive locations.
 }
 \references{

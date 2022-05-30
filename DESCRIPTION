@@ -9,7 +9,7 @@ Description: Functions to filter GPS/Argos locations, as well as assessing the s
 Depends:
     R (>= 3.5.0), ggplot2
 Imports:
-    geosphere, data.table, gridExtra, ggsn, ggmap, maps, pracma, lubridate, dplyr, emmeans, utils, sf, stars
+    geosphere, data.table, gridExtra, ggsn, ggmap, maps, pracma, lubridate, dplyr, emmeans, utils, sf, stars, stats4
 License: GPL-2 | file LICENSE
 URL: https://github.com/TakahiroShimada/SDLfilter
 BugReports: https://github.com/TakahiroShimada/SDLfilter/issues

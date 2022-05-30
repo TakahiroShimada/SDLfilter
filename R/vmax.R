@@ -1,6 +1,6 @@
 #' @aliases vmax
 #' @title Estimate maximum linear speed
-#' @description Function to estimate the maximum linear speed between two consecutive locations.
+#' @description Function to estimate the maximum linear speed between two consecutive locations using maximum likelihood estimation.
 #' @param sdata A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon", "qi". 
 #' See the data \code{\link{turtle}} for an example.
 #' The function filters the input data by a unique "id" (e.g. transmitter number, identifier for each animal). 
@@ -13,13 +13,17 @@
 #' The greater number indicates a higher accuracy. 
 #' @param qi An integer specifying the lowest quality index of a location that is qualified to be used in the estimation. 
 #' Default is 5 (e.g. 5 GPS satellite or more).
-#' @param prob A numeric value to specify a sample quantile. Default is 0.99.
+#' @param prob A quantile value (0 to 1) specifying the range of a probability distribution to be considered when estimating the maximum linear speed. 
+#' See details. Default is 0.95.
 #' @param ... Extra arguments passed to \code{\link{dupfilter}}.
-#' @importFrom stats quantile
+#' @importFrom stats4 mle
 #' @export
 #' @details The function first calculates the linear speed between each pair of two consecutive locations. 
-#' It then discards extreme values, based on the specified quantile, to exclude potential outliers from the estimation process. 
-#' The maximum value in the retained dataset (i.e. without outliers) represents the maximum linear speed at which 
+#' Some of the calculated linear speed can be inaccurate When the input data includes inaccurate locations (e.g. outliers).
+#' This issue is handled by estimating the probability distribution of the speed and discard values beyond a given probability range (e.g. 0.95 - default).
+#' More specifically, it assumes that linear speed follows a Gaussian distribution when log-transformed. 
+#' Maximum likelihood approach is to to estimate the mean and standard deviation of the distribution.
+#' The maximum value in a given probability range (e.g. 0.95) represents the maximum linear speed at which 
 #' an animal would travel between two consecutive locations.   
 #' @return Maximum linear speed (vmax) estimated from the input data. The unit is km/h. 
 #' @author Takahiro Shimada
@@ -56,19 +60,65 @@ vmax<-function(sdata, qi=5, prob=0.99, ...){
   sdata <- track_param(sdata, param = c('time', 'distance', 'speed'))
   
   
-  #### Maximum speed given # percentile considered outliers
-  speed <- sdata$pSpeed[!(is.na(sdata$pSpeed))]
-  Vmax <- stats::quantile(speed, prob)
+  #### Maximum speed 
+  v <- with(sdata, sdata[!(is.na(pSpeed)) & pSpeed > 0, 'pSpeed'])
   
+  ## given x percentile considered to exclude outliers
+  # Vmax <- stats::quantile(speed, prob)
   
-  #### Report the results
-  SampleSize <- round(nrow(sdata)*prob)
-  cat("\n")
-  cat("The maximum linear speed (Vmax) was estimated using", SampleSize, "locations.", fill = TRUE)
-  cat("Vmax:", round(Vmax,1), "km/h", fill = TRUE)
-
+  ## or through maximum likelihood estimation
+  # likelihood function for normal distribution with two unknowns
+  # v <- log(speed)
+  # neg_log_lik_gaussian <- function(mu,sigma) {
+  #   -sum(dnorm(v, mean=mu, sd=sigma, log=TRUE))
+  # }
+  # 
+  # gaussian_fit <- stats4::mle(neg_log_lik_gaussian, start=list(mu=1, sigma=1), method="L-BFGS-B") #, method="L-BFGS-B"
+  # mle_mean <- gaussian_fit@coef['mu']
+  # ml_sd <- gaussian_fit@coef['sigma']
+  # v_vec <- seq(min(v), max(v), by = 0.001)
+  # p.norm <- pnorm(v_vec, m=mle_mean, sd=ml_sd)
   
-  #### Maximum speed given # percentile considered outliers
-  return(Vmax)
+  ## use Gamma distribution
+  # maximum likelihood estimation of gamma distribution parameters (shape, scale)
+  
+  alpha.start <- mean(v)^2 / var(v)
+  lambda.start <- mean(v) / var(v)
+  theta.start <- c(alpha.start, lambda.start)
+  
+  mlogl <- function(theta, x) {
+    alpha <- theta[1]
+    lambda <- theta[2]
+    return(- sum(dgamma(x, shape = alpha, rate = lambda, log = TRUE)))
+  }
+  
+  # para <- nlm(mlogl, theta.start, x = v, hessian = TRUE,
+  #            fscale = length(v))
+  
+  if(inherits(try(optim(par = theta.start, fn = mlogl, x = v), silent = TRUE), "try-error")){
+    message('There is not enough data to estimate Vmax')
+    return(NA)
+  } else {
+    suppressWarnings({
+      para <- optim(par = theta.start, fn = mlogl, x = v)
+    })
+    
+    p <- prob + (1 - prob)/2
+    v_vec <- seq(min(v), max(v), by = 0.001)
+    p.gamma <- stats::pgamma(v_vec, shape=para$par[1], scale=para$par[2])
+    p <- prob + (1 - prob)/2
+    Vmax <- v_vec[max(which(p.gamma < p))]
+    
+    
+    #### Report the results
+    SampleSize <- round(nrow(sdata)*prob)
+    cat("\n")
+    cat("The maximum linear speed (Vmax) was estimated using", SampleSize, "locations.", fill = TRUE)
+    cat("Vmax:", Vmax, "km/h", fill = TRUE)
+    
+    
+    #### Maximum speed given # percentile considered outliers
+    return(Vmax)
+  }
 }
 
