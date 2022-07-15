@@ -21,8 +21,9 @@ The greater number indicates a higher accuracy.}
 \item{qi}{An integer specifying the minimum quality index associated with a location used for the estimation. 
 Default is 4 (e.g. 4 GPS satellite or more).}
 
-\item{prob}{A quantile value (0 to 1) specifying the range of a probability distribution to be considered when estimating the maximum linear speed. 
-See details. Default is 0.95.}
+\item{prob}{A quantile value (0 to 1). 
+This value specifies the upper limit of probabilities within which the maximum linear speed is considered to be plausible. 
+Default is 0.9. See the below for more details.}
 
 \item{...}{Extra arguments passed to \code{\link{dupfilter}}.}
 }
@@ -41,7 +42,7 @@ the turning point and return location of a loop trip.
 It then calculates the one-way travelling speed to or from each turning point for each loop trip. 
 To exclude potential outliers, the function discards extreme values based on an estimated probability distribution for the loop trip speed.
 A Gamma distribution is assumed and the shape and scale parameters are estimated via maximum likelihood estimation using the \code{\link[stats:optim]{optim}} function.
-The maximum value in a given probability range (e.g. 0.95) represents the maximum one-way linear speed at which 
+The maximum value in a given probability range (e.g. 0.9) represents the maximum one-way linear speed at which 
 an animal would travel during a loop trip.
 }
 \note{

@@ -13,16 +13,18 @@
 #' The greater number indicates a higher accuracy. 
 #' @param qi An integer specifying the lowest quality index of a location that is qualified to be used in the estimation. 
 #' Default is 5 (e.g. 5 GPS satellite or more).
-#' @param prob A quantile value (0 to 1) specifying the range of a probability distribution to be considered when estimating the maximum linear speed. 
-#' See details. Default is 0.95.
+#' @param prob A quantile value (0 to 1). 
+#' This value specifies the upper limit of a probability distribution of linear speed, 
+#' from which maximum linear speed is determined. 
+#' Default is 0.99. See the below for more details.
 #' @param ... Extra arguments passed to \code{\link{dupfilter}}.
 #' @importFrom stats pgamma optim
 #' @export
 #' @details The function first calculates the linear speed between each pair of two consecutive locations. 
 #' Some of the calculated linear speed can be inaccurate When the input data includes inaccurate locations (e.g. outliers).
-#' This issue is handled by estimating a probability distribution of the speed and discard values beyond a given probability range (e.g. 0.95 - default).
+#' This issue is handled by estimating a probability distribution of the speed and discard values beyond a given probability range (e.g. 0.99 - default).
 #' A Gamma distribution is assumed and the shape and scale parameters are estimated via maximum likelihood estimation using the \code{\link[stats:optim]{optim}} function.
-#' The maximum value within a given probability range (e.g. 0.95) represents the maximum linear speed at which 
+#' The maximum value within a given probability range (e.g. 0.99) represents the maximum linear speed at which 
 #' an animal would travel between two consecutive locations.   
 #' @return Maximum linear speed (vmax) estimated from the input data. The unit is km/h. 
 #' @author Takahiro Shimada

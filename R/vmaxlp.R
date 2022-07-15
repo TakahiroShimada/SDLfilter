@@ -13,8 +13,10 @@
 #' The greater number indicates a higher accuracy. 
 #' @param qi An integer specifying the minimum quality index associated with a location used for the estimation. 
 #' Default is 4 (e.g. 4 GPS satellite or more).
-#' @param prob A quantile value (0 to 1) specifying the range of a probability distribution to be considered when estimating the maximum linear speed. 
-#' See details. Default is 0.95.
+#' @param prob A quantile value (0 to 1). 
+#' This value specifies the upper limit of a probability distribution of linear speed, 
+#' from which maximum one-way linear speed of a loop trip is determined. 
+#' Default is 0.9. See the below for more details.
 #' @param ... Extra arguments passed to \code{\link{dupfilter}}.
 #' @importFrom stats pgamma optim
 #' @export
@@ -26,7 +28,7 @@
 #' It then calculates the one-way travelling speed to or from each turning point for each loop trip. 
 #' To exclude potential outliers, the function discards extreme values based on an estimated probability distribution for the loop trip speed.
 #' A Gamma distribution is assumed and the shape and scale parameters are estimated via maximum likelihood estimation using the \code{\link[stats:optim]{optim}} function.
-#' The maximum value in a given probability range (e.g. 0.95) represents the maximum one-way linear speed at which 
+#' The maximum value in a given probability range (e.g. 0.9) represents the maximum one-way linear speed at which 
 #' an animal would travel during a loop trip.
 #' @return Maximum one-way linear speed of a loop trip (vmaxlp) estimated from the input data. The unit km/h.
 #' @author Takahiro Shimada
