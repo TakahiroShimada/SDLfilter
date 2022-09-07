@@ -18,7 +18,7 @@
 #' @param percent An integer specifying the percent volume of each UD to be considered in the analysis. 
 #' @param quantiles A vector or a number to specify the quantiles to be calculated in the summary of the results. 
 #' @importFrom stars st_as_stars
-#' @importFrom stats aggregate sd
+#' @importFrom stats aggregate sd quantile
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @export
 #' @details This function calculates and bootstraps overlap between UDs based on the areas ("HR"), 
@@ -195,7 +195,7 @@ boot_overlap <- function(data, R = 1000, method = "PHR", percent = 100, quantile
     c(mu = mean(x),
       std = stats::sd(x),
       sem = stats::sd(x)/sqrt(length(x)),
-      quantile(x, probs = quantiles))
+      stats::quantile(x, probs = quantiles))
   })
   summary.data <- cbind(N = summary.data[,1], as.data.frame(summary.data[,-1]))
   quantile_header <- quantiles * 100

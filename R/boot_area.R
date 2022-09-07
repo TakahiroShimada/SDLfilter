@@ -14,7 +14,7 @@
 #' @param quantiles A vector or a number to specify the quantiles to be calculated in the summary of the results. 
 #' @importFrom stars st_as_stars st_dimensions
 #' @importFrom dplyr bind_rows
-#' @importFrom stats aggregate sd
+#' @importFrom stats aggregate sd quantile
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @export
 #' @details This function calculates collective areas (e.g. 50\% UDs) of 1 to \emph{n} individuals by bootstrapping.
@@ -41,7 +41,7 @@
 #'   geom_pointrange(aes(y = y, ymin = y_lwr, ymax = y_upr)) + 
 #'   geom_point(aes(y = y), size = 2) + 
 #'   scale_x_continuous(breaks = seq(0, 15, 3), limits = c(2,15), name = "Animals tracked (n)") +
-#'   scale_y_continuous(name = expression(Area~(km^2)))
+#'   scale_y_continuous(name = expression(Area~(km^2)), labels=function(x) x/1e6)
 #' }
 
 
@@ -156,7 +156,7 @@ boot_area <- function(data, cell.size = NA, R = 1000, percent = 50, quantiles = 
       c(mu = mean(x),
         std = stats::sd(x),
         sem = stats::sd(x)/sqrt(length(x)),
-        quantile(x, probs = quantiles))
+        stats::quantile(x, probs = quantiles))
     })
     summary.data <- cbind(N = summary.data[,1], as.data.frame(summary.data[,-1]))
     quantile_header <- quantiles * 100

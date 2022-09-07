@@ -2,9 +2,9 @@
 % Please edit documentation in R/vmaxlp.R
 \name{vmaxlp}
 \alias{vmaxlp}
-\title{Estimate maximum one-way linear speed of a loop trip}
+\title{Maximum one-way linear speed of a loop trip}
 \usage{
-vmaxlp(sdata, qi = 4, prob = 0.9, ...)
+vmaxlp(sdata, qi = 4, method = "ML", prob = 0.9, ...)
 }
 \arguments{
 \item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon", "qi". 
@@ -21,9 +21,12 @@ The greater number indicates a higher accuracy.}
 \item{qi}{An integer specifying the minimum quality index associated with a location used for the estimation. 
 Default is 4 (e.g. 4 GPS satellite or more).}
 
+\item{method}{Available options are "sample" (i.e. sample quantile - see \code{\link[stats:quantile]{quantile}})
+and "ML" (maximum likelihood estimation - see details). Default is "ML".}
+
 \item{prob}{A quantile value (0 to 1). 
-This value specifies the upper limit of probabilities within which the maximum linear speed is considered to be plausible. 
-Default is 0.9. See the below for more details.}
+This value specifies the upper limit of a sample quantile or a probability distribution of linear speed, 
+from which maximum one-way linear speed of a loop trip is determined. Default is 0.9. See details.}
 
 \item{...}{Extra arguments passed to \code{\link{dupfilter}}.}
 }
@@ -31,7 +34,7 @@ Default is 0.9. See the below for more details.}
 Maximum one-way linear speed of a loop trip (vmaxlp) estimated from the input data. The unit km/h.
 }
 \description{
-Function to estimate the maximum one-way linear speed of a loop trip using maximum likelihood estimation.
+Function to estimate the maximum one-way linear speed of a loop trip.
 }
 \details{
 The function first detects a "loop trip". 
@@ -40,9 +43,11 @@ Loop trip behaviour is represented by spatial departure and return involving mor
 The function calculates the net (i.e. straight-line) distance between the departure and turning point as well as 
 the turning point and return location of a loop trip. 
 It then calculates the one-way travelling speed to or from each turning point for each loop trip. 
-To exclude potential outliers, the function discards extreme values based on an estimated probability distribution for the loop trip speed.
-A Gamma distribution is assumed and the shape and scale parameters are estimated via maximum likelihood estimation using the \code{\link[stats:optim]{optim}} function.
-The maximum value in a given probability range (e.g. 0.9) represents the maximum one-way linear speed at which 
+To exclude implausible outliers, the function discards extreme values based on the specified quantile or 
+an estimated probability distribution for the loop trip speed, depending on the selected \emph{method}. 
+If the "ML" method is selected, a Gamma distribution is assumed and the shape and scale parameters are estimated via maximum likelihood estimation 
+using the \code{\link[stats:optim]{optim}} function.
+The maximum value within a given quantile or probability range (e.g. 0.9) represents the maximum one-way linear speed at which 
 an animal would travel during a loop trip.
 }
 \note{
