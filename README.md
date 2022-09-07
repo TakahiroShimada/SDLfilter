@@ -195,7 +195,7 @@ The sample size linked to this value was deemed to be the minimum sample
 size required to represent the general distribution of the group.
 
 ``` r
-a <- asymptote(overlap, upper.degree = 10, estimator = 'glm', family = binomial)
+a <- asymptote(overlap, upper.degree = 5, estimator = 'glm', family = binomial)
 ```
 
 #### 2-4. Plot the estimated overlap probabilities relative to the sample sizes (black points), the 95% confidence intervals (grey lines), and 95% of the estimated asymptote (dashed line).
@@ -248,4 +248,4 @@ Evol* 12(2):288-297 doi:
 
 ## Current version
 
-2.2.3.9001 (2022-09-07)
+2.2.3.9002 (2022-09-07)
