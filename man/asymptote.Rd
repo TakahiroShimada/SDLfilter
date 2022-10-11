@@ -9,7 +9,7 @@ asymptote(
   x = NULL,
   y = NULL,
   degree = "optim",
-  upper.degree = 10,
+  upper.degree = 5,
   d1 = NA,
   d2 = NA,
   threshold = 0.95,
@@ -32,7 +32,7 @@ Alternatively, an integer can be used to specify the maximal degree.
 The 'optim' option is recommended unless there is a strong reason that a maximal degree should be specified.}
 
 \item{upper.degree}{The upper limit of the maximal degree to be assessed when the 'optim' option is selected. 
-Default is 10, meaning the "optimal" degree is searched from 1 and 10. 
+Default is 5, meaning the "optimal" degree is searched from 1 and 10. 
 The default usually gives good results. If the fit does not look good, a larger value may result in a better fit.}
 
 \item{d1, d2}{(Deprecated) Maximal degrees of numerator (d1) and denominator (d2) of a rational function. d1 and d2 must be equal. 

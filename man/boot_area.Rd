@@ -55,7 +55,7 @@ ggplot(data = a$results, aes(x = x))+
   geom_pointrange(aes(y = y, ymin = y_lwr, ymax = y_upr)) + 
   geom_point(aes(y = y), size = 2) + 
   scale_x_continuous(breaks = seq(0, 15, 3), limits = c(2,15), name = "Animals tracked (n)") +
-  scale_y_continuous(name = expression(Area~(km^2)))
+  scale_y_continuous(name = expression(Area~(km^2)), labels=function(x) x/1e6)
 }
 }
 \references{

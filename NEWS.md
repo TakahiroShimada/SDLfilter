@@ -8,7 +8,7 @@ output:
 News for Package 'SDLfilter'
 =========
 
-#### Version 2.2.3.9001 (2022-09-07)
+#### Version 2.3.0 (2022-10-11)
 
 * improved the estimation of vmax of vmaxlp by implementing Maximum Likelihood estimation.
 * fixed minor bugs in the ddfilter, dupfilter and track_param functions.
