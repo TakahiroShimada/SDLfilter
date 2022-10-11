@@ -10,36 +10,12 @@ There were no ERRORs or WARNINGs, and 1 NOTE as below when run on windows (win-b
 Please note each of the points within the note is verified and all information is correct.
 
 
-* checking CRAN incoming feasibility ... NOTE
+* checking CRAN incoming feasibility ... [19s] NOTE
 Maintainer: 'Takahiro Shimada <taka.shimada@gmail.com>'
 
-New submission
-
-Package was archived on CRAN
-
-Possibly misspelled words in DESCRIPTION:
-  Shimada (8:295, 8:345, 8:571)
-  al (8:306, 8:356, 8:582)
-  et (8:303, 8:353, 8:579)
-
 Found the following (possibly) invalid URLs:
-  URL: http://www.int-res.com/abstracts/meps/v457/p171-180/ (moved to https://www.int-res.com/abstracts/meps/v457/p171-180/)
-    From: man/vmaxlp.Rd
-    Status: 200
-    Message: OK
   URL: https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.13506
     From: man/flatback.Rd
           man/ud_matrix.Rd
     Status: 503
     Message: Service Unavailable
-  URL: https://doi.org/10.1111/2041-210X.13506
-    From: README.md
-    Status: 503
-    Message: Service Unavailable
-
-Found the following (possibly) invalid DOIs:
-  DOI: 10.1111/2041-210X.13506
-    From: DESCRIPTION
-          inst/CITATION
-    Status: Service Unavailable
-    Message: 503
