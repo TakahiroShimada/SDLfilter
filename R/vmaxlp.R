@@ -71,216 +71,222 @@ vmaxlp <- function(sdata, qi=4, method = 'ML', prob=0.9, ...){
   ndata<-table(as.character(sdata$id))
   id.exclude<-names(ndata[as.numeric(ndata)<8])
   sdata<-with(sdata, sdata[!id %in% id.exclude,])
-
-  ## Renew IDs and row names
-  IDs<-levels(factor(sdata$id))
-  row.names(sdata)<-1:nrow(sdata)
-  
- 
-  #### Identify loop trips
-  ## continuous straight movements 
-  # function to identify straight movements: (1=straight, 0=curve)
-  straight<-function(i){
-    if (sdata$inAng[i]>90){
-      1
-    } else if (sdata$inAng[i-2]>90 && sdata$inAng[i-1]>90 && sdata$inAng[i]<90 && sdata$inAng[i+1]<90 && sdata$inAng[i+2]>90){
-      1
-    } else if(sdata$inAng[i-2]>90 && sdata$inAng[i-1]<90 && sdata$inAng[i]<90 && sdata$inAng[i+1]>90 && sdata$inAng[i+2]>90){
-      1 
-    } else {
-      0
-    }
-  }
-  
-  # Apply the above function to each data set separately
-  straight.group<-function(j){
-    start<-as.numeric(rownames(sdata[sdata$id %in% j,][4,]))
-    end<-as.numeric(rownames(sdata[sdata$id %in% j,][1,]))+(nrow(sdata[sdata$id %in% j,])-4)
-    group<-unlist(lapply(start:end, straight))
-    c(3, 3, 3, group, 3, 3, 3)
-  }
-  
-  sdata$straightMove<-unlist(lapply(IDs, straight.group))
-
-  
-  ## Identify the first and last points of each straight movement 
-  # function to identify start and end points: (1=start, 2=end, others=3)
-  start.straight<-function(i){
-    if(sdata$straightMove[i]==0 && sdata$straightMove[i+1]==1){
-      1
-    } else if (sdata$straightMove[i]==0 && sdata$straightMove[i-1]==1){
-      2
-    } else {
-      3
-    }
-  }
   
   
-  # Apply the above function to each data set separately
-  start.straight.group<-function(j){
-    start<-as.numeric(rownames(sdata[sdata$id %in% j,][2,]))
-    end<-as.numeric(rownames(sdata[sdata$id %in% j,][1,]))+(nrow(sdata[sdata$id %in% j,])-2)
-    group<-unlist(lapply(start:end, start.straight))
-    c(1, group, 2)
-  }
-  
-  sdata$startEnd<-unlist(lapply(IDs, start.straight.group))
-  
-  
-  ## Remove points with 3
-  sdata<-sdata[sdata$startEnd<3,]
-  sdata$rownames<-as.numeric(rownames(sdata))
-  row.names(sdata)<-1:nrow(sdata)
-  
-  
-  ## Extract start and end points (except first and last points of each data set)
-  # function to identify actual start and end points: (1=start, 2=end, others=3)
-  start.end<-function(i){
-    if(sdata$startEnd[i]==1 && sdata$startEnd[i+1]==1){
-      3
-    } else if (sdata$startEnd[i]==1 && sdata$startEnd[i+1]==2){
-      1
-    } else if (sdata$startEnd[i]==2 && sdata$startEnd[i-1]==1) {
-      2
-    } else {
-      3
-    }
-  }
-  
-  
-  # Apply the above function to each data set separately
-  start.end.group<-function(j){
-    sdataTEMP<-sdata[sdata$id %in% j,]
-    rowNumbers<-as.numeric(rownames(sdataTEMP[c(-1, -nrow(sdataTEMP)),]))
-    group<-unlist(lapply(rowNumbers, start.end))
-    c(1, group, 2)
-  }
-  
-  sdata$startEnd2<-unlist(lapply(IDs, start.end.group))
-  
-  
-  ## Remove points with 3
-  sdata<-sdata[sdata$startEnd2<3,]
-  row.names(sdata)<-1:nrow(sdata)
-  
-  
-  ## Extract start and end points (First point of each data set)
-  # function to identify actual start and end points: (1=start, 2=end, others=3)
-  FirstPoint<-function(i){
-    if(sdata$startEnd[i]==1 && sdata$startEnd[i+1]==1){
-      3
-    } else {
-      1
-    }
-  }
-  
-  LastPoint<-function(i){
-    if(sdata$startEnd[i]==2 && sdata$startEnd[i-1]==2){
-      3
-    } else {
-      2
-    }
-  }
-  
-  
-  # Apply the above function to each data set separately
-  FirstEndPoints.group<-function(j){
-    sdataTEMP<-sdata[sdata$id %in% j,]
-    
-    FirstRow<-as.numeric(rownames(sdataTEMP[1,]))
-    FirstStatus<-unlist(lapply(FirstRow, FirstPoint))
-    
-    LastRow<-as.numeric(rownames(sdataTEMP[nrow(sdataTEMP),]))
-    LastStatus<-unlist(lapply(LastRow, LastPoint))
+  if(nrow(sdata) > 0){
+    ## Renew IDs and row names
+    IDs<-levels(factor(sdata$id))
+    row.names(sdata) <- 1:nrow(sdata)
     
     
-    c(FirstStatus, sdataTEMP[c(-1, -nrow(sdataTEMP)), "startEnd2"], LastStatus)
-  }
-  
-  sdata$startEnd3<-unlist(lapply(IDs, FirstEndPoints.group))
-  
-  
-  ## Remove points with 3
-  sdata<-sdata[sdata$startEnd3<3,]
-  row.names(sdata)<-1:nrow(sdata)
-  
-  
-  ## Get movement parameters
-  sdata <- track_param(sdata, param = 'speed')
-  # sdata <- track_param(sdata, param = c('time', 'distance', 'speed'))
-  
-  
-  #### Retain locations with more than two consecutive points 
-  sdata$npoints <- unlist(with(sdata, tapply(rownames, id, function(x) c(diff(x),NA))))
-  Vlp <- with(sdata, sdata[startEnd3 == 1 & npoints > 2 & sSpeed > 0, "sSpeed"])
-  
-  
-  #### Maximum Vlp 
-  if(method == "ML"){
-    
-    ## or through maximum likelihood estimation
-    # likelihood function for normal distribution with two unknowns
-    # v <- log(Vlp)
-    # neg_log_lik_gaussian <- function(mu,sigma) {
-    #   -sum(dnorm(v, mean=mu, sd=sigma, log=TRUE))
-    # }
-    # 
-    # gaussian_fit <- stats4::mle(neg_log_lik_gaussian, 
-    #                             start=list(mu=1, sigma=1), method="L-BFGS-B") #  method="L-BFGS-B"
-    # mle_mean <- gaussian_fit@coef['mu']
-    # ml_sd <- gaussian_fit@coef['sigma']
-    # v_vec <- seq(min(v), max(v), by = 0.001)
-    # p.norm <- pnorm(v_vec, m=mle_mean, sd=ml_sd)
-    # p <- prob + (1 - prob)/2
-    # MaxVlp <- max(p.norm[p.norm < p])
-    # MaxVlp <- v_vec[max(which(p.norm < p))]
-    
-    ## use Gamma distribution
-    # maximum likelihood estimation of gamma distribution parameters (shape, scale)
-    
-    alpha.start <- mean(Vlp)^2 / stats::var(Vlp)
-    lambda.start <- mean(Vlp) / stats::var(Vlp)
-    theta.start <- c(alpha.start, lambda.start)
-    
-    mlogl <- function(theta, x) {
-      alpha <- theta[1]
-      lambda <- theta[2]
-      return(- sum(stats::dgamma(x, shape = alpha, rate = lambda, log = TRUE)))
+    #### Identify loop trips
+    ## continuous straight movements 
+    # function to identify straight movements: (1=straight, 0=curve)
+    straight<-function(i){
+      if (sdata$inAng[i]>90){
+        1
+      } else if (sdata$inAng[i-2]>90 && sdata$inAng[i-1]>90 && sdata$inAng[i]<90 && sdata$inAng[i+1]<90 && sdata$inAng[i+2]>90){
+        1
+      } else if(sdata$inAng[i-2]>90 && sdata$inAng[i-1]<90 && sdata$inAng[i]<90 && sdata$inAng[i+1]>90 && sdata$inAng[i+2]>90){
+        1 
+      } else {
+        0
+      }
     }
     
-    # para <- nlm(mlogl, theta.start, x = Vlp, hessian = TRUE,
-    #             fscale = length(Vlp))
+    # Apply the above function to each data set separately
+    straight.group<-function(j){
+      start<-as.numeric(rownames(sdata[sdata$id %in% j,][4,]))
+      end<-as.numeric(rownames(sdata[sdata$id %in% j,][1,]))+(nrow(sdata[sdata$id %in% j,])-4)
+      group<-unlist(lapply(start:end, straight))
+      c(3, 3, 3, group, 3, 3, 3)
+    }
     
-    if(suppressWarnings({
-      inherits(try(stats::optim(par = theta.start, fn = mlogl, x = Vlp), silent = TRUE), "try-error")
+    sdata$straightMove<-unlist(lapply(IDs, straight.group))
+    
+    
+    ## Identify the first and last points of each straight movement 
+    # function to identify start and end points: (1=start, 2=end, others=3)
+    start.straight<-function(i){
+      if(sdata$straightMove[i]==0 && sdata$straightMove[i+1]==1){
+        1
+      } else if (sdata$straightMove[i]==0 && sdata$straightMove[i-1]==1){
+        2
+      } else {
+        3
+      }
+    }
+    
+    
+    # Apply the above function to each data set separately
+    start.straight.group<-function(j){
+      start<-as.numeric(rownames(sdata[sdata$id %in% j,][2,]))
+      end<-as.numeric(rownames(sdata[sdata$id %in% j,][1,]))+(nrow(sdata[sdata$id %in% j,])-2)
+      group<-unlist(lapply(start:end, start.straight))
+      c(1, group, 2)
+    }
+    
+    sdata$startEnd<-unlist(lapply(IDs, start.straight.group))
+    
+    
+    ## Remove points with 3
+    sdata<-sdata[sdata$startEnd<3,]
+    sdata$rownames<-as.numeric(rownames(sdata))
+    row.names(sdata)<-1:nrow(sdata)
+    
+    
+    ## Extract start and end points (except first and last points of each data set)
+    # function to identify actual start and end points: (1=start, 2=end, others=3)
+    start.end<-function(i){
+      if(sdata$startEnd[i]==1 && sdata$startEnd[i+1]==1){
+        3
+      } else if (sdata$startEnd[i]==1 && sdata$startEnd[i+1]==2){
+        1
+      } else if (sdata$startEnd[i]==2 && sdata$startEnd[i-1]==1) {
+        2
+      } else {
+        3
+      }
+    }
+    
+    
+    # Apply the above function to each data set separately
+    start.end.group<-function(j){
+      sdataTEMP<-sdata[sdata$id %in% j,]
+      rowNumbers<-as.numeric(rownames(sdataTEMP[c(-1, -nrow(sdataTEMP)),]))
+      group<-unlist(lapply(rowNumbers, start.end))
+      c(1, group, 2)
+    }
+    
+    sdata$startEnd2<-unlist(lapply(IDs, start.end.group))
+    
+    
+    ## Remove points with 3
+    sdata<-sdata[sdata$startEnd2<3,]
+    row.names(sdata)<-1:nrow(sdata)
+    
+    
+    ## Extract start and end points (First point of each data set)
+    # function to identify actual start and end points: (1=start, 2=end, others=3)
+    FirstPoint<-function(i){
+      if(sdata$startEnd[i]==1 && sdata$startEnd[i+1]==1){
+        3
+      } else {
+        1
+      }
+    }
+    
+    LastPoint<-function(i){
+      if(sdata$startEnd[i]==2 && sdata$startEnd[i-1]==2){
+        3
+      } else {
+        2
+      }
+    }
+    
+    
+    # Apply the above function to each data set separately
+    FirstEndPoints.group<-function(j){
+      sdataTEMP<-sdata[sdata$id %in% j,]
+      
+      FirstRow<-as.numeric(rownames(sdataTEMP[1,]))
+      FirstStatus<-unlist(lapply(FirstRow, FirstPoint))
+      
+      LastRow<-as.numeric(rownames(sdataTEMP[nrow(sdataTEMP),]))
+      LastStatus<-unlist(lapply(LastRow, LastPoint))
+      
+      
+      c(FirstStatus, sdataTEMP[c(-1, -nrow(sdataTEMP)), "startEnd2"], LastStatus)
+    }
+    
+    sdata$startEnd3<-unlist(lapply(IDs, FirstEndPoints.group))
+    
+    
+    ## Remove points with 3
+    sdata<-sdata[sdata$startEnd3<3,]
+    row.names(sdata)<-1:nrow(sdata)
+    
+    
+    ## Get movement parameters
+    sdata <- track_param(sdata, param = 'speed')
+    # sdata <- track_param(sdata, param = c('time', 'distance', 'speed'))
+    
+    
+    #### Retain locations with more than two consecutive points 
+    sdata$npoints <- unlist(with(sdata, tapply(rownames, id, function(x) c(diff(x),NA))))
+    Vlp <- with(sdata, sdata[startEnd3 == 1 & npoints > 2 & sSpeed > 0, "sSpeed"])
+    
+    
+    #### Maximum Vlp 
+    if(method == "ML"){
+      
+      ## or through maximum likelihood estimation
+      # likelihood function for normal distribution with two unknowns
+      # v <- log(Vlp)
+      # neg_log_lik_gaussian <- function(mu,sigma) {
+      #   -sum(dnorm(v, mean=mu, sd=sigma, log=TRUE))
+      # }
+      # 
+      # gaussian_fit <- stats4::mle(neg_log_lik_gaussian, 
+      #                             start=list(mu=1, sigma=1), method="L-BFGS-B") #  method="L-BFGS-B"
+      # mle_mean <- gaussian_fit@coef['mu']
+      # ml_sd <- gaussian_fit@coef['sigma']
+      # v_vec <- seq(min(v), max(v), by = 0.001)
+      # p.norm <- pnorm(v_vec, m=mle_mean, sd=ml_sd)
+      # p <- prob + (1 - prob)/2
+      # MaxVlp <- max(p.norm[p.norm < p])
+      # MaxVlp <- v_vec[max(which(p.norm < p))]
+      
+      ## use Gamma distribution
+      # maximum likelihood estimation of gamma distribution parameters (shape, scale)
+      
+      alpha.start <- mean(Vlp)^2 / stats::var(Vlp)
+      lambda.start <- mean(Vlp) / stats::var(Vlp)
+      theta.start <- c(alpha.start, lambda.start)
+      
+      mlogl <- function(theta, x) {
+        alpha <- theta[1]
+        lambda <- theta[2]
+        return(- sum(stats::dgamma(x, shape = alpha, rate = lambda, log = TRUE)))
+      }
+      
+      # para <- nlm(mlogl, theta.start, x = Vlp, hessian = TRUE,
+      #             fscale = length(Vlp))
+      
+      if(suppressWarnings({
+        inherits(try(stats::optim(par = theta.start, fn = mlogl, x = Vlp), silent = TRUE), "try-error")
       })){
-      message('There is not enough data to estimate vmaxlp')
-      return(NA)
+        message('There is not enough data to estimate vmaxlp')
+        return(NA)
+      } else {
+        suppressWarnings({
+          para <- stats::optim(par = theta.start, fn = mlogl, x = Vlp)
+        })
+        
+        p <- prob + (1 - prob)/2
+        v_vec <- seq(min(Vlp), max(Vlp), by = 0.001)
+        p.gamma <- stats::pgamma(v_vec, shape=para$par[1], scale=para$par[2])
+        p <- prob + (1 - prob)/2
+        MaxVlp <- v_vec[max(which(p.gamma < p))]
+      }
     } else {
-      suppressWarnings({
-        para <- stats::optim(par = theta.start, fn = mlogl, x = Vlp)
-      })
-      
-      p <- prob + (1 - prob)/2
-      v_vec <- seq(min(Vlp), max(Vlp), by = 0.001)
-      p.gamma <- stats::pgamma(v_vec, shape=para$par[1], scale=para$par[2])
-      p <- prob + (1 - prob)/2
-      MaxVlp <- v_vec[max(which(p.gamma < p))]
+      # given # percentile considered outliers
+      MaxVlp <- stats::quantile(Vlp, prob)
     }
+    
+    #### Report the results
+    SampleSize<-round(length(Vlp)*prob)
+    LoopTrips<-round(SampleSize/2)
+    cat("\n")
+    cat("The maximum one-way linear speed of a loop trip (vmaxlp) was estimated using", SampleSize, "Vlp from", LoopTrips, "loop trips.", fill = TRUE)
+    cat("vmaxlp:", round(MaxVlp,3), "km/h", fill = TRUE)
   } else {
-    # given # percentile considered outliers
-    MaxVlp <- stats::quantile(Vlp, prob)
+    MaxVlp <- NA
   }
-      
-      
-  #### Report the results
-  SampleSize<-round(length(Vlp)*prob)
-  LoopTrips<-round(SampleSize/2)
-  cat("\n")
-  cat("The maximum one-way linear speed of a loop trip (vmaxlp) was estimated using", SampleSize, "Vlp from", LoopTrips, "loop trips.", fill = TRUE)
-  cat("vmaxlp:", round(MaxVlp,3), "km/h", fill = TRUE)
+  
+  
   if(length(id.exclude) > 0){
-    message('Warning: insufficient data to estimate vlp from:')
+    message('Warning: insufficient data to estimate vlp for:')
     message(paste(id.exclude, collapse = ', '))
   }
   

@@ -8,6 +8,9 @@ output:
 News for Package 'SDLfilter'
 =========
 
+#### Version 2.3.0.9001 (2022-10-17)
+* fixed an error in the vmaxlp function that occurs when there is not enough data for the calculation.
+
 #### Version 2.3.0 (2022-10-11)
 
 * improved the estimation of vmax of vmaxlp by implementing Maximum Likelihood estimation.
