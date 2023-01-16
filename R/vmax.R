@@ -14,20 +14,20 @@
 #' @param qi An integer specifying the lowest quality index of a location that is qualified to be used in the estimation. 
 #' Default is 5 (e.g. 5 GPS satellite or more).
 #' @param method Available options are "sample" (i.e. sample quantile - see \code{\link[stats:quantile]{quantile}})
-#' and "ML" (maximum likelihood estimation - see details). Default is "ML".
-#' @param prob A quantile value (0 to 1). 
-#' This value specifies the upper limit of a sample quantile or a probability distribution of linear speed, 
-#' from which maximum linear speed is determined. Default is 0.99. See details.
+#' and "ML" (maximum likelihood estimation). Default is "ML". See details.
+#' @param prob A value (0 to 1) specifying the sample quantile or cumulative probability for linear speed.
+#' Values beyond this threshold are considered 'outliers' and excluded from estimation of maximum linear speed. 
+#' Default is 0.99. See details.
 #' @param ... Extra arguments passed to \code{\link{dupfilter}}.
 #' @importFrom stats pgamma dgamma optim var
 #' @export
 #' @details The function first calculates the linear speed between each pair of two consecutive locations. 
-#' Some of the calculated linear speed can be inaccurate when input data contains inaccurate locations (e.g. outliers).
-#' To exclude implausible outliers, the function discards extreme values based on the specified quantile or 
-#' an estimated probability distribution for the loop trip speed, depending on the selected \emph{method}. 
-#' If the "ML" method is selected, a Gamma distribution is assumed and the shape and scale parameters are estimated via maximum likelihood estimation 
-#' using the \code{\link[stats:optim]{optim}} function. 
-#' The maximum value within a given probability range (e.g. 0.99) represents the maximum linear speed at which 
+#' Some of the calculated linear speed can be inaccurate when the input data contains inaccurate locations (e.g. outliers).
+#' The function can discard the implausible outliers by excluding extreme values using either the "sample" or "ML" method.
+#' The "sample" method simply discards values that lie beyond the specified quantile. 
+#' If the "ML" method is selected, it is assumed that the linear speed follow a Gamma distribution. 
+#' The distribution parameters are derived via maximum likelihood estimation using the \code{\link[stats:optim]{optim}} function. 
+#' The linear speed at the given quantile or cumulative probability (e.g. 0.99) represents the maximum linear speed at which 
 #' an animal would travel between two consecutive locations.   
 #' @return Maximum linear speed (vmax) estimated from the input data. The unit is km/h. 
 #' @author Takahiro Shimada
@@ -47,6 +47,14 @@ vmax <- function(sdata, qi=5, method = 'ML', prob=0.99, ...){
     qi[qi %in% "Z"] <- "-3"
     qi <- as.numeric(as.character(qi))
   })
+  
+  # stop if the qi threshold is greater than the highest qi of the input data.
+  if(max(sdata$qi) < qi){
+    stop("\nThe maximum 'qi' of the input data is lower than the 'qi' that was specified in the function.
+    \nUse the lowest 'qi' value that is available in the input data and considered reliable to estimate the vmax.
+    \nFor example, for Argos data, it may be 2.")
+  } 
+  
   
   ## Date & time
   sdata$DateTime <- with(sdata, as.POSIXct(DateTime, format = "%Y-%m-%d %H:%M:%S", tz = "GMT"))
@@ -68,22 +76,7 @@ vmax <- function(sdata, qi=5, method = 'ML', prob=0.99, ...){
   #### Maximum speed 
   if(method == "ML"){
     
-    ## Maximum likelihood estimation
-
-        # likelihood function for normal distribution with two unknowns
-    # v <- log(speed)
-    # neg_log_lik_gaussian <- function(mu,sigma) {
-    #   -sum(dnorm(v, mean=mu, sd=sigma, log=TRUE))
-    # }
-    # 
-    # gaussian_fit <- stats4::mle(neg_log_lik_gaussian, start=list(mu=1, sigma=1), method="L-BFGS-B") #, method="L-BFGS-B"
-    # mle_mean <- gaussian_fit@coef['mu']
-    # ml_sd <- gaussian_fit@coef['sigma']
-    # v_vec <- seq(min(v), max(v), by = 0.001)
-    # p.norm <- pnorm(v_vec, m=mle_mean, sd=ml_sd)
-    
-    ## use Gamma distribution
-    # maximum likelihood estimation of gamma distribution parameters (shape, scale)
+    ## Maximum likelihood estimation of gamma distribution parameters (shape, scale)
     
     alpha.start <- mean(v)^2 / stats::var(v)
     lambda.start <- mean(v) / stats::var(v)
@@ -95,9 +88,6 @@ vmax <- function(sdata, qi=5, method = 'ML', prob=0.99, ...){
       return(- sum(stats::dgamma(x, shape = alpha, rate = lambda, log = TRUE)))
     }
     
-    # para <- nlm(mlogl, theta.start, x = v, hessian = TRUE,
-    #            fscale = length(v))
-    
     if(suppressWarnings({
       inherits(try(stats::optim(par = theta.start, fn = mlogl, x = v), silent = TRUE), "try-error")
       })){
@@ -107,14 +97,15 @@ vmax <- function(sdata, qi=5, method = 'ML', prob=0.99, ...){
       suppressWarnings({
         para <- stats::optim(par = theta.start, fn = mlogl, x = v)
       })
-      
-      p <- prob + (1 - prob)/2
+
+      ## Estimate Vmax
       v_vec <- seq(min(v), max(v), by = 0.001)
-      p.gamma <- stats::pgamma(v_vec, shape=para$par[1], scale=para$par[2])
-      p <- prob + (1 - prob)/2
-      Vmax <- v_vec[max(which(p.gamma < p))]
+      # d.gamma <- stats::dgamma(v_vec, shape=para$par[1], rate = para$par[2])
+      # Vmax <- v_vec[max(which(d.gamma >= (1 - prob)))]
+      p.gamma <- stats::pgamma(v_vec, shape=para$par[1], rate = para$par[2])
+      Vmax <- v_vec[max(which(p.gamma <= prob))]
     } 
-    
+
    } else {
      ## Given x percentile considered to exclude outliers
      Vmax <- stats::quantile(v, prob)

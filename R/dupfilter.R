@@ -71,7 +71,11 @@ dupfilter <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, no.cor
   #### Report the summary of filtering
   FilteredSS <- nrow(sdata)
   RemovedSamplesN <- OriginalSS-FilteredSS
-  RemovedSamplesP <- round((1-(FilteredSS/OriginalSS))*100,2)
+  if(RemovedSamplesN > 0){
+    RemovedSamplesP <- round((1-(FilteredSS/OriginalSS))*100,2)
+  } else {
+    RemovedSamplesP <- 0
+  }
   
   cat("\n")
   cat("Input data:", OriginalSS, "locations", fill = TRUE)

@@ -4,7 +4,7 @@
 \alias{distfilter}
 \title{Filter locations by distance}
 \usage{
-distfilter(sdata, max.dist = 100, method = 1)
+distfilter(sdata, max.dist = 100, method = 1, ia = NA)
 }
 \arguments{
 \item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon". 
@@ -18,17 +18,23 @@ The function filters the input data by a unique "id" (e.g. transmitter number, i
 \item{method}{An integer specifying how locations should be filtered with \emph{max.dist}. 
 A location is removed if the distance from a previous and(1)/or(2) to a subsequent location exceeds \emph{max.dist}. 
 Default is 1 (both way).}
+
+\item{ia}{An integer (0 to 180) specifying an inner angle (in degrees) between consecutive locations, 
+beyond which the locations are considered potential outliers. 
+Default (NA) ignores this option. See details.}
 }
 \value{
 The input data is returned without locations identified by this filter. 
-The following columns are added: "pDist", "sDist". 
+The following columns are added: "pDist", "sDist", 'inAng'. 
 "pDist" and "sDist" are straight distances in kilometres from a previous and to a subsequent fix respectively.
+"inAng" is the degree between the bearings of lines joining successive location points.
 }
 \description{
 This function removes locations that are located beyond a specified distance.
 }
 \details{
-This function removes locations if the distance from a previous and/or to a subsequent location exceeds \emph{max.dist}.
+This function removes locations if the distance from a previous and/or to a subsequent location exceeds \emph{max.dist} and
+the inner angle is less than \emph{ia}. If \emph{ia} is NA (default), inner angles are not considered in the filtering.
 }
 \examples{
 #### Load data sets
@@ -41,11 +47,11 @@ data(SandyStrait)
 
 
 #### Filter temporal and/or spatial duplicates
-turtle.dup <- dupfilter(turtle, step.time=5/60, step.dist=0.001)
+turtle.dup <- dupfilter(turtle, step.time=1/60, step.dist=0.001)
  
 
 #### distfilter
-turtle.dist <- distfilter(turtle.dup)
+turtle.dist <- distfilter(turtle.dup, max.dist = 50, ia = 20)
 
 
 #### Plot data removed or retained by ddfilter
@@ -63,7 +69,7 @@ p1 <- map_track(turtle.dup, bgmap=Australia, point.size = 2, line.size = 0.5, ax
 p2 <- map_track(turtle.dup, bgmap=SandyStrait, xlim=c(152.7, 153.2), ylim=(c(-25.75, -25.24)), 
             axes.lab.size = 0, sb.distance=10, point.size = 2, point.bg = "red", line.size = 0.5, 
             multiplot = FALSE, title.size=15, title="Zoomed in")[[1]] + 
-geom_path(aes(x=lon, y=lat), data=turtle.dist, size=0.5, colour="black", linetype=1) + 
+geom_path(aes(x=lon, y=lat), data=turtle.dist, linewidth=0.5, colour="black", linetype=1) + 
 geom_point(aes(x=lon, y=lat), data=turtle.dist, size=2, colour="black", shape=21, fill="yellow")
 
 gridExtra::marrangeGrob(list(p1, p2), nrow=1, ncol=2)

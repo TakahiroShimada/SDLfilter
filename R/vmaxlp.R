@@ -13,11 +13,12 @@
 #' The greater number indicates a higher accuracy. 
 #' @param qi An integer specifying the minimum quality index associated with a location used for the estimation. 
 #' Default is 4 (e.g. 4 GPS satellite or more).
+#' @param nloc An integer specifying the minimum number of successive locations to be considered a loop trip.
 #' @param method Available options are "sample" (i.e. sample quantile - see \code{\link[stats:quantile]{quantile}})
 #' and "ML" (maximum likelihood estimation - see details). Default is "ML".
-#' @param prob A quantile value (0 to 1). 
-#' This value specifies the upper limit of a sample quantile or a probability distribution of linear speed, 
-#' from which maximum one-way linear speed of a loop trip is determined. Default is 0.9. See details.
+#' @param prob A value (0 to 1) specifying the sample quantile or cumulative probability for one-way linear speed of a loop trip.
+#' Values beyond this threshold are considered 'outliers' and excluded from estimation of maximum one-way linear speed of a loop trip. 
+#' Default is 0.99. See details.
 #' @param ... Extra arguments passed to \code{\link{dupfilter}}.
 #' @importFrom stats pgamma dgamma optim var
 #' @export
@@ -31,7 +32,7 @@
 #' an estimated probability distribution for the loop trip speed, depending on the selected \emph{method}. 
 #' If the "ML" method is selected, a Gamma distribution is assumed and the shape and scale parameters are estimated via maximum likelihood estimation 
 #' using the \code{\link[stats:optim]{optim}} function.
-#' The maximum value within a given quantile or probability range (e.g. 0.9) represents the maximum one-way linear speed at which 
+#' The maximum value within a given quantile or probability range (e.g. 0.99) represents the maximum one-way linear speed at which 
 #' an animal would travel during a loop trip.
 #' @return Maximum one-way linear speed of a loop trip (vmaxlp) estimated from the input data. The unit km/h.
 #' @author Takahiro Shimada
@@ -42,7 +43,7 @@
 #' @seealso \code{\link{ddfilter}}, \code{\link{ddfilter_loop}}, \code{\link{track_param}}, \code{\link{dupfilter}}
 
 
-vmaxlp <- function(sdata, qi=4, method = 'ML', prob=0.9, ...){
+vmaxlp <- function(sdata, qi=4, nloc = 5, method = 'ML', prob=0.99, ...){
   #### Organize data
   ## qi format
   sdata <- within(sdata, {
@@ -52,12 +53,20 @@ vmaxlp <- function(sdata, qi=4, method = 'ML', prob=0.9, ...){
     qi <- as.numeric(as.character(qi))
   })
   
+  # stop if the qi threshold is greater than the highest qi of the input data.
+  if(max(sdata$qi) < qi){
+    stop("\nThe maximum 'qi' of the input data is lower than the 'qi' that was specified in the function.
+    \nUse the lowest 'qi' value that is available in the input data and considered reliable to estimate the vmaxlp.
+    \nFor example, for Argos data, it may be 1.")
+  } 
+  
+  
   ## Date & time
   sdata$DateTime <- with(sdata, as.POSIXct(DateTime, format = "%Y-%m-%d %H:%M:%S", tz = "GMT"))
   
   
   ## Subset data by quality index
-  sdata<-sdata[sdata$qi>=qi,]
+  sdata <- sdata[sdata$qi >= qi,]
   
   ## Filter duplicate locations
   sdata <- dupfilter(sdata, ...)
@@ -68,9 +77,9 @@ vmaxlp <- function(sdata, qi=4, method = 'ML', prob=0.9, ...){
   
   
   #### Exclude datasets less than 8 locations
-  ndata<-table(as.character(sdata$id))
-  id.exclude<-names(ndata[as.numeric(ndata)<8])
-  sdata<-with(sdata, sdata[!id %in% id.exclude,])
+  ndata <- table(as.character(sdata$id))
+  id.exclude <- names(ndata[as.numeric(ndata) < 8])
+  sdata <- with(sdata, sdata[!id %in% id.exclude,])
   
   
   if(nrow(sdata) > 0){
@@ -82,12 +91,12 @@ vmaxlp <- function(sdata, qi=4, method = 'ML', prob=0.9, ...){
     #### Identify loop trips
     ## continuous straight movements 
     # function to identify straight movements: (1=straight, 0=curve)
-    straight<-function(i){
-      if (sdata$inAng[i]>90){
+    straight <- function(i){
+      if (sdata$inAng[i] > 90){
         1
-      } else if (sdata$inAng[i-2]>90 && sdata$inAng[i-1]>90 && sdata$inAng[i]<90 && sdata$inAng[i+1]<90 && sdata$inAng[i+2]>90){
+      } else if (sdata$inAng[i-2] > 90 && sdata$inAng[i-1] > 90 && sdata$inAng[i] < 90 && sdata$inAng[i+1] < 90 && sdata$inAng[i+2] > 90){
         1
-      } else if(sdata$inAng[i-2]>90 && sdata$inAng[i-1]<90 && sdata$inAng[i]<90 && sdata$inAng[i+1]>90 && sdata$inAng[i+2]>90){
+      } else if(sdata$inAng[i-2] > 90 && sdata$inAng[i-1] < 90 && sdata$inAng[i] < 90 && sdata$inAng[i+1] > 90 && sdata$inAng[i+2] > 90){
         1 
       } else {
         0
@@ -95,10 +104,10 @@ vmaxlp <- function(sdata, qi=4, method = 'ML', prob=0.9, ...){
     }
     
     # Apply the above function to each data set separately
-    straight.group<-function(j){
-      start<-as.numeric(rownames(sdata[sdata$id %in% j,][4,]))
-      end<-as.numeric(rownames(sdata[sdata$id %in% j,][1,]))+(nrow(sdata[sdata$id %in% j,])-4)
-      group<-unlist(lapply(start:end, straight))
+    straight.group <- function(j){
+      start <- as.numeric(rownames(sdata[sdata$id %in% j,][4,]))
+      end <- as.numeric(rownames(sdata[sdata$id %in% j,][1,])) + (nrow(sdata[sdata$id %in% j,]) - 4)
+      group <- unlist(lapply(start:end, straight))
       c(3, 3, 3, group, 3, 3, 3)
     }
     
@@ -107,10 +116,10 @@ vmaxlp <- function(sdata, qi=4, method = 'ML', prob=0.9, ...){
     
     ## Identify the first and last points of each straight movement 
     # function to identify start and end points: (1=start, 2=end, others=3)
-    start.straight<-function(i){
-      if(sdata$straightMove[i]==0 && sdata$straightMove[i+1]==1){
+    start.straight <- function(i){
+      if(sdata$straightMove[i] == 0 && sdata$straightMove[i+1] == 1){
         1
-      } else if (sdata$straightMove[i]==0 && sdata$straightMove[i-1]==1){
+      } else if (sdata$straightMove[i] == 0 && sdata$straightMove[i-1] == 1){
         2
       } else {
         3
@@ -119,30 +128,30 @@ vmaxlp <- function(sdata, qi=4, method = 'ML', prob=0.9, ...){
     
     
     # Apply the above function to each data set separately
-    start.straight.group<-function(j){
-      start<-as.numeric(rownames(sdata[sdata$id %in% j,][2,]))
-      end<-as.numeric(rownames(sdata[sdata$id %in% j,][1,]))+(nrow(sdata[sdata$id %in% j,])-2)
-      group<-unlist(lapply(start:end, start.straight))
+    start.straight.group <- function(j){
+      start <- as.numeric(rownames(sdata[sdata$id %in% j,][2,]))
+      end <- as.numeric(rownames(sdata[sdata$id %in% j,][1,])) + (nrow(sdata[sdata$id %in% j,]) - 2)
+      group <- unlist(lapply(start:end, start.straight))
       c(1, group, 2)
     }
     
-    sdata$startEnd<-unlist(lapply(IDs, start.straight.group))
+    sdata$startEnd <- unlist(lapply(IDs, start.straight.group))
     
     
     ## Remove points with 3
-    sdata<-sdata[sdata$startEnd<3,]
-    sdata$rownames<-as.numeric(rownames(sdata))
-    row.names(sdata)<-1:nrow(sdata)
+    sdata <- sdata[sdata$startEnd < 3,]
+    sdata$rownames <- as.numeric(rownames(sdata))
+    row.names(sdata) <- 1:nrow(sdata)
     
     
     ## Extract start and end points (except first and last points of each data set)
     # function to identify actual start and end points: (1=start, 2=end, others=3)
-    start.end<-function(i){
-      if(sdata$startEnd[i]==1 && sdata$startEnd[i+1]==1){
+    start.end <- function(i){
+      if(sdata$startEnd[i] == 1 && sdata$startEnd[i+1] == 1){
         3
-      } else if (sdata$startEnd[i]==1 && sdata$startEnd[i+1]==2){
+      } else if (sdata$startEnd[i] == 1 && sdata$startEnd[i+1] == 2){
         1
-      } else if (sdata$startEnd[i]==2 && sdata$startEnd[i-1]==1) {
+      } else if (sdata$startEnd[i] == 2 && sdata$startEnd[i-1] == 1) {
         2
       } else {
         3
@@ -151,33 +160,33 @@ vmaxlp <- function(sdata, qi=4, method = 'ML', prob=0.9, ...){
     
     
     # Apply the above function to each data set separately
-    start.end.group<-function(j){
-      sdataTEMP<-sdata[sdata$id %in% j,]
-      rowNumbers<-as.numeric(rownames(sdataTEMP[c(-1, -nrow(sdataTEMP)),]))
-      group<-unlist(lapply(rowNumbers, start.end))
+    start.end.group <- function(j){
+      sdataTEMP <- sdata[sdata$id %in% j,]
+      rowNumbers <- as.numeric(rownames(sdataTEMP[c(-1, -nrow(sdataTEMP)),]))
+      group <- unlist(lapply(rowNumbers, start.end))
       c(1, group, 2)
     }
     
-    sdata$startEnd2<-unlist(lapply(IDs, start.end.group))
+    sdata$startEnd2 <- unlist(lapply(IDs, start.end.group))
     
     
     ## Remove points with 3
-    sdata<-sdata[sdata$startEnd2<3,]
-    row.names(sdata)<-1:nrow(sdata)
+    sdata <- sdata[sdata$startEnd2 < 3,]
+    row.names(sdata) <- 1:nrow(sdata)
     
     
     ## Extract start and end points (First point of each data set)
     # function to identify actual start and end points: (1=start, 2=end, others=3)
-    FirstPoint<-function(i){
-      if(sdata$startEnd[i]==1 && sdata$startEnd[i+1]==1){
+    FirstPoint <- function(i){
+      if(sdata$startEnd[i] == 1 && sdata$startEnd[i+1] == 1){
         3
       } else {
         1
       }
     }
     
-    LastPoint<-function(i){
-      if(sdata$startEnd[i]==2 && sdata$startEnd[i-1]==2){
+    LastPoint <- function(i){
+      if(sdata$startEnd[i] == 2 && sdata$startEnd[i-1] == 2){
         3
       } else {
         2
@@ -186,25 +195,25 @@ vmaxlp <- function(sdata, qi=4, method = 'ML', prob=0.9, ...){
     
     
     # Apply the above function to each data set separately
-    FirstEndPoints.group<-function(j){
-      sdataTEMP<-sdata[sdata$id %in% j,]
+    FirstEndPoints.group <- function(j){
+      sdataTEMP <- sdata[sdata$id %in% j,]
       
-      FirstRow<-as.numeric(rownames(sdataTEMP[1,]))
-      FirstStatus<-unlist(lapply(FirstRow, FirstPoint))
+      FirstRow <- as.numeric(rownames(sdataTEMP[1,]))
+      FirstStatus <- unlist(lapply(FirstRow, FirstPoint))
       
-      LastRow<-as.numeric(rownames(sdataTEMP[nrow(sdataTEMP),]))
-      LastStatus<-unlist(lapply(LastRow, LastPoint))
+      LastRow <- as.numeric(rownames(sdataTEMP[nrow(sdataTEMP),]))
+      LastStatus <- unlist(lapply(LastRow, LastPoint))
       
       
       c(FirstStatus, sdataTEMP[c(-1, -nrow(sdataTEMP)), "startEnd2"], LastStatus)
     }
     
-    sdata$startEnd3<-unlist(lapply(IDs, FirstEndPoints.group))
+    sdata$startEnd3 <- unlist(lapply(IDs, FirstEndPoints.group))
     
     
     ## Remove points with 3
-    sdata<-sdata[sdata$startEnd3<3,]
-    row.names(sdata)<-1:nrow(sdata)
+    sdata <- sdata[sdata$startEnd3 < 3,]
+    row.names(sdata) <- 1:nrow(sdata)
     
     
     ## Get movement parameters
@@ -214,32 +223,14 @@ vmaxlp <- function(sdata, qi=4, method = 'ML', prob=0.9, ...){
     
     #### Retain locations with more than two consecutive points 
     sdata$npoints <- unlist(with(sdata, tapply(rownames, id, function(x) c(diff(x),NA))))
-    Vlp <- with(sdata, sdata[startEnd3 == 1 & npoints > 2 & sSpeed > 0, "sSpeed"])
+    Vlp <- with(sdata, sdata[startEnd3 == 1 & npoints >= nloc & sSpeed > 0, "sSpeed"])
     
     
     #### Maximum Vlp 
     if(method == "ML"){
       
-      ## or through maximum likelihood estimation
-      # likelihood function for normal distribution with two unknowns
-      # v <- log(Vlp)
-      # neg_log_lik_gaussian <- function(mu,sigma) {
-      #   -sum(dnorm(v, mean=mu, sd=sigma, log=TRUE))
-      # }
-      # 
-      # gaussian_fit <- stats4::mle(neg_log_lik_gaussian, 
-      #                             start=list(mu=1, sigma=1), method="L-BFGS-B") #  method="L-BFGS-B"
-      # mle_mean <- gaussian_fit@coef['mu']
-      # ml_sd <- gaussian_fit@coef['sigma']
-      # v_vec <- seq(min(v), max(v), by = 0.001)
-      # p.norm <- pnorm(v_vec, m=mle_mean, sd=ml_sd)
-      # p <- prob + (1 - prob)/2
-      # MaxVlp <- max(p.norm[p.norm < p])
-      # MaxVlp <- v_vec[max(which(p.norm < p))]
-      
-      ## use Gamma distribution
-      # maximum likelihood estimation of gamma distribution parameters (shape, scale)
-      
+      ## Maximum likelihood estimation of gamma distribution parameters (shape, scale)
+
       alpha.start <- mean(Vlp)^2 / stats::var(Vlp)
       lambda.start <- mean(Vlp) / stats::var(Vlp)
       theta.start <- c(alpha.start, lambda.start)
@@ -249,9 +240,6 @@ vmaxlp <- function(sdata, qi=4, method = 'ML', prob=0.9, ...){
         lambda <- theta[2]
         return(- sum(stats::dgamma(x, shape = alpha, rate = lambda, log = TRUE)))
       }
-      
-      # para <- nlm(mlogl, theta.start, x = Vlp, hessian = TRUE,
-      #             fscale = length(Vlp))
       
       if(suppressWarnings({
         inherits(try(stats::optim(par = theta.start, fn = mlogl, x = Vlp), silent = TRUE), "try-error")
@@ -263,11 +251,13 @@ vmaxlp <- function(sdata, qi=4, method = 'ML', prob=0.9, ...){
           para <- stats::optim(par = theta.start, fn = mlogl, x = Vlp)
         })
         
-        p <- prob + (1 - prob)/2
+        ## Estimate vmaxlp
         v_vec <- seq(min(Vlp), max(Vlp), by = 0.001)
-        p.gamma <- stats::pgamma(v_vec, shape=para$par[1], scale=para$par[2])
-        p <- prob + (1 - prob)/2
-        MaxVlp <- v_vec[max(which(p.gamma < p))]
+        # d.gamma <- stats::dgamma(v_vec, shape=para$par[1], rate = para$par[2])
+        # MaxVlp <- v_vec[max(which(d.gamma >= (1- prob)))]
+        p.gamma <- stats::pgamma(v_vec, shape=para$par[1], rate = para$par[2])
+        MaxVlp <- v_vec[max(which(p.gamma <= prob))]
+        
       }
     } else {
       # given # percentile considered outliers
@@ -275,11 +265,11 @@ vmaxlp <- function(sdata, qi=4, method = 'ML', prob=0.9, ...){
     }
     
     #### Report the results
-    SampleSize<-round(length(Vlp)*prob)
-    LoopTrips<-round(SampleSize/2)
+    SampleSize <- round(length(Vlp)*prob)
+    LoopTrips <- round(SampleSize/2)
     cat("\n")
     cat("The maximum one-way linear speed of a loop trip (vmaxlp) was estimated using", SampleSize, "Vlp from", LoopTrips, "loop trips.", fill = TRUE)
-    cat("vmaxlp:", round(MaxVlp,3), "km/h", fill = TRUE)
+    cat("vmaxlp:", round(MaxVlp, 3), "km/h", fill = TRUE)
   } else {
     MaxVlp <- NA
   }

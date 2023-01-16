@@ -4,7 +4,7 @@
 \alias{vmaxlp}
 \title{Maximum one-way linear speed of a loop trip}
 \usage{
-vmaxlp(sdata, qi = 4, method = "ML", prob = 0.9, ...)
+vmaxlp(sdata, qi = 4, nloc = 5, method = "ML", prob = 0.99, ...)
 }
 \arguments{
 \item{sdata}{A data frame containing columns with the following headers: "id", "DateTime", "lat", "lon", "qi". 
@@ -21,12 +21,14 @@ The greater number indicates a higher accuracy.}
 \item{qi}{An integer specifying the minimum quality index associated with a location used for the estimation. 
 Default is 4 (e.g. 4 GPS satellite or more).}
 
+\item{nloc}{An integer specifying the minimum number of successive locations to be considered a loop trip.}
+
 \item{method}{Available options are "sample" (i.e. sample quantile - see \code{\link[stats:quantile]{quantile}})
 and "ML" (maximum likelihood estimation - see details). Default is "ML".}
 
-\item{prob}{A quantile value (0 to 1). 
-This value specifies the upper limit of a sample quantile or a probability distribution of linear speed, 
-from which maximum one-way linear speed of a loop trip is determined. Default is 0.9. See details.}
+\item{prob}{A value (0 to 1) specifying the sample quantile or cumulative probability for one-way linear speed of a loop trip.
+Values beyond this threshold are considered 'outliers' and excluded from estimation of maximum one-way linear speed of a loop trip. 
+Default is 0.99. See details.}
 
 \item{...}{Extra arguments passed to \code{\link{dupfilter}}.}
 }
@@ -47,7 +49,7 @@ To exclude implausible outliers, the function discards extreme values based on t
 an estimated probability distribution for the loop trip speed, depending on the selected \emph{method}. 
 If the "ML" method is selected, a Gamma distribution is assumed and the shape and scale parameters are estimated via maximum likelihood estimation 
 using the \code{\link[stats:optim]{optim}} function.
-The maximum value within a given quantile or probability range (e.g. 0.9) represents the maximum one-way linear speed at which 
+The maximum value within a given quantile or probability range (e.g. 0.99) represents the maximum one-way linear speed at which 
 an animal would travel during a loop trip.
 }
 \note{

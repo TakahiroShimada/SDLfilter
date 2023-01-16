@@ -309,7 +309,7 @@ dupfilter_space <- function(sdata, step.time=0, step.dist=0, conditional=FALSE, 
  
   ## Filtered data
   FilteredSS <- nrow(sdata)
-  RemovedSamplesN <- OriginalSS-FilteredSS
+  RemovedSamplesN <- OriginalSS - FilteredSS
   
   
   ## Print report

@@ -345,7 +345,11 @@ depthfilter <- function(sdata, bathymetry, bilinear = TRUE, qi = 4, tide, tidal.
     #### Report the summary of filtering
     FilteredSS <- nrow(sdata)
     RemovedSamplesN <- OriginalSS-FilteredSS
-    RemovedSamplesP <- round((1-(FilteredSS/OriginalSS))*100,2)
+    if(RemovedSamplesN > 0){
+      RemovedSamplesP <- round((1-(FilteredSS/OriginalSS))*100,2)
+    } else {
+      RemovedSamplesP <- 0
+    }
     DepthEst <- nrow(sdata[!(is.na(sdata$depth.exp)),])
     
     cat("\n")

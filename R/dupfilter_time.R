@@ -229,17 +229,17 @@ dupfilter_time <- function (sdata, step.time = 0, no.cores = 1) {
     }
     
     if(.Platform$OS.type %in% 'windows'){
-      cl <- parallel::makeCluster(no.cores, type="PSOCK")
+      cl <- parallel::makeCluster(no.cores, type = "PSOCK")
     } else {
-      cl <- parallel::makeCluster(no.cores, type="FORK")
+      cl <- parallel::makeCluster(no.cores, type = "FORK")
     }
   }
   
   ## run the function
   if(any(sdata$pTime <= step.time, na.rm = TRUE)){
-    sdata <- dup.timing(sdata=sdata, step.time=step.time)
+    sdata <- dup.timing(sdata=sdata, step.time = step.time)
     while(any(sdata$pTime <= step.time, na.rm = TRUE)){
-      sdata <- dup.timing(sdata=sdata, step.time=step.time)
+      sdata <- dup.timing(sdata = sdata, step.time = step.time)
     }
   }
   

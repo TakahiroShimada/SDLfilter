@@ -116,7 +116,7 @@ ddfilter_loop<-function(sdata, qi=4, ia=90, vmaxlp=1.8){
             if(nrow(excluded.data)>0){
               sdata <- dplyr::bind_rows(sdata, excluded.data)
             } else {
-              sdata<-sdata
+              sdata <- sdata
             }
             
             return(sdata)

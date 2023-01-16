@@ -81,7 +81,7 @@
 #' p2 <- to_map(turtle.dup, bgmap=SandyStrait, xlim=c(152.7, 153.2), ylim=(c(-25.75, -25.24)), 
 #'             axes.lab.size = 0, sb.distance=10, point.size = 2, point.bg = "red", line.size = 0.5, 
 #'             multiplot = FALSE, title.size=15, title="Zoomed in")[[1]] + 
-#' geom_path(aes(x=lon, y=lat), data=turtle.dd, size=0.5, colour="black", linetype=1) + 
+#' geom_path(aes(x=lon, y=lat), data=turtle.dd, linewidth=0.5, colour="black", linetype=1) + 
 #' geom_point(aes(x=lon, y=lat), data=turtle.dd, size=2, colour="black", shape=21, fill="yellow")
 #'
 #' gridExtra::marrangeGrob(list(p1, p2), nrow=1, ncol=2)
@@ -100,9 +100,14 @@ ddfilter<-function(sdata, vmax=8.9, vmaxlp=1.8, qi=4, ia=90, method=1) {
   
   
   #### Report the summary of filtering
-  FilteredSS<-nrow(sdata)
-  RemovedSamplesN<-OriginalSS-FilteredSS
-  RemovedSamplesP<-round((1-(FilteredSS/OriginalSS))*100,2)
+  FilteredSS <- nrow(sdata)
+  RemovedSamplesN <- OriginalSS - FilteredSS
+  if(RemovedSamplesN > 0){
+    RemovedSamplesP <- round((1-(FilteredSS/OriginalSS))*100,2)
+  } else {
+    RemovedSamplesP <- 0
+  }
+  
   
   cat("\n")
   cat("Input data:", OriginalSS, "locations", fill = TRUE)

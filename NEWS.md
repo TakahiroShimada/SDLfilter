@@ -8,8 +8,12 @@ output:
 News for Package 'SDLfilter'
 =========
 
-#### Version 2.3.0.9001 (2022-10-17)
+#### Version 2.3.1 (2023-01-16)
+* added an additional argument "ia" in the distfilter. "ia" is the inner angle between consecutive locations that can be used for detecting potential outliers. Default (NA) is set to ignore this argument.
+* added an additional argument "nloc" in the vmaxlp function. This allows to specify the minimum number of successive locations to be considered a loop trip. The defaul value is set to be 5 locations.
 * fixed an error in the vmaxlp function that occurs when there is not enough data for the calculation.
+* fixed bugs in the "ML" method for the vmax and vmaxlp functions.
+
 
 #### Version 2.3.0 (2022-10-11)
 

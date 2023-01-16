@@ -93,7 +93,7 @@ p1 <- to_map(turtle.dup, bgmap=Australia, point.size = 2, line.size = 0.5, axes.
 p2 <- to_map(turtle.dup, bgmap=SandyStrait, xlim=c(152.7, 153.2), ylim=(c(-25.75, -25.24)), 
             axes.lab.size = 0, sb.distance=10, point.size = 2, point.bg = "red", line.size = 0.5, 
             multiplot = FALSE, title.size=15, title="Zoomed in")[[1]] + 
-geom_path(aes(x=lon, y=lat), data=turtle.dd, size=0.5, colour="black", linetype=1) + 
+geom_path(aes(x=lon, y=lat), data=turtle.dd, linewidth=0.5, colour="black", linetype=1) + 
 geom_point(aes(x=lon, y=lat), data=turtle.dd, size=2, colour="black", shape=21, fill="yellow")
 
 gridExtra::marrangeGrob(list(p1, p2), nrow=1, ncol=2)

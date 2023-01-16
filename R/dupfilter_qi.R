@@ -135,16 +135,16 @@ dupfilter_qi <- function(sdata = sdata, step.time = 0){
 
   #### Repeat the function until no locations can be removed by this filter
   if(any((sdata$pTime <= step.time & sdata$qi != sdata$pQI) | (sdata$sTime <= step.time & sdata$qi != sdata$sQI), na.rm = TRUE)){
-    sdata <- dup.qi(sdata=sdata, step.time=step.time)    
+    sdata <- dup.qi(sdata = sdata, step.time = step.time)    
     while(any((sdata$pTime <= step.time & sdata$qi != sdata$pQI) | (sdata$sTime <= step.time & sdata$qi != sdata$sQI), na.rm = TRUE)){
-      sdata <- dup.qi(sdata=sdata, step.time=step.time)
+      sdata <- dup.qi(sdata = sdata, step.time = step.time)
     }
   }
 
   #### Report the summary of filtering
   ## Filtered data
-  FilteredSS<-nrow(sdata)
-  RemovedSamplesN<-OriginalSS-FilteredSS
+  FilteredSS <- nrow(sdata)
+  RemovedSamplesN <- OriginalSS - FilteredSS
   
   ## Print report
   cat("dupfilter_qi removed", RemovedSamplesN, "of", OriginalSS, "locations", fill = TRUE)

@@ -22,11 +22,11 @@ The greater number indicates a higher accuracy.}
 Default is 5 (e.g. 5 GPS satellite or more).}
 
 \item{method}{Available options are "sample" (i.e. sample quantile - see \code{\link[stats:quantile]{quantile}})
-and "ML" (maximum likelihood estimation - see details). Default is "ML".}
+and "ML" (maximum likelihood estimation). Default is "ML". See details.}
 
-\item{prob}{A quantile value (0 to 1). 
-This value specifies the upper limit of a sample quantile or a probability distribution of linear speed, 
-from which maximum linear speed is determined. Default is 0.99. See details.}
+\item{prob}{A value (0 to 1) specifying the sample quantile or cumulative probability for linear speed.
+Values beyond this threshold are considered 'outliers' and excluded from estimation of maximum linear speed. 
+Default is 0.99. See details.}
 
 \item{...}{Extra arguments passed to \code{\link{dupfilter}}.}
 }
@@ -38,12 +38,12 @@ Function to estimate the maximum linear speed between two consecutive locations.
 }
 \details{
 The function first calculates the linear speed between each pair of two consecutive locations. 
-Some of the calculated linear speed can be inaccurate when input data contains inaccurate locations (e.g. outliers).
-To exclude implausible outliers, the function discards extreme values based on the specified quantile or 
-an estimated probability distribution for the loop trip speed, depending on the selected \emph{method}. 
-If the "ML" method is selected, a Gamma distribution is assumed and the shape and scale parameters are estimated via maximum likelihood estimation 
-using the \code{\link[stats:optim]{optim}} function. 
-The maximum value within a given probability range (e.g. 0.99) represents the maximum linear speed at which 
+Some of the calculated linear speed can be inaccurate when the input data contains inaccurate locations (e.g. outliers).
+The function can discard the implausible outliers by excluding extreme values using either the "sample" or "ML" method.
+The "sample" method simply discards values that lie beyond the specified quantile. 
+If the "ML" method is selected, it is assumed that the linear speed follow a Gamma distribution. 
+The distribution parameters are derived via maximum likelihood estimation using the \code{\link[stats:optim]{optim}} function. 
+The linear speed at the given quantile or cumulative probability (e.g. 0.99) represents the maximum linear speed at which 
 an animal would travel between two consecutive locations.
 }
 \references{

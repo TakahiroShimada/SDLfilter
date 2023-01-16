@@ -132,16 +132,16 @@ ddfilter_speed<-function (sdata, vmax=8.9, method=1){
   
   #### Report the summary of filtering
   ## Data excluded from filtering
-  ndata<-table(as.character(sdata$id))
-  id.exclude<-names(ndata[as.numeric(ndata)<4])
+  ndata <- table(as.character(sdata$id))
+  id.exclude <- names(ndata[as.numeric(ndata)<4])
     
   ## Filtered data
-  FilteredSS<-nrow(sdata3)
-  RemovedSamplesN<-OriginalSS-FilteredSS
+  FilteredSS <- nrow(sdata3)
+  RemovedSamplesN <- OriginalSS - FilteredSS
   
   ## Print report
   cat("ddfilter_speed removed", RemovedSamplesN, "of", OriginalSS, "locations", fill = TRUE)
-  if(length(id.exclude)>0){
+  if(length(id.exclude) > 0){
     message('Warning: insufficient data to apply ddfilter_speed to:')
     message(paste(id.exclude, collapse = ', '))
   }

@@ -1,5 +1,5 @@
 ## Test environments
-* local debian 11 install: R 4.2.0
+* local debian 11 install: R 4.2.2
 * win-builder: R-devel
 
 
@@ -10,8 +10,10 @@ There were no ERRORs or WARNINGs, and 1 NOTE as below when run on windows (win-b
 Please note each of the points within the note is verified and all information is correct.
 
 
-* checking CRAN incoming feasibility ... [19s] NOTE
+* checking CRAN incoming feasibility ... [28s] NOTE
 Maintainer: 'Takahiro Shimada <taka.shimada@gmail.com>'
+
+Version contains large components (2.3.0.9004)
 
 Found the following (possibly) invalid URLs:
   URL: https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.13506
