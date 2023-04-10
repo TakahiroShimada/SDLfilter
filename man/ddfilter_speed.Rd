@@ -21,9 +21,11 @@ The greater number indicates a higher accuracy.}
 Default is 8.9km/h. 
 If this value is unknown, it can be estimated from \emph{sdata} using the function \code{\link{vmax}}.}
 
-\item{method}{An integer specifying how locations should be filtered with \emph{vmax}. 
-A location is removed if the speed from a previous and(1)/or(2) to a subsequent location exceeds \emph{vmax}. 
-Default is 1 (both way).}
+\item{method}{An integer (1 or 2) specifying how locations should be filtered with \emph{vmax}. 
+Default is 1 (both way) and removes a location if the speed from a previous AND to a subsequent location exceeds \emph{vmax}. 
+Select 2 (one way) to remove a location if the speed from a previous OR to a subsequent location exceeds \emph{vmax}. 
+For the latter, the filter examines successive suspect locations (i.e. the speed from a previous and/or to a subsequent location exceeds \emph{vmax}) 
+and retain one location that is associated with the minimum speed from a previous and/or to a subsequent location.}
 }
 \value{
 The input data is returned without locations identified by this filter. 
@@ -38,6 +40,7 @@ This function removes locations by a given threshold speed as described in Shima
 }
 \details{
 This function removes locations if the speed from a previous and/or to a subsequent location exceeds a given threshold speed. 
+When method = 2 is selected (one way), 
 If \emph{vmax} is unknown, it can be estimated using the function \code{\link{vmax}}.
 }
 \references{

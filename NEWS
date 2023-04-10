@@ -1,3 +1,8 @@
+Version 2.3.1.9001 (2023-04-10)
+
+  o fixed bugs in the ddfilter_speed when "method = 2" is selected. 
+
+
 Version 2.3.1 (2023-01-16)
 
   o added an additional argument "ia" in the distfilter. "ia" is the inner angle between consecutive locations that can be used for detecting potential outliers. Default (NA) is set to ignore this argument.

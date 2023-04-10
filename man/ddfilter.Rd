@@ -32,9 +32,11 @@ Default is 4.}
 \item{ia}{An integer specifying a threshold of inner angle, which is used to evaluate the locations of loop trips. 
 Default is 90 degrees.}
 
-\item{method}{An integer specifying how locations should be filtered with \emph{vmax}. 
-A location is removed if the speed from a previous and(1)/or(2) to a subsequent location exceeds \emph{vmax}. 
-Default is 1 (both way).}
+\item{method}{An integer (1 or 2) specifying how locations should be filtered with \emph{vmax}. 
+Default is 1 (both way) and removes a location if the speed from a previous AND to a subsequent location exceeds \emph{vmax}. 
+Select 2 (one way) to remove a location if the speed from a previous OR to a subsequent location exceeds \emph{vmax}. 
+For the latter, the filter examines successive suspect locations (i.e. the speed from a previous and/or to a subsequent location exceeds \emph{vmax}) 
+and retain one location that is associated with the minimum speed from a previous and/or to a subsequent location.}
 }
 \value{
 The input data is returned without locations identified by this filter. 
