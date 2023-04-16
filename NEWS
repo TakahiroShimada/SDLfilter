@@ -1,6 +1,7 @@
-Version 2.3.1.9001 (2023-04-10)
+Version 2.3.1.9002 (2023-04-16)
 
-  o fixed bugs in the ddfilter_speed when "method = 2" is selected. 
+  o fixed bugs in the ddfilter_speed when "method = 2" is selected.
+  o significantly improved the processing speed for the ddfilter_speed.
 
 
 Version 2.3.1 (2023-01-16)

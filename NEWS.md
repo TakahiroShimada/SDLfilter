@@ -8,6 +8,12 @@ output:
 News for Package 'SDLfilter'
 =========
 
+#### Version 2.3.1.9002 (2023-04-16)
+
+* fixed bugs in the ddfilter_speed when "method = 2" is selected.
+* significantly improved the processing speed for the ddfilter_speed.
+
+
 #### Version 2.3.1 (2023-01-16)
 * added an additional argument "ia" in the distfilter. "ia" is the inner angle between consecutive locations that can be used for detecting potential outliers. Default (NA) is set to ignore this argument.
 * added an additional argument "nloc" in the vmaxlp function. This allows to specify the minimum number of successive locations to be considered a loop trip. The default value is set to be 5 locations.
