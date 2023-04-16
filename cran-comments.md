@@ -1,5 +1,5 @@
 ## Test environments
-* local debian 11 install: R 4.2.2
+* local debian 11 install: R 4.2.3
 * win-builder: R-devel
 
 

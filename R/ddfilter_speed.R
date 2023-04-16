@@ -82,30 +82,39 @@ ddfilter_speed <- function (sdata, vmax = 8.9, method = 1){
       
       # Remove locations at which the speed from a previous OR to a subsequent location exceeds maximum linear traveling speed (Vmax)
       sdata$row <- seq(1, nrow(sdata))
-      sdata1 <- with(sdata, sdata[(!is.na(pSpeed) & pSpeed > vmax) | (!is.na(sSpeed) & sSpeed > vmax),])
-
+      sdata1 <- with(sdata, sdata[(!is.na(pSpeed) & pSpeed > vmax) | (!is.na(sSpeed) & sSpeed > vmax), c('pSpeed', 'sSpeed', 'row')])
+      
       while(nrow(sdata1) > 0){
+        # Select working columns
+        pSpd <- sdata1$pSpeed
+        sSpd <- sdata1$sSpeed
+        rows <- sdata1$row
+        rm(sdata1)
+        
         # group successive locations to assess
-        index <- 1; g <- rep(1, nrow(sdata1))
-        for(i in 2:nrow(sdata1)){
-          if(is.na(sdata1[i, 'pSpeed']) | sdata1[i, 'pSpeed'] != sdata1[i-1, 'sSpeed'] | is.na(sdata1[i-1, 'sSpeed'])){
+        index <- 1; g <- rep(1, length(rows))
+        for(i in 2:length(rows)){
+          if(is.na(pSpd[i]) | pSpd[i] != sSpd[i-1] | is.na(sSpd[i-1])){
             index <- index + 1
           }
           g[i] <- index
         }
-        sdata1$group <- g
+        
+        
+        # Calculate mean speed
+        mean_spd <- rowMeans(cbind(pSpd, sSpd), na.rm = TRUE)
 
         # Remove/retain locations based on the mean speed from a previous and to a subsequent location
-        rm_row <- rep(0, length(unique(sdata1$group)))
-        for(i in unique(sdata1$group)){
-          temp_df <- sdata1[sdata1$group %in% i, ]
-          mean_spd <- with(temp_df, rowMeans(cbind(pSpeed, sSpeed), na.rm = TRUE))
-          rm_row[i] <- with(temp_df, temp_df[which.max(mean_spd), 'row'])
-         }
-
-        sdata <- sdata[!(sdata$row %in% rm_row),]
+        row_rm <- rep(0, length(unique(g)))
+        for(i in unique(g)){
+          rows_g <- which(g == i)
+          max_spd <- which.max(mean_spd[rows_g])
+          row_rm[i] <- rows[rows_g[max_spd]]
+        }
+  
+        sdata <- sdata[!sdata$row %in% row_rm,]
         sdata <- track_param(sdata, param = 'speed')
-        sdata1 <- with(sdata, sdata[(!is.na(pSpeed) & pSpeed > vmax) | (!is.na(sSpeed) & sSpeed > vmax),])
+        sdata1 <- with(sdata, sdata[(!is.na(pSpeed) & pSpeed > vmax) | (!is.na(sSpeed) & sSpeed > vmax), c('pSpeed', 'sSpeed', 'row')])
       }
       sdata$row <- NULL
     }

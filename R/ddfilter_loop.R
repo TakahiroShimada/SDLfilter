@@ -38,10 +38,7 @@
 
 
 # Hierarchical screening
-ddfilter_loop<-function(sdata, qi=4, ia=90, vmaxlp=1.8){
-  
-  ## Original columns
-  # headers <- names(sdata)
+ddfilter_loop <- function(sdata, qi = 4, ia = 90, vmaxlp = 1.8){
   
   ## Original sample size
   OriginalSS <- nrow(sdata)
