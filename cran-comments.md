@@ -10,14 +10,12 @@ There were no ERRORs or WARNINGs, and 1 NOTE as below when run on windows (win-b
 Please note each of the points within the note is verified and all information is correct.
 
 
-* checking CRAN incoming feasibility ... [28s] NOTE
+* checking CRAN incoming feasibility ... [17s] NOTE
 Maintainer: 'Takahiro Shimada <taka.shimada@gmail.com>'
-
-Version contains large components (2.3.0.9004)
 
 Found the following (possibly) invalid URLs:
   URL: https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.13506
     From: man/flatback.Rd
           man/ud_matrix.Rd
-    Status: 503
-    Message: Service Unavailable
+    Status: 403
+    Message: Forbidden

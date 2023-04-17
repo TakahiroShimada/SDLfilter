@@ -8,7 +8,7 @@ output:
 News for Package 'SDLfilter'
 =========
 
-#### Version 2.3.1.9003 (2023-04-16)
+#### Version 2.3.2 (2023-04-17)
 
 * fixed bugs in the ddfilter_speed when "method = 2" is selected.
 * significantly improved the processing speed for the ddfilter_speed, especially when "method = 1" is used.
