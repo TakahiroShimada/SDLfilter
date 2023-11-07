@@ -8,6 +8,11 @@ output:
 News for Package 'SDLfilter'
 =========
 
+#### Version 2.3.3 (2023-11-07)
+
+* removed functions that relied on the archived plotKML package. The functions include kml_track and to_kml. 
+
+
 #### Version 2.3.2 (2023-04-17)
 
 * fixed bugs in the ddfilter_speed when "method = 2" is selected.

@@ -41,7 +41,7 @@
 #' @param nrow An integer to specify the number of rows in the multiple plot page.
 #' @param ncol An integer to specify the number of columns in the multiple plot page.
 #' @import ggmap ggplot2
-#' @importFrom ggsn scalebar
+#' @importFrom ggspatial annotation_scale
 #' @importFrom gridExtra marrangeGrob
 #' @importFrom sf st_as_sf st_distance
 #' @importFrom maps map
@@ -93,7 +93,7 @@ map_track<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
   sdata$DateTime <- with(sdata, as.POSIXct(DateTime, format = "%Y-%m-%d %H:%M:%S", tz = "GMT"))
   
   
-  p.all<-lapply(1:length(ID), function(i){
+  p.all <- lapply(1:length(ID), function(i){
     #### Subset data
     sdata.temp<-sdata[sdata$id %in% ID[i],]
     
@@ -180,31 +180,29 @@ map_track<-function(sdata, xlim=NULL, ylim=NULL, margin=10,
     
     #### Add scale
     # Get parameters
-    if(is.null(sb.distance)){
-      # sb.distance <- raster::pointDistance(c(xlim[1], ylim[1]), c(xlim[2], ylim[1]), lonlat = TRUE)/4
-      # sb_mat <- rbind(c(xlim[1], ylim[1]), c(xlim[2], ylim[1]))
-      # sb.distance <- terra::distance(sb_mat, lonlat = TRUE)
-      sb_df <- data.frame(lon = c(xlim[1], xlim[2]), lat = c(ylim[1], ylim[1]))
-      sb_sf <- sf::st_as_sf(sb_df, coords = c('lon', 'lat'), crs = 4326)
-      sb.distance <- sf::st_distance(sb_sf)[1,2]
-      sb.distance <- as.numeric(sb.distance)/4
-      digi <- nchar(trunc(sb.distance))
-      sb.distance <- round(sb.distance/10^(digi-1)) * 10^(digi-1)
-      sb.distance <- as.numeric(sb.distance)/1000
-    }
-    
-    sb<-ggsn::scalebar(x.min=xlim[1]+extra2, x.max=xlim[2]-extra2, y.min=ylim[1]+extra2, y.max=ylim[2]-extra2,
-                       dist = sb.distance, dist_unit = "km", transform = TRUE, model = 'WGS84', location="bottomleft", st.dist=.03)
-      
-    sb.xmin<-min(sb[[1]]$data$x); sb.xmax<-max(sb[[1]]$data$x)
-    sb.ymin<-min(sb[[1]]$data$y); sb.ymax<-max(sb[[1]]$data$y)
-    
-    sb.df<-data.frame(x=c(sb.xmin, sb.xmax), y=c(sb.ymax, sb.ymax))
-    
-    # Add scale bar
-    p + geom_line(aes_string(x="x", y="y"), data=sb.df, colour=sb.line.col, lwd=sb.lwd) +
-      annotate("text", x=mean(c(sb.xmin, sb.xmax)), y=sb.ymin-extra2/sb.space, 
-               label=paste0(sb.distance, " km"), colour=sb.text.col, size=sb.text.size)
+    # if(is.null(sb.distance)){
+    #   sb_df <- data.frame(lon = c(xlim[1], xlim[2]), lat = c(ylim[1], ylim[1]))
+    #   sb_sf <- sf::st_as_sf(sb_df, coords = c('lon', 'lat'), crs = 4326)
+    #   sb.distance <- sf::st_distance(sb_sf)[1,2]
+    #   sb.distance <- as.numeric(sb.distance)/4
+    #   digi <- nchar(trunc(sb.distance))
+    #   sb.distance <- round(sb.distance/10^(digi-1)) * 10^(digi-1)
+    #   sb.distance <- as.numeric(sb.distance)/1000
+    # }
+    # 
+    # sb<-ggsn::scalebar(x.min=xlim[1]+extra2, x.max=xlim[2]-extra2, y.min=ylim[1]+extra2, y.max=ylim[2]-extra2,
+    #                    dist = sb.distance, dist_unit = "km", transform = TRUE, model = 'WGS84', location="bottomleft", st.dist=.03)
+    #   
+    # sb.xmin<-min(sb[[1]]$data$x); sb.xmax<-max(sb[[1]]$data$x)
+    # sb.ymin<-min(sb[[1]]$data$y); sb.ymax<-max(sb[[1]]$data$y)
+    # 
+    # sb.df<-data.frame(x=c(sb.xmin, sb.xmax), y=c(sb.ymax, sb.ymax))
+    # 
+    # # Add scale bar
+    # p + geom_line(aes_string(x="x", y="y"), data=sb.df, colour=sb.line.col, lwd=sb.lwd) +
+    #   annotate("text", x=mean(c(sb.xmin, sb.xmax)), y=sb.ymin-extra2/sb.space, 
+    #            label=paste0(sb.distance, " km"), colour=sb.text.col, size=sb.text.size)
+    p + annotation_scale()
   })
   
   if(isTRUE(multiplot)){
