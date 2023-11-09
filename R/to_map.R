@@ -35,7 +35,7 @@
 #' @import ggmap ggplot2
 #' @importFrom ggspatial annotation_scale
 #' @importFrom gridExtra marrangeGrob
-#' @importFrom sf st_as_sf st_distance
+#' @importFrom sf st_as_sf st_cast st_combine
 #' @importFrom maps map
 #' @export
 #' @return An arrangelist is returned when \emph{multiplot} is TRUE. Otherwise a list is returned. 
@@ -211,7 +211,7 @@ to_map <- function(sdata, xlim=NULL, ylim=NULL, margin=10,
     # p + geom_line(aes_string(x="x", y="y"), data=sb.df, colour=sb.line.col, lwd=sb.lwd) +
     #   annotate("text", x=mean(c(sb.xmin, sb.xmax)), y=sb.ymin-extra2/sb.space, 
     #            label=paste0(sb.distance, " km"), colour=sb.text.col, size=sb.text.size)
-    p + annotation_scale()
+    p + ggspatial::annotation_scale()
   })
   
   if(isTRUE(multiplot)){
