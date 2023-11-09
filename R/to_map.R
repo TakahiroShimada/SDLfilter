@@ -25,14 +25,6 @@
 #' @param line.col The colour of the line that connects consecutive points.
 #' @param line.type The type of the line that connects consecutive points. See \code{\link[ggplot2:aes_linetype_size_shape]{linetype}} for details. 
 #' @param line.size An integer to specify the thickness (width) of the line that connects consecutive points. 
-#' @param sb.distance An integer to specify the length of the scale bar. If not specified, approximately a quarter of the 
-#' plotting range will be used. 
-#' @param sb.lwd An integer to specify the thickness (width) of the scale bar.
-#' @param sb.line.col The colour of the scale bar.
-#' @param sb.text.size An integer to specify the text size for the scale bar.
-#' @param sb.text.col The colour of the text for the scale bar.
-#' @param sb.space Set the amount of space between the scale bar and the text. 
-#' The value is scaled to the plot. The smaller value increases the space.
 #' @param title The main title for each plot. If not specified, the "id" will be used.
 #' @param title.size An integer to specify the size of the title.
 #' @param axes.text.size An integer to specify the size of the axes characters.
@@ -81,7 +73,7 @@ to_map <- function(sdata, xlim=NULL, ylim=NULL, margin=10,
                     bgmap=NULL, google.key=NULL, map.bg="grey", map.col="black", zoom=NULL, 
                     point.bg="yellow", point.col="black", point.symbol=21, point.size=1,
                     line.col="lightgrey", line.type=1, line.size=0.5,
-                    sb.distance=NULL, sb.lwd=1, sb.line.col="black", sb.text.size=4, sb.text.col="black", sb.space=3,
+                    # sb.distance=NULL, sb.lwd=1, sb.line.col="black", sb.text.size=4, sb.text.col="black", sb.space=3,
                     title="id", title.size=11, axes.text.size=11, axes.lab.size=11,
                     multiplot=TRUE, nrow=1, ncol=1){
   
@@ -123,17 +115,7 @@ to_map <- function(sdata, xlim=NULL, ylim=NULL, margin=10,
     extra2<-max(c(diff(xlim), diff(ylim)))/margin
     
     #### Background map
-    if(is.null(bgmap)){
-      if(inherits(try(ggplot2::map_data('world', xlim=xlim, ylim=ylim)), "try-error")){
-        map.data <- ggplot2::map_data('world', xlim=c(-180, 180), ylim=c(-90, 90))
-      } else {
-        map.data<-try(ggplot2::map_data('world', xlim=xlim, ylim=ylim))
-      }
-
-      p <-ggplot(data=sdata.temp)+
-        geom_polygon(aes_string(x="long", y="lat", group="group"), data=map.data, bg=map.bg, colour=map.col)
-      
-    } else if(any(bgmap %in% c("terrain", "satellite", "roadmap", "hybrid"))) {
+    if(any(bgmap %in% c("terrain", "satellite", "roadmap", "hybrid"))){
       ggmap::ggmap_show_api_key()
       ggmap::register_google(key = google.key)
       
@@ -144,21 +126,40 @@ to_map <- function(sdata, xlim=NULL, ylim=NULL, margin=10,
         zoomlat <- ceiling( log2( 180*2 / latlength) )
         zm <- min(zoomlon, zoomlat)
         
-        map.data<-ggmap::get_map(location = c(lon = mean(xlim), lat = mean(ylim)), 
-                                 color = "color", source = "google", maptype = bgmap, 
-                                 zoom = zm)
+        map.data <- ggmap::get_map(location = c(lon = mean(xlim), lat = mean(ylim)), 
+                                   color = "color", source = "google", maptype = bgmap, 
+                                   zoom = zm)
         
       } else {
-        map.data<-ggmap::get_map(location = c(lon = mean(xlim), lat = mean(ylim)), 
-                                 color = "color", source = "google", maptype = bgmap, zoom=zoom)
+        map.data <- ggmap::get_map(location = c(lon = mean(xlim), lat = mean(ylim)), 
+                                   color = "color", source = "google", maptype = bgmap, zoom=zoom)
       }
       
-      p <- ggmap::ggmap(map.data)  
+      p <- ggmap::ggmap(map.data)
       
     } else {
-      map.data<-bgmap
-      p <-ggplot(data=sdata.temp)+
-        geom_polygon(aes_string(x="long", y="lat", group="group"), data=map.data, bg=map.bg, colour=map.col)
+      if(is.null(bgmap)){
+        
+        map.data <- ggplot2::map_data('world', xlim=xlim, ylim=ylim)
+        
+      } else {
+        
+        map.data <- bgmap
+        
+      }
+      
+      map.data <- sf::st_as_sf(map.data, coords = c('long', 'lat'), crs = 4326) 
+      map.data <- sf::st_sf(
+        aggregate(
+          map.data$geometry,
+          list(map.data$group),
+          function(g){
+            sf::st_cast(sf::st_combine(g),"POLYGON")
+          }
+        ))
+      
+      p <- ggplot(data = sdata.temp) +
+        geom_sf(data = map.data, fill = map.bg, colour = map.col)
     }
     
     
@@ -166,14 +167,14 @@ to_map <- function(sdata, xlim=NULL, ylim=NULL, margin=10,
     p <- p +
       geom_path(aes_string(x="lon", y="lat"), data=sdata.temp, colour=line.col, linetype = line.type, linewidth=line.size)+
       geom_point(aes_string(x="lon", y="lat"), data=sdata.temp, size=point.size, colour=point.col, shape=point.symbol, fill=point.bg) +
-      coord_fixed(xlim=xlim, ylim=ylim, ratio=1) + 
+      coord_sf(xlim=xlim, ylim=ylim) +
       theme_classic() + 
       theme(axis.title.x = element_text(colour="black", size=axes.lab.size), 
             axis.title.y = element_text(colour="black", size=axes.lab.size), 
             axis.text.x = element_text(colour="black", size=axes.text.size),
             axis.text.y = element_text(colour="black", size=axes.text.size),
             plot.margin = unit(c(0.2,0.2,0.2,0.2), "cm"),
-            panel.border = element_rect(colour = "black", fill=NA, size=1)) 
+            panel.border = element_rect(colour = "black", fill=NA, linewidth=1)) 
     
     
     ##### Add title

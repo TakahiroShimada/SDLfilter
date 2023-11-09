@@ -21,12 +21,6 @@ to_map(
   line.col = "lightgrey",
   line.type = 1,
   line.size = 0.5,
-  sb.distance = NULL,
-  sb.lwd = 1,
-  sb.line.col = "black",
-  sb.text.size = 4,
-  sb.text.col = "black",
-  sb.space = 3,
   title = "id",
   title.size = 11,
   axes.text.size = 11,
@@ -75,20 +69,6 @@ For other options, see \code{\link[ggmap]{get_map}} for details.}
 \item{line.type}{The type of the line that connects consecutive points. See \code{\link[ggplot2:aes_linetype_size_shape]{linetype}} for details.}
 
 \item{line.size}{An integer to specify the thickness (width) of the line that connects consecutive points.}
-
-\item{sb.distance}{An integer to specify the length of the scale bar. If not specified, approximately a quarter of the 
-plotting range will be used.}
-
-\item{sb.lwd}{An integer to specify the thickness (width) of the scale bar.}
-
-\item{sb.line.col}{The colour of the scale bar.}
-
-\item{sb.text.size}{An integer to specify the text size for the scale bar.}
-
-\item{sb.text.col}{The colour of the text for the scale bar.}
-
-\item{sb.space}{Set the amount of space between the scale bar and the text. 
-The value is scaled to the plot. The smaller value increases the space.}
 
 \item{title}{The main title for each plot. If not specified, the "id" will be used.}
 

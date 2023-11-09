@@ -8,15 +8,21 @@ There were no ERRORs or WARNINGs, and 2 NOTES as below when run on windows (win-
 Please note each of the points within the note is verified and all information is correct.
 
 
-* checking CRAN incoming feasibility ... [17s] NOTE
+* checking CRAN incoming feasibility ... NOTE
 Maintainer: 'Takahiro Shimada <taka.shimada@gmail.com>'
 
-Found the following (possibly) invalid URLs:
-  URL: https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.13506
-    From: man/flatback.Rd
-          man/ud_matrix.Rd
-    Status: 403
-    Message: Forbidden
+New submission
+
+Package was archived on CRAN
+
+Possibly misspelled words in DESCRIPTION:
+  Shimada (8:295, 8:345, 8:571)
+  al (8:306, 8:356, 8:582)
+  et (8:303, 8:353, 8:579)
+
+CRAN repository db overrides:
+  X-CRAN-Comment: Archived on 2023-10-31 as check problems were not
+    corrected in time.
     
     
 * checking Rd files ... NOTE

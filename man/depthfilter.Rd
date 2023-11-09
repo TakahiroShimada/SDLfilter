@@ -117,7 +117,7 @@ tide = tidedata, tidal.plane = tidalplane)
 
 #### Plot data removed or retained by depthfilter
 to_map(turtle.dd, bgmap = SandyStrait, point.bg = "red", point.size = 2, line.size = 0.5, 
-        axes.lab.size = 0, title.size = 0, sb.distance = 10, multiplot = FALSE)[[1]] + 
+        axes.lab.size = 0, title.size = 0, multiplot = FALSE)[[1]] + 
 geom_point(aes(x = lon, y = lat), data = turtle, size = 2, fill = "yellow", shape = 21)+
 geom_point(aes(x = x, y = y), data = data.frame(x = c(152.68, 152.68), y = c(-25.3, -25.34)), 
            size = 3, fill = c("yellow", "red"), shape = 21) + 
