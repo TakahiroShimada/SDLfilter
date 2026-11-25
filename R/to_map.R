@@ -165,8 +165,8 @@ to_map <- function(sdata, xlim=NULL, ylim=NULL, margin=10,
     
     #### Plot locations on the map
     p <- p +
-      geom_path(aes_string(x="lon", y="lat"), data=sdata.temp, colour=line.col, linetype = line.type, linewidth=line.size)+
-      geom_point(aes_string(x="lon", y="lat"), data=sdata.temp, size=point.size, colour=point.col, shape=point.symbol, fill=point.bg) +
+      geom_path(aes(x=lon, y=lat), data=sdata.temp, colour=line.col, linetype = line.type, linewidth=line.size)+
+      geom_point(aes(x=lon, y=lat), data=sdata.temp, size=point.size, colour=point.col, shape=point.symbol, fill=point.bg) +
       coord_sf(xlim=xlim, ylim=ylim) +
       theme_classic() + 
       theme(axis.title.x = element_text(colour="black", size=axes.lab.size), 
