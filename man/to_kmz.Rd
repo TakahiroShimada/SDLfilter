@@ -250,18 +250,6 @@ to_kmz(
   append_file_name = FALSE
 )
 
-## Supply complete file names matched explicitly to ID
-ids <- unique(as.character(sdata$id))
-
-to_kmz(
-  sdata,
-  file_name = stats::setNames(
-    c("Moreton_Bay_track", "Hervey_Bay_track"),
-    ids
-  ),
-  append_file_name = FALSE
-)
-
 ## Create a species column, split by species and display points only
 sdata$species <- "Chelonia mydas"
 

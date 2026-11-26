@@ -32,9 +32,9 @@ library(SDLfilter)
 
 There are three main filtering functions.
 
--   *dupfilter* filters temporal and spatial duplicates.  
--   *ddfilter* filters locations with high error.  
--   *depthfilter* filters locations by water depth.
+- *dupfilter* filters temporal and spatial duplicates.  
+- *ddfilter* filters locations with high error.  
+- *depthfilter* filters locations by water depth.
 
 <!-- <p>&nbsp;</p> -->
 
@@ -248,4 +248,4 @@ Evol* 12(2):288-297 doi:
 
 ## Current version
 
-Version 2.3.3 (2023-11-07)
+Version 2.3.4 (2026-11-26)
