@@ -8,6 +8,14 @@ output:
 News for Package 'SDLfilter'
 =========
 
+#### Version 2.3.4 (2026-11-26)
+
+* reinstated and substantially revised the to_kmz function without relying on the archived plotKML package.
+* added options to split tracking data into separate KMZ files, customise file names, point symbols, labels and colours, and omit track lines.
+* added support for transforming input coordinates to WGS 84 and assigning point colours chronologically or according to values in a specified column.
+* updated package documentation and dependencies.
+
+
 #### Version 2.3.3 (2023-11-07)
 
 * removed functions that relied on the archived plotKML package. The functions include kml_track and to_kml. 
